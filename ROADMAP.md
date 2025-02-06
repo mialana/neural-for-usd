@@ -21,25 +21,26 @@ TODO...
 
 ## Stage 1: General Preparation
 
-1. Decide which 3 neural rendering techniques to implement / models to utilize.
-2. List necessary data to be collected from USD for each technique.
+- [ ] 1. Decide which 3 neural rendering techniques to implement / models to utilize.
+
+- [ ] 2. List necessary data to be collected from USD for each technique.
 
 ## Stage 2: Prepare for Data Collection
 
-1. For each data element, research precedential collection methods for OpenUSD. Alternatively, experiment briefly with methods used for other file formats / DCCs.
-2. Develop a database.
+- [ ] 1. For each data element, research precedential collection methods for OpenUSD. Alternatively, experiment briefly with methods used for other file formats / DCCs.
+- [ ] 2. Develop a database.
 
 ## Stage 3: Prepare for QT GUI and Python API creation
 
-1. Design a QT-based GUI.
+- [ ] 1. Design a QT-based GUI.
 - Mark 3 features as essential for Milestone 1 demo.
-2. Brainstorm desired endpoints for Python API. Begin creating pydantic models & fields.
+- [ ] 2. Brainstorm desired endpoints for Python API. Begin creating pydantic models & fields.
 - Mark 4 features as essential for Milestone 1 demo.
 
 ## Stage 4: Implement Data Collection
 
-1. TODO
-2. ...
+- [ ] 1. TODO
+- [ ] 2. ...
    
 Results:
 1. Python program with basic flags that will perform data collection on *a single* USD file.
@@ -47,16 +48,16 @@ Results:
 
 ## Stage 5: Implement 3 endpoints of Python API
 
-1. TODO
-2. ...
+- [ ] 1. TODO
+- [ ] 2. ...
 
 ## Stage 6: Implement 3 endpoints of QT GUI
 
-1. TODO
-2. ...
+- [ ] 1. TODO
+- [ ] 2. ...
 
 ## Stage 7: Refinement
 
-1. Refine flags for python program
-2. TODO
-3. ...
+- [ ] 1. Refine flags for python program
+- [ ] 2. TODO
+- [ ] 3. ...
