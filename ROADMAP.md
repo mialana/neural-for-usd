@@ -42,9 +42,9 @@ TODO...
 - [ ] 1. TODO
 - [ ] 2. ...
    
-Results:
-1. Python program with basic flags that will perform data collection on *a single* USD file.
-- Includes functionality to pipe into the database.
+#### Results:
+- Python program with basic flags that will perform data collection on *a single* USD file.
+  - Includes functionality to pipe into the database.
 
 ## Stage 5: Implement 3 endpoints of Python API
 
