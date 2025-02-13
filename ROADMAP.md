@@ -25,6 +25,12 @@ TODO...
 
 - [ ] 2. List necessary data to be collected from USD for each technique.
 
+## Stage 1b: Implement basic neural rendering functions
+
+- [] 1. NeRF
+
+- [ ] 2. Gaussian Splatting
+
 ## Stage 2: Prepare for Data Collection
 
 - [ ] 1. For each data element, research precedential collection methods for OpenUSD. Alternatively, experiment briefly with methods used for other file formats / DCCs.
