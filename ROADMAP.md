@@ -21,7 +21,7 @@ TODO...
 
 ## Stage 1: General Preparation
 
-- [ ] 1. Decide which 3 neural rendering techniques to implement / models to utilize.
+- [x] 1. Decide which 3 neural rendering techniques to implement / models to utilize.
 
 - [ ] 2. List necessary data to be collected from USD for each technique.
 

@@ -6,6 +6,7 @@
   - [*Tutorial @ Conference -- Materials*](#tutorial--conference----materials)
   - [STEP-BY-STEP](#step-by-step)
   - [3RD PARTY IMPLEMENTATIONS](#3rd-party-implementations)
+  - [XTRA RESOURCES](#xtra-resources)
 - [**NEURAL RADIANCE FIELDS (NeRF)**](#neural-radiance-fields-nerf)
   - [*Original Repo*](#original-repo-1)
   - [*Tutorial @ Conference -- Materials*](#tutorial--conference----materials-1)
@@ -27,15 +28,16 @@
 ### STEP-BY-STEP
 1. [A Python Engineer's Introduction to 3D Gaussian Splatting (Part 1)](https://medium.com/towards-data-science/a-python-engineers-introduction-to-3d-gaussian-splatting-part-1-e133b0449fc6)
 
-2. [How to get started with Gaussian Splatting](https://stackoverflow.com/questions/77712389/how-to-get-started-with-gaussian-splatting)
-- Advantage of Gaussian Splatting over NeRF is ease of implementation
+2. [Understanding 3D Gaussian Splats by writing a software renderer](https://www.thomasantony.com/posts/gaussian-splatting-renderer/)
 
-3. [Understanding 3D Gaussian Splats by writing a software renderer](https://www.thomasantony.com/posts/gaussian-splatting-renderer/)
-
-4. [3D Gaussian Splatting full YouTube tutorial, crop, transform, mesh, import into UE5 & Collision](https://www.youtube.com/watch?v=fCtOUtUCSmM)
+3. [3D Gaussian Splatting full YouTube tutorial, crop, transform, mesh, import into UE5 & Collision](https://www.youtube.com/watch?v=fCtOUtUCSmM)
 
 ### 3RD PARTY IMPLEMENTATIONS
 1. ["3D Gaussian Splatting for Real-Time Radiance Field Rendering" Reproduction in C++ and CUDA](https://github.com/MrNeRF/gaussian-splatting-cuda?tab=readme-ov-file)
+
+### XTRA RESOURCES
+1. [How to get started with Gaussian Splatting](https://stackoverflow.com/questions/77712389/how-to-get-started-with-gaussian-splatting)
+- Advantage of Gaussian Splatting over NeRF is ease of implementation
 
 ## **NEURAL RADIANCE FIELDS (NeRF)**
 ### *[Original Repo](https://github.com/bmild/nerf)*
