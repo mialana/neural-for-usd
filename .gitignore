@@ -23,7 +23,7 @@
 hs_err_pid*
 replay_pid*
 
-# Don't commit extracted example data
-data*
+# Don't commit extracted example data in root directory
+./data*
 
 .DS_Store
