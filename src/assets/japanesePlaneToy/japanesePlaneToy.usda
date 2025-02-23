@@ -4,6 +4,7 @@
 
 Generated from Composed Stage of root layer /Users/liu.amy05/Documents/Neural-for-USD/tmp/woodenPlane-orig.usda
 """
+    defaultPrim = "japanese_toy"
     metersPerUnit = 1
     upAxis = "Z"
 )
@@ -100,7 +101,7 @@ def "_materials"
         def Shader "previewShader"
         {
             uniform token info:id = "UsdPreviewSurface"
-            asset inputs:diffuseColor.connect = </_materials/japanese_toy/file1.outputs:rgb>
+            color3f inputs:diffuseColor.connect = </_materials/japanese_toy/file1.outputs:rgb>
             normal3f inputs:normal.connect = </_materials/japanese_toy/file2.outputs:rgb>
             float inputs:metallic = 0
             float inputs:roughness = 0.5527864
@@ -122,10 +123,12 @@ def "_materials"
         {
             uniform token info:id = "UsdUVTexture"
             asset inputs:file = @textures/japanesePlaneToy_Normal.png@
-            token inputs:sourceColorSpace = "sRGB"
+            token inputs:sourceColorSpace = "raw"
             float2 inputs:st.connect = </_materials/japanese_toy/place2dTexture2.outputs:result>
             token inputs:wrapS = "repeat"
             token inputs:wrapT = "repeat"
+            float4 inputs:scale = (2, 2, 2, 1)
+            float4 inputs:bias = (-1, -1, -1, 0)
             float3 outputs:rgb
         }
 
