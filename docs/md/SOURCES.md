@@ -54,7 +54,13 @@
 ### 3RD PARTY IMPLEMENTATIONS
 1. [NeRF Factory: PyTorch Implementations of popular NeRF models](https://github.com/kakaobrain/nerf-factory)
 
+2. [Venkatag14 NeRF Impl](https://github.com/Venkatag14/neural_radiance_fields/tree/6d6e4123250222e9d5696c9ab6afe04a706ca53b)
+
 ## **MISC**
 1. [Input Data Collection Best Practices](https://github.com/Fyusion/LLFF?tab=readme-ov-file#using-your-own-input-images-for-view-synthesis)
 
 2. [Apple's Pointersect: Neural Rendering with Cloud-Ray Intersection](https://github.com/apple/ml-pointersect)
+
+3. [Setup USD for Jupyter](https://developer.nvidia.com/usd#libraries-and-tools)
+
+4. [USD Environment Forum](https://forum.aousd.org/t/setup-usd-environment-for-the-first-time/1165/3)
