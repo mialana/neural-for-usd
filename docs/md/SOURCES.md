@@ -13,6 +13,7 @@
   - [STEP-BY-STEP](#step-by-step-1)
   - [3RD PARTY IMPLEMENTATIONS](#3rd-party-implementations-1)
 - [**MISC**](#misc)
+- [**CODE SOURCES**](#code-sources)
 
 ## **GENERAL NEURAL RENDERING**
 1. [State of the Art on Neural Rendering](https://onlinelibrary.wiley.com/doi/am-pdf/10.1111/cgf.14022)
@@ -64,3 +65,8 @@
 3. [Setup USD for Jupyter](https://developer.nvidia.com/usd#libraries-and-tools)
 
 4. [USD Environment Forum](https://forum.aousd.org/t/setup-usd-environment-for-the-first-time/1165/3)
+
+5. [CMake Starter Tutorial](https://github.com/Kitware/CMake)
+
+## **CODE SOURCES**
+1. [USD Plugin Examples](https://github.com/wetadigital/USDPluginExamples?tab=readme-ov-file)
