@@ -9,6 +9,8 @@ project(
     LANGUAGES CXX
 )
 
+include_directories(./include)
+
 # Discover cmake modules.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/
@@ -29,8 +31,3 @@ include(USDPluginTools)
 
 # Recurse into source tree.
 add_subdirectory(src)
-
-# Export targets and install package files.
-# This must come after source tree recursion as exporting targets
-# requires the targets to be defined in the first place!
-include(Export)

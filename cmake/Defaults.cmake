@@ -1,5 +1,8 @@
 # Default build configurations for the USDPluginExamples project.
 
+set(USD_ROOT /Users/liu.amy05/usd)
+set(CMAKE_INSTALL_PREFIX /Users/liu.amy05/Documents/Neural-for-USD)
+
 # By default, build for release.
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")

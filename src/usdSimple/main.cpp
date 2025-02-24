@@ -3,6 +3,11 @@
 #include <pxr/usd/usd/stage.h>
 #include <pxr/usd/usdGeom/pointBased.h>
 
+#define GLM_ENABLE_EXPERIMENTAL 
+
+#include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 int main()
 {
     // Path to the USD file
@@ -17,6 +22,9 @@ int main()
         std::cerr << "Failed to open USD stage." << std::endl;
         return 1;
     }
+
+    glm::vec3 v3 = glm::vec3(1.f);
+    std::cout << glm::to_string(v3) << std::endl;
 
     // Get the root layer of the USD stage
     pxr::SdfLayerHandle rootLayer = stage->GetRootLayer();

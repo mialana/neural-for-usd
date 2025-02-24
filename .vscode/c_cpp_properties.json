@@ -3,7 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
+                "${workspaceFolder}/include/**",
                 "/Users/liu.amy05/usd/include/**",
                 "/Users/liu.amy05/usd/include/boost/**",
                 "/usr/local/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/include/python3.9/**"
