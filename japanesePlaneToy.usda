@@ -71,7 +71,7 @@ def Xform "Camera"
 
 def Xform "japanese_toy"
 {
-    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, -0.1, 0, 1) )
+    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, -1.6292068494294654e-7, 1, 0), (0, -1, -1.6292068494294654e-7, 0), (0, 0, 0, 1) )
     uniform token[] xformOpOrder = ["xformOp:transform"]
 
     def Mesh "japanese_toy" (
@@ -172,12 +172,43 @@ def Xform "sun"
 
 def Xform "Xform_MyCam"
 {
-    double3 xformOp:translate = (0, 0, 5)
-    uniform token[] xformOpOrder = ["xformOp:translate"]
-
     def Camera "MyCam"
     {
+        float4[] clippingPlanes.timeSamples = {
+            0: [],
+        }
+        float2 clippingRange.timeSamples = {
+            0: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            0: 50,
+        }
+        float focusDistance.timeSamples = {
+            0: 0,
+        }
+        float fStop.timeSamples = {
+            0: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            0: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            0: 0,
+        }
         token projection = "perspective"
+        token projection.timeSamples = {
+            0: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            0: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            0: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            0: ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 5), (0, 0, 0, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
     }
 }
 

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.13)
 
 # Define project.
 project(
-    USDPluginExamples
+    Neural-for-USD
     VERSION 0.0.0
     DESCRIPTION "A collection of example plugins for Pixar's USD (Universal Scene Description)."
     LANGUAGES CXX
