@@ -10,6 +10,7 @@
 // // For glm::value_ptr.
 // #include <glm/gtc/type_ptr.hpp>
 
+#include <pxr/usd/usdGeom/xform.h>
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
@@ -18,6 +19,7 @@
 class Camera
 {
 private:
+    pxr::UsdGeomXform m_usdCameraXform;
     pxr::UsdGeomCamera m_usdCamera;
     pxr::GfCamera m_usdCameraParams;
 
