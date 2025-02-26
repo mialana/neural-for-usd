@@ -2,10 +2,13 @@ usd_executable(simple
 
     CPPFILES
         main.cpp
+        camera.h
+        camera.cpp
 
     LIBRARIES
-        tf
         sdf
         usd
         usdGeom
+        tf
+        gf
 )
