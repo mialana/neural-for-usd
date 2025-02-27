@@ -67,7 +67,7 @@ glm::vec3 squareToHemisphereUniform(const glm::vec2& sample)
 
     const Point2f xz = PolarToCartesian(r, phi);
 
-    return glm::vec3(xz.x, y, xz.y) * 5.f;
+    return glm::vec3(xz.x, y, xz.y) * 4.f;
 }
 
 void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamples)
@@ -166,7 +166,7 @@ Camera::Camera()
     pxr::UsdPrim prim = stage->GetPrimAtPath(pxr::SdfPath("/lights/domeLight"));
 
     // hdri.GetIntensityAttr().Set(0.5f);
-    // hdri.GetExposureAttr().Set(1.f);
+    hdri.GetExposureAttr().Set(1.f);
     // hdri.GetEnableColorTemperatureAttr().Set(true);
     // hdri.GetColorTemperatureAttr().Set(9000.f);
     // hdri.GetColorAttr().Set(pxr::GfVec3f(0.5, 0.5, 0.5));
