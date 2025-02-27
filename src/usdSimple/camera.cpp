@@ -78,7 +78,7 @@ void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamp
 
     pcg32 rng;
 
-    for (int i = 1; i < numSamples; ++i) {
+    for (int i = 0; i < numSamples; ++i) {
         int y = i / sqrtVal;
         int x = i % sqrtVal;
         glm::vec2 sample;
