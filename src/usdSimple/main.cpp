@@ -1,18 +1,20 @@
-#include <iostream>
-#include <pxr/usd/usd/primRange.h>
-#include <pxr/usd/usd/stage.h>
-#include <pxr/usd/usdGeom/pointBased.h>
+#include "mycpp/myutils.h"
+#include "mainwindow.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
+#include <QDebug>
+#include <QApplication>
+#include <QSurfaceFormat>
 
-#include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
-
-#include "camera.h"
-
-int main()
+int main(int argc, char* argv[])
 {
-    Camera c = Camera();
+    startup::doSimpleSetup();
 
-    return 0;
+    QApplication a(argc, argv);
+
+    qDebug() << "HELLO!";
+
+    MainWindow w;
+    w.show();
+
+    return a.exec();
 }
