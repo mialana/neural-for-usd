@@ -56,42 +56,50 @@ glm::vec3 squareToHemisphereCosine(const glm::vec2& sample)
     return glm::vec3(x, y, z) * 5.f;
 }
 
-void Camera::generateCameraTransforms(int numSamples)
+glm::vec3 squareToHemisphereUniform(const glm::vec2& sample)
 {
-    // m_usdCameraXform.AddTranslateOp();
+    const float y = sample.x;  // z range is positive
 
-    // The square root of the number of samples input
+    float r = sqrt(std::fmax(0.f, 1.f - pow(y, 2.f)));
+
+    const AngleRad phi = 2.f * M_PI * sample.y;
+
+    const Point2f xz = PolarToCartesian(r, phi);
+
+    return glm::vec3(xz.x, y, xz.y) * 5.f;
+}
+
+void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamples)
+{
     int sqrtVal = (int)(std::sqrt((float)numSamples) + 0.5);
-    // A number useful for scaling a square of size sqrtVal x sqrtVal to 1 x 1
     float invSqrtVal = 1.f / sqrtVal;
 
     numSamples = sqrtVal * sqrtVal;
-    // samples.resize(numSamples * 3);       // 3 floats for position
-    // sampleColors.resize(numSamples * 3);  // 3 floats for color
-    // float colorScale = 1.f / numSamples;  // For creating a gradient
 
-    pcg32 rng;  // We'll be using the PCG random number generator class to generate samples.
-    // You can read more about this random number generator at http://www.pcg-random.org/
-    // PBRT ed. 3 also discusses the PCG RNG from pages 1065 - 1066
+    pcg32 rng;
 
     for (int i = 1; i < numSamples; ++i) {
         int y = i / sqrtVal;
         int x = i % sqrtVal;
-        glm::vec2 sample;                                     // position of sample
+        glm::vec2 sample;
 
-        glm::vec2 gridOrigin = glm::vec2(x, y) * invSqrtVal;  // scale to 1 x 1 square
+        glm::vec2 gridOrigin = glm::vec2(x, y) * invSqrtVal;
         glm::vec2 offset;
 
-        offset = glm::vec2(invSqrtVal / 2.f);  // offset by half of size of a grid cell
+        offset = glm::vec2(invSqrtVal / 2.f);
         sample = gridOrigin + offset;
 
-        sample = glm::vec2(rng.nextFloat(), rng.nextFloat());
+        // sample = glm::vec2(rng.nextFloat(), rng.nextFloat());
 
-        glm::vec3 warpResult = squareToHemisphereCosine(sample);
+        glm::vec3 warpResult = squareToHemisphereUniform(sample);
 
         glm::vec3 target = glm::vec3(0.f);
         glm::vec3 look = glm::normalize(target - warpResult);
         glm::vec3 right = glm::normalize(glm::cross(look, glm::vec3(0, 1, 0)));
+        if (glm::length(right) < 1e-6f) {
+            // look direction was too close to y-axis. use z-axis as pseudo up.
+            right = glm::normalize(glm::cross(look, glm::vec3(0.0f, 0.0f, 1.0f)));
+        }
         glm::vec3 up = glm::cross(right, look);
 
         pxr::GfMatrix4d m = pxr::GfMatrix4d().SetLookAt(pxr::GfVec3d(warpResult.x,
@@ -99,9 +107,14 @@ void Camera::generateCameraTransforms(int numSamples)
                                                                      warpResult.z),
                                                         pxr::GfVec3d(0.f),
                                                         pxr::GfVec3d(up.x, up.y, up.z));
-        pxr::GfMatrix4d t = pxr::GfMatrix4d().SetTranslate(pxr::GfVec3d(4, 0, 3));
-
         m = m.GetInverse();
+
+        std::ostringstream p;
+        p << "/Xform_MyCam/MyCam";
+        p << i;
+        const pxr::SdfPath& cameraPath = pxr::SdfPath(p.str());
+        m_usdCamera = pxr::UsdGeomCamera::Define(stage, cameraPath);
+        m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
 
         m_usdCameraParams.SetTransform(m);
         m_usdCamera.SetFromCamera(m_usdCameraParams, i);
@@ -110,16 +123,7 @@ void Camera::generateCameraTransforms(int numSamples)
 
 void Camera::createUsdCameraParams()
 {
-    pxr::GfMatrix4d m = pxr::GfMatrix4d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 5, 1);
-    // pxr::GfVec3d v = pxr::GfVec3d(0, 0, 5);
-    // m_usdCameraXform.AddTranslateOp().Set(v);
-
     m_usdCameraParams = pxr::GfCamera(m_usdCamera.GetCamera(0));
-    m_usdCameraParams.SetTransform(m);
-
-    m_usdCamera.SetFromCamera(m_usdCameraParams, 0);
-
-    generateCameraTransforms(100);
 
     return;
 }
@@ -134,6 +138,8 @@ void Camera::createUsdCamera(const pxr::UsdStagePtr& stage, const char* name)
     m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
 
     createUsdCameraParams();
+
+    generateCameraTransforms(stage, 100);
 
     return;
 }

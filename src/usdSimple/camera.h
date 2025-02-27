@@ -16,7 +16,7 @@ private:
 
     void createUsdCameraParams();
     void createUsdCamera(const pxr::UsdStagePtr& stage, const char* path);
-    void generateCameraTransforms(int numSamples);
+    void generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamples);
 
 public:
     Camera();

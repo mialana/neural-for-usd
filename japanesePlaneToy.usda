@@ -176,1128 +176,3866 @@ def Xform "Xform_MyCam"
 {
     def Camera "MyCam"
     {
+        token projection = "perspective"
+    }
+
+    def Camera "MyCam1"
+    {
         float4[] clippingPlanes.timeSamples = {
-            0: [],
             1: [],
+        }
+        float2 clippingRange.timeSamples = {
+            1: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            1: 50,
+        }
+        float focusDistance.timeSamples = {
+            1: 0,
+        }
+        float fStop.timeSamples = {
+            1: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            1: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            1: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            1: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            1: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            1: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            1: ( (0.30901701199735154, -2.5651979290719495e-9, -0.9510565105692873, 0), (-0.1426584736797535, 0.9886859970027568, -0.046352553522195646, 0), (0.9402962544770621, 0.14999999776888306, 0.3055207922314671, 0), (4.701481342315674, 0.7499999999999999, 1.5276039838790894, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam2"
+    {
+        float4[] clippingPlanes.timeSamples = {
             2: [],
+        }
+        float2 clippingRange.timeSamples = {
+            2: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            2: 50,
+        }
+        float focusDistance.timeSamples = {
+            2: 0,
+        }
+        float fStop.timeSamples = {
+            2: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            2: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            2: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            2: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            2: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            2: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            2: ( (0.30901700037972046, 4.069669393147456e-9, -0.9510565143440846, 0), (-0.2377641149961247, 0.9682458405719048, -0.07725424153608071, 0), (0.9208565138480748, 0.2499999844304105, 0.2992044262512924, 0), (4.60428285598755, 1.25, 1.4960222244262698, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam3"
+    {
+        float4[] clippingPlanes.timeSamples = {
             3: [],
+        }
+        float2 clippingRange.timeSamples = {
+            3: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            3: 50,
+        }
+        float focusDistance.timeSamples = {
+            3: 0,
+        }
+        float fStop.timeSamples = {
+            3: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            3: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            3: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            3: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            3: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            3: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            3: ( (0.30901700711707075, -2.05417904908245e-9, -0.9510565121549868, 0), (-0.33286978393961664, 0.9367496976854582, -0.10815595603662216, 0), (0.8909019004651417, 0.35000000555171823, 0.289471587312807, 0), (4.454509735107422, 1.7500001192092896, 1.4473580121994016, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam4"
+    {
+        float4[] clippingPlanes.timeSamples = {
             4: [],
+        }
+        float2 clippingRange.timeSamples = {
+            4: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            4: 50,
+        }
+        float focusDistance.timeSamples = {
+            4: 0,
+        }
+        float fStop.timeSamples = {
+            4: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            4: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            4: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            4: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            4: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            4: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            4: ( (0.30901702070883896, -1.1258378951328753e-9, -0.9510565077387533, 0), (-0.42797543482044426, 0.8930285514518761, -0.13905766243546627, 0), (0.8493206156113752, 0.45000000699084935, 0.2759610218957579, 0), (4.246603012084963, 2.2500000000000004, 1.3798050880432131, 1.0000000000000004) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam5"
+    {
+        float4[] clippingPlanes.timeSamples = {
             5: [],
+        }
+        float2 clippingRange.timeSamples = {
+            5: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            5: 50,
+        }
+        float focusDistance.timeSamples = {
+            5: 0,
+        }
+        float fStop.timeSamples = {
+            5: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            5: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            5: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            5: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            5: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            5: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            5: ( (0.3090170126167033, 1.8755200170694764e-10, -0.9510565103680477, 0), (-0.5230810604475451, 0.8351646684833777, -0.16995935019327887, 0), (0.7942887951586124, 0.5499999786518631, 0.2580800909958576, 0), (3.971444129943849, 2.75, 1.2904005050659182, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam6"
+    {
+        float4[] clippingPlanes.timeSamples = {
             6: [],
+        }
+        float2 clippingRange.timeSamples = {
+            6: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            6: 50,
+        }
+        float focusDistance.timeSamples = {
+            6: 0,
+        }
+        float fStop.timeSamples = {
+            6: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            6: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            6: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            6: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            6: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            6: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            6: ( (0.3090169772746826, 1.1344787054223815e-8, -0.9510565218513664, 0), (-0.6181867769666834, 0.7599341761119263, -0.20086103843361916, 0), (0.7227403520902663, 0.650000036905451, 0.23483256904303101, 0), (3.613701820373535, 3.25000023841858, 1.1741628646850588, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam7"
+    {
+        float4[] clippingPlanes.timeSamples = {
             7: [],
+        }
+        float2 clippingRange.timeSamples = {
+            7: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            7: 50,
+        }
+        float focusDistance.timeSamples = {
+            7: 0,
+        }
+        float fStop.timeSamples = {
+            7: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            7: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            7: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            7: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            7: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            7: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            7: ( (0.30901700439119545, -3.0630387115593286e-9, -0.9510565130406772, 0), (-0.7132923861918224, 0.6614378253370822, -0.23176275588223313, 0), (0.6290647524681922, 0.7500000021422343, 0.20439553319184972, 0), (3.1453237533569327, 3.7499999999999996, 1.0219776630401611, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam8"
+    {
+        float4[] clippingPlanes.timeSamples = {
             8: [],
+        }
+        float2 clippingRange.timeSamples = {
+            8: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            8: 50,
+        }
+        float focusDistance.timeSamples = {
+            8: 0,
+        }
+        float fStop.timeSamples = {
+            8: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            8: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            8: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            8: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            8: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            8: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            8: ( (0.30901703093556515, -1.4203694193026809e-8, -0.951056504415888, 0), (-0.8083980206076058, 0.5267826975402201, -0.26266448151578126, 0), (0.5010001146401797, 0.8499999938660288, 0.1627848136598684, 0), (2.5050005912780757, 4.249999999999999, 0.8139240741729735, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam9"
+    {
+        float4[] clippingPlanes.timeSamples = {
             9: [],
+        }
+        float2 clippingRange.timeSamples = {
+            9: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            9: 50,
+        }
+        float focusDistance.timeSamples = {
+            9: 0,
+        }
+        float fStop.timeSamples = {
+            9: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            9: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            9: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            9: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            9: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            9: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            9: ( (0.30901698870169003, -3.0489758356955213e-9, -0.9510565181385066, 0), (-0.9035037307610833, 0.31224977572266965, -0.29356615278663556, 0), (0.29696718538340794, 0.950000040821653, 0.09649048266183641, 0), (1.4848358631134035, 4.750000000000001, 0.482452392578125, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam10"
+    {
+        float4[] clippingPlanes.timeSamples = {
             10: [],
+        }
+        float2 clippingRange.timeSamples = {
+            10: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            10: 50,
+        }
+        float focusDistance.timeSamples = {
+            10: 0,
+        }
+        float fStop.timeSamples = {
+            10: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            10: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            10: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            10: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            10: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            10: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            10: ( (0.8090170598776013, -1.5551646775913145e-11, -0.5877851621357943, 0), (-0.02938925858419033, 0.9987492177301779, -0.040450853677390736, 0), (0.5870499708771593, 0.0500000008335808, 0.8080051556826655, 0), (2.9352498054504395, 0.25, 4.04002571105957, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam11"
+    {
+        float4[] clippingPlanes.timeSamples = {
             11: [],
+        }
+        float2 clippingRange.timeSamples = {
+            11: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            11: 50,
+        }
+        float focusDistance.timeSamples = {
+            11: 0,
+        }
+        float fStop.timeSamples = {
+            11: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            11: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            11: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            11: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            11: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            11: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            11: ( (0.809017055704726, -7.07782506215171e-9, -0.5877851678792655, 0), (-0.08816776633366093, 0.9886859974868565, -0.12135255808244316, 0), (0.5811349658716032, 0.14999999457806565, 0.7998638340792706, 0), (2.9056749343872066, 0.7499999999999999, 3.999319314956665, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam12"
+    {
+        float4[] clippingPlanes.timeSamples = {
             12: [],
+        }
+        float2 clippingRange.timeSamples = {
+            12: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            12: 50,
+        }
+        float focusDistance.timeSamples = {
+            12: 0,
+        }
+        float fStop.timeSamples = {
+            12: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            12: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            12: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            12: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            12: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            12: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            12: ( (0.8090170270710801, -1.0114335147193286e-8, -0.5877852072901042, 0), (-0.1469462900150215, 0.9682458382582889, -0.2022542571772575, 0), (0.5691205827940965, 0.24999999339100581, 0.7833273680554029, 0), (2.845602989196777, 1.25, 3.9166369438171373, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam13"
+    {
+        float4[] clippingPlanes.timeSamples = {
             13: [],
+        }
+        float2 clippingRange.timeSamples = {
+            13: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            13: 50,
+        }
+        float focusDistance.timeSamples = {
+            13: 0,
+        }
+        float fStop.timeSamples = {
+            13: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            13: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            13: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            13: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            13: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            13: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            13: ( (0.8090170174334714, -6.485467302086436e-9, -0.5877852205551364, 0), (-0.20572483363355018, 0.9367496925423073, -0.2831559753004357, 0), (0.5506076264723351, 0.35000001931698915, 0.757846441008077, 0), (2.7530381679534908, 1.7500001192092898, 3.78923225402832, 0.9999999999999999) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam14"
+    {
+        float4[] clippingPlanes.timeSamples = {
             14: [],
+        }
+        float2 clippingRange.timeSamples = {
+            14: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            14: 50,
+        }
+        float focusDistance.timeSamples = {
+            14: 0,
+        }
+        float fStop.timeSamples = {
+            14: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            14: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            14: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            14: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            14: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            14: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            14: ( (0.8090170432205656, -9.057556926705958e-9, -0.5877851850622419, 0), (-0.2645033210930293, 0.8930285598106704, -0.3640576664393128, 0), (0.5249089605916551, 0.4499999904027555, 0.7224753225737943, 0), (2.624544858932495, 2.25, 3.6123766899108887, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam15"
+    {
+        float4[] clippingPlanes.timeSamples = {
             15: [],
+        }
+        float2 clippingRange.timeSamples = {
+            15: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            15: 50,
+        }
+        float focusDistance.timeSamples = {
+            15: 0,
+        }
+        float fStop.timeSamples = {
+            15: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            15: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            15: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            15: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            15: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            15: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            15: ( (0.8090170486409729, 9.646407422847503e-9, -0.5877851776016896, 0), (-0.3232818465583502, 0.8351646629846663, -0.44495936150117366, 0), (0.4908974054668379, 0.5499999870015532, 0.6756624538955959, 0), (2.4544870853424072, 2.75, 3.3783123493194585, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam16"
+    {
+        float4[] clippingPlanes.timeSamples = {
             16: [],
+        }
+        float2 clippingRange.timeSamples = {
+            16: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            16: 50,
+        }
+        float focusDistance.timeSamples = {
+            16: 0,
+        }
+        float fStop.timeSamples = {
+            16: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            16: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            16: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            16: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            16: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            16: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            16: ( (0.8090170595645434, -1.8195692397249275e-8, -0.5877851625666811, 0), (-0.3820603582547244, 0.7599341876361164, -0.5258611158016036, 0), (0.44667804958808055, 0.6500000234321808, 0.6147997149920882, 0), (2.2333903312683105, 3.2500002384185795, 3.0739986896514897, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam17"
+    {
+        float4[] clippingPlanes.timeSamples = {
             17: [],
+        }
+        float2 clippingRange.timeSamples = {
+            17: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            17: 50,
+        }
+        float focusDistance.timeSamples = {
+            17: 0,
+        }
+        float fStop.timeSamples = {
+            17: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            17: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            17: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            17: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            17: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            17: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            17: ( (0.8090170518403437, 1.1622521361998036e-8, -0.5877851731981324, 0), (-0.44083888880448024, 0.6614378225836308, -0.606762788059268, 0), (0.38878333805500154, 0.7500000045705498, 0.5351144823259647, 0), (1.94391667842865, 3.7499999999999996, 2.675572395324707, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam18"
+    {
+        float4[] clippingPlanes.timeSamples = {
             18: [],
+        }
+        float2 clippingRange.timeSamples = {
+            18: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            18: 50,
+        }
+        float focusDistance.timeSamples = {
+            18: 0,
+        }
+        float fStop.timeSamples = {
+            18: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            18: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            18: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            18: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            18: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            18: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            18: ( (0.8090170265327021, 6.471770785942967e-9, -0.5877852080311183, 0), (-0.4996174296771308, 0.5267826873885286, -0.6876644706763154, 0), (0.30963506704345106, 0.8500000001574823, 0.4261761666133829, 0), (1.5481753349304201, 4.25, 2.130880832672119, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam19"
+    {
+        float4[] clippingPlanes.timeSamples = {
             19: [],
+        }
+        float2 clippingRange.timeSamples = {
+            19: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            19: 50,
+        }
+        float focusDistance.timeSamples = {
+            19: 0,
+        }
+        float fStop.timeSamples = {
+            19: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            19: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            19: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            19: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            19: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            19: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            19: ( (0.8090170450530304, -1.651642989042301e-10, -0.5877851825400694, 0), (-0.5583959524263559, 0.31224974952822493, -0.7685662328214943, 0), (0.18353577615147834, 0.9500000494313464, 0.2526153695896464, 0), (0.9176788330078123, 4.75, 1.2630767822265625, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam20"
+    {
+        float4[] clippingPlanes.timeSamples = {
             20: [],
+        }
+        float2 clippingRange.timeSamples = {
+            20: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            20: 50,
+        }
+        float focusDistance.timeSamples = {
+            20: 0,
+        }
+        float fStop.timeSamples = {
+            20: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            20: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            20: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            20: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            20: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            20: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            20: ( (0.9999999999999988, -1.5304335468571457e-16, 4.371139079559779e-8, 0), (2.185569817065054e-9, 0.9987492176293953, -0.05000000284670035, 0), (-4.36567173509439e-8, 0.050000002846700406, 0.9987492176293945, 0), (-2.1828357432696066e-7, 0.2499999999999999, 4.993745803833006, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam21"
+    {
+        float4[] clippingPlanes.timeSamples = {
             21: [],
+        }
+        float2 clippingRange.timeSamples = {
+            21: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            21: 50,
+        }
+        float focusDistance.timeSamples = {
+            21: 0,
+        }
+        float fStop.timeSamples = {
+            21: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            21: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            21: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            21: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            21: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            21: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            21: ( (0.9999999999999993, 6.8030126138109e-17, 4.371139173515773e-8, 0), (6.556708740234383e-9, 0.9886859965003613, -0.15000000108029393, 0), (-4.3216840906296585e-8, 0.15000000108029404, 0.9886859965003602, 0), (-2.1608420297525302e-7, 0.75, 4.943429946899414, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam22"
+    {
+        float4[] clippingPlanes.timeSamples = {
             22: [],
+        }
+        float2 clippingRange.timeSamples = {
+            22: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            22: 50,
+        }
+        float focusDistance.timeSamples = {
+            22: 0,
+        }
+        float fStop.timeSamples = {
+            22: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            22: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            22: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            22: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            22: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            22: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            22: ( (0.999999999999999, -2.4661735001659496e-16, 4.3711386384280945e-8, 0), (1.0927846293069822e-8, 0.9682458397521347, -0.2499999876053657, 0), (-4.23233679547238e-8, 0.24999998760536596, 0.9682458397521339, 0), (-2.116168502652726e-7, 1.2499999999999998, 4.841229438781737, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam23"
+    {
+        float4[] clippingPlanes.timeSamples = {
             23: [],
+        }
+        float2 clippingRange.timeSamples = {
+            23: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            23: 50,
+        }
+        float focusDistance.timeSamples = {
+            23: 0,
+        }
+        float fStop.timeSamples = {
+            23: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            23: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            23: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            23: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            23: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            23: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            23: ( (0.9999999999999991, -5.179420621520019e-16, 4.3711392043389626e-8, 0), (1.5298989341633243e-8, 0.9367496857307013, -0.35000003754775855, 0), (-4.094663257821697e-8, 0.3500000375477589, 0.9367496857307004, 0), (-2.047331548737929e-7, 1.7500001192092896, 4.683748245239258, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam24"
+    {
+        float4[] clippingPlanes.timeSamples = {
             24: [],
+        }
+        float2 clippingRange.timeSamples = {
+            24: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            24: 50,
+        }
+        float focusDistance.timeSamples = {
+            24: 0,
+        }
+        float fStop.timeSamples = {
+            24: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            24: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            24: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            24: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            24: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            24: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            24: ( (0.9999999999999991, -8.518027519076896e-16, 4.371138959634559e-8, 0), (1.9670126247584396e-8, 0.8930285530316108, -0.45000000385585287, 0), (-3.9035518618914254e-8, 0.4500000038558533, 0.89302855303161, 0), (-1.9517759142217988e-7, 2.2499999999999996, 4.465142726898193, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam25"
+    {
+        float4[] clippingPlanes.timeSamples = {
             25: [],
+        }
+        float2 clippingRange.timeSamples = {
+            25: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            25: 50,
+        }
+        float focusDistance.timeSamples = {
+            25: 0,
+        }
+        float fStop.timeSamples = {
+            25: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            25: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            25: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            25: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            25: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            25: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            25: ( (0.9999999999999989, -4.155150926961981e-16, 4.371139079951364e-8, 0), (2.404126552951446e-8, 0.8351646507671213, -0.5500000055536648, 0), (-3.6506208203087686e-8, 0.5500000055536653, 0.8351646507671207, 0), (-1.8253103917231783e-7, 2.7499999999999996, 4.175823211669922, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam26"
+    {
+        float4[] clippingPlanes.timeSamples = {
             26: [],
+        }
+        float2 clippingRange.timeSamples = {
+            26: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            26: 50,
+        }
+        float focusDistance.timeSamples = {
+            26: 0,
+        }
+        float fStop.timeSamples = {
+            26: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            26: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            26: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            26: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            26: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            26: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            26: ( (0.999999999999999, 6.624654672817682e-16, 4.371138501654575e-8, 0), (2.8412401408896002e-8, 0.7599341753608532, -0.650000037783552, 0), (-3.3217775757032035e-8, 0.6500000377835526, 0.7599341753608525, 0), (-1.660888813148631e-7, 3.2500002384185787, 3.7996709346771245, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam27"
+    {
+        float4[] clippingPlanes.timeSamples = {
             27: [],
+        }
+        float2 clippingRange.timeSamples = {
+            27: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            27: 50,
+        }
+        float focusDistance.timeSamples = {
+            27: 0,
+        }
+        float fStop.timeSamples = {
+            27: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            27: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            27: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            27: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            27: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            27: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            27: ( (0.9999999999999989, -8.95267089543186e-16, 4.3711389865662314e-8, 0), (3.2783543646703846e-8, 0.6614378107675318, -0.7500000149913688, 0), (-2.8912365346899433e-8, 0.7500000149913697, 0.6614378107675313, 0), (-1.4456182384492425e-7, 3.75, 3.3071889877319336, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam28"
+    {
+        float4[] clippingPlanes.timeSamples = {
             28: [],
+        }
+        float2 clippingRange.timeSamples = {
+            28: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            28: 50,
+        }
+        float focusDistance.timeSamples = {
+            28: 0,
+        }
+        float fStop.timeSamples = {
+            28: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            28: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            28: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            28: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            28: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            28: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            28: ( (0.999999999999999, -1.0092248177716358e-15, 4.371138768910405e-8, 0), (3.715467975897722e-8, 0.526782699027085, -0.8499999929445516, 0), (-2.302640192724444e-8, 0.8499999929445525, 0.5267826990270845, 0), (-1.1513201059187847e-7, 4.25, 2.6339135169982906, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam29"
+    {
+        float4[] clippingPlanes.timeSamples = {
             29: [],
+        }
+        float2 clippingRange.timeSamples = {
+            29: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            29: 50,
+        }
+        float focusDistance.timeSamples = {
+            29: 0,
+        }
+        float fStop.timeSamples = {
+            29: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            29: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            29: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            29: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            29: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            29: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            29: ( (0.9999999999999989, -2.0052049370347198e-15, 4.371139602953204e-8, 0), (4.152582872213161e-8, 0.3122497699052696, -0.9500000427337381, 0), (-1.3648871447514718e-8, 0.950000042733739, 0.3122497699052693, 0), (-6.824435416774576e-8, 4.749999999999999, 1.5612487792968748, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam30"
+    {
+        float4[] clippingPlanes.timeSamples = {
             30: [],
+        }
+        float2 clippingRange.timeSamples = {
+            30: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            30: 50,
+        }
+        float focusDistance.timeSamples = {
+            30: 0,
+        }
+        float fStop.timeSamples = {
+            30: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            30: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            30: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            30: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            30: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            30: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            30: ( (0.8090168804353428, 1.8613199731509766e-9, 0.5877854091168532, 0), (0.029389269857743608, 0.9987492176947557, -0.04045084636125978, 0), (-0.5870502176031409, 0.05000000154113514, 0.8080049763819472, 0), (-2.9352509975433354, 0.25, 4.040024757385254, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam31"
+    {
+        float4[] clippingPlanes.timeSamples = {
             31: [],
+        }
+        float2 clippingRange.timeSamples = {
+            31: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            31: 50,
+        }
+        float focusDistance.timeSamples = {
+            31: 0,
+        }
+        float fStop.timeSamples = {
+            31: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            31: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            31: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            31: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            31: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            31: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            31: ( (0.809016890306415, -1.1935286509112686e-9, 0.5877853955304932, 0), (0.08816780496963746, 0.9886859980360392, -0.1213525255374486, 0), (-0.581135190266236, 0.14999999095827019, 0.7998636717258414, 0), (-2.9056761264801025, 0.7500000000000001, 3.999318599700928, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam32"
+    {
+        float4[] clippingPlanes.timeSamples = {
             32: [],
+        }
+        float2 clippingRange.timeSamples = {
+            32: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            32: 50,
+        }
+        float focusDistance.timeSamples = {
+            32: 0,
+        }
+        float fStop.timeSamples = {
+            32: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            32: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            32: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            32: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            32: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            32: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            32: ( (0.8090168417419207, 8.943031606922783e-9, 0.5877854623737542, 0), (0.14694635671938625, 0.9682458373727401, -0.2022542129530575, 0), (-0.5691208290203645, 0.24999999682072352, 0.7833271880669096, 0), (-2.8456041812896733, 1.25, 3.9166359901428227, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam33"
+    {
+        float4[] clippingPlanes.timeSamples = {
             33: [],
+        }
+        float2 clippingRange.timeSamples = {
+            33: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            33: 50,
+        }
+        float focusDistance.timeSamples = {
+            33: 0,
+        }
+        float fStop.timeSamples = {
+            33: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            33: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            33: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            33: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            33: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            33: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            33: ( (0.8090168878063675, -1.286230236208219e-8, 0.5877853989715117, 0), (0.20572491684078684, 0.9367496886654951, -0.2831559276722796, 0), (-0.5506077858466504, 0.3500000296929955, 0.7578463204238387, 0), (-2.753038883209229, 1.7500001192092898, 3.789231538772584, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam34"
+    {
+        float4[] clippingPlanes.timeSamples = {
             34: [],
+        }
+        float2 clippingRange.timeSamples = {
+            34: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            34: 50,
+        }
+        float focusDistance.timeSamples = {
+            34: 0,
+        }
+        float fStop.timeSamples = {
+            34: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            34: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            34: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            34: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            34: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            34: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            34: ( (0.8090168934815402, 9.817183677096608e-9, 0.5877853911603097, 0), (0.2645034298759864, 0.8930285455902329, -0.36405762228640726, 0), (-0.524909136561098, 0.4500000186233253, 0.7224751771470694, 0), (-2.624545574188233, 2.2499999999999996, 3.6123757362365727, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam35"
+    {
+        float4[] clippingPlanes.timeSamples = {
             35: [],
+        }
+        float2 clippingRange.timeSamples = {
+            35: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            35: 50,
+        }
+        float focusDistance.timeSamples = {
+            35: 0,
+        }
+        float fStop.timeSamples = {
+            35: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            35: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            35: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            35: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            35: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            35: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            35: ( (0.809016875653658, -2.310250035719718e-8, 0.587785415698274, 0), (0.3232819875805271, 0.835164661889719, -0.44495926109770406, 0), (-0.4908975976856856, 0.5499999886642094, 0.6756623128869866, 0), (-2.454488039016723, 2.7500000000000004, 3.3783116340637203, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam36"
+    {
+        float4[] clippingPlanes.timeSamples = {
             36: [],
+        }
+        float2 clippingRange.timeSamples = {
+            36: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            36: 50,
+        }
+        float focusDistance.timeSamples = {
+            36: 0,
+        }
+        float fStop.timeSamples = {
+            36: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            36: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            36: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            36: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            36: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            36: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            36: ( (0.809016845134683, 1.5609586956344401e-9, 0.58778545770402, 0), (0.3820605725724248, 0.7599341698080582, -0.5258609858544065, 0), (-0.4466782546464013, 0.650000044275489, 0.6147995439717789, 0), (-2.233391284942627, 3.25000023841858, 3.0739977359771724, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam37"
+    {
+        float4[] clippingPlanes.timeSamples = {
             37: [],
+        }
+        float2 clippingRange.timeSamples = {
+            37: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            37: 50,
+        }
+        float focusDistance.timeSamples = {
+            37: 0,
+        }
+        float fStop.timeSamples = {
+            37: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            37: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            37: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            37: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            37: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            37: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            37: ( (0.8090168507364297, -2.1223356766464363e-8, 0.5877854499938808, 0), (0.44083910668056153, 0.6614378126647583, -0.6067626405756574, 0), (-0.3887835094825832, 0.7500000133181728, 0.5351143455161208, 0), (-1.9439175128936763, 3.749999999999999, 2.675571680068969, 0.9999999999999999) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam38"
+    {
+        float4[] clippingPlanes.timeSamples = {
             38: [],
+        }
+        float2 clippingRange.timeSamples = {
+            38: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            38: 50,
+        }
+        float focusDistance.timeSamples = {
+            38: 0,
+        }
+        float fStop.timeSamples = {
+            38: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            38: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            38: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            38: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            38: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            38: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            38: ( (0.8090168982120041, 4.665918901247681e-9, 0.5877853846493872, 0), (0.49961756676752556, 0.5267827101418829, -0.6876643536441821, 0), (-0.3096351811159794, 0.8499999860562196, 0.42617611185952425, 0), (-1.5481759309768683, 4.250000000000001, 2.1308805942535405, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam39"
+    {
+        float4[] clippingPlanes.timeSamples = {
             39: [],
+        }
+        float2 clippingRange.timeSamples = {
+            39: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            39: 50,
+        }
+        float focusDistance.timeSamples = {
+            39: 0,
+        }
+        float fStop.timeSamples = {
+            39: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            39: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            39: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            39: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            39: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            39: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            39: ( (0.8090169045913078, -2.7172788186202723e-9, 0.5877853758690316, 0), (0.5583961328498002, 0.3122497700630011, -0.7685660933933992, 0), (-0.18353584637309137, 0.9500000426818953, 0.25261534395303475, 0), (-0.9176791906356809, 4.75, 1.263076663017273, 0.9999999999999999) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam40"
+    {
+        float4[] clippingPlanes.timeSamples = {
             40: [],
+        }
+        float2 clippingRange.timeSamples = {
+            40: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            40: 50,
+        }
+        float focusDistance.timeSamples = {
+            40: 0,
+        }
+        float fStop.timeSamples = {
+            40: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            40: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            40: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            40: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            40: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            40: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            40: ( (0.30901677689581647, 3.3325711461251744e-10, 0.9510565869583794, 0), (0.04755282747160475, 0.9987492178652623, -0.015450838585108808, 0), (-0.9498670223754362, 0.0499999981352729, 0.30863026421609363, 0), (-4.749335289001466, 0.25, 1.543151378631592, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam41"
+    {
+        float4[] clippingPlanes.timeSamples = {
             41: [],
+        }
+        float2 clippingRange.timeSamples = {
+            41: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            41: 50,
+        }
+        float focusDistance.timeSamples = {
+            41: 0,
+        }
+        float fStop.timeSamples = {
+            41: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            41: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            41: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            41: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            41: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            41: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            41: ( (0.3090167871902991, 1.5184090235154098e-9, 0.9510565836135015, 0), (0.1426584815158474, 0.9886859975515763, -0.046352517699008694, 0), (-0.940296327168291, 0.14999999415148085, 0.3055205702868101, 0), (-4.701481819152832, 0.7499999999999999, 1.5276029109954832, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam42"
+    {
+        float4[] clippingPlanes.timeSamples = {
             42: [],
+        }
+        float2 clippingRange.timeSamples = {
+            42: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            42: 50,
+        }
+        float focusDistance.timeSamples = {
+            42: 0,
+        }
+        float fStop.timeSamples = {
+            42: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            42: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            42: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            42: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            42: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            42: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            42: ( (0.3090168001579592, -3.1335019301526038e-9, 0.9510565794000563, 0), (0.23776414624501083, 0.9682458364276655, -0.07725419730261501, 0), (-0.9208565729691661, 0.25000000048098053, 0.29920423088417836, 0), (-4.604282855987549, 1.25, 1.4960211515426636, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam43"
+    {
+        float4[] clippingPlanes.timeSamples = {
             43: [],
+        }
+        float2 clippingRange.timeSamples = {
+            43: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            43: 50,
+        }
+        float focusDistance.timeSamples = {
+            43: 0,
+        }
+        float fStop.timeSamples = {
+            43: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            43: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            43: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            43: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            43: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            43: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            43: ( (0.30901679865418435, -1.5240048528708523e-9, 0.9510565798886621, 0), (0.3328698293580089, 0.9367496895627478, -0.10815588660477729, 0), (-0.890901955802483, 0.3500000272915638, 0.28947139071627664, 0), (-4.454509735107422, 1.7500001192092893, 1.4473569393157963, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam44"
+    {
+        float4[] clippingPlanes.timeSamples = {
             44: [],
+        }
+        float2 clippingRange.timeSamples = {
+            44: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            44: 50,
+        }
+        float focusDistance.timeSamples = {
+            44: 0,
+        }
+        float fStop.timeSamples = {
+            44: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            44: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            44: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            44: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            44: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            44: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            44: ( (0.30901679733874804, 3.63351324028649e-9, 0.9510565803160731, 0), (0.42797545464991, 0.8930285578831791, -0.1390575601047716, 0), (-0.8493206868902381, 0.44999999422787695, 0.27596082333404626, 0), (-4.246603488922119, 2.25, 1.3798041343688963, 0.9999999999999999) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam45"
+    {
+        float4[] clippingPlanes.timeSamples = {
             45: [],
+        }
+        float2 clippingRange.timeSamples = {
+            45: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            45: 50,
+        }
+        float focusDistance.timeSamples = {
+            45: 0,
+        }
+        float fStop.timeSamples = {
+            45: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            45: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            45: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            45: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            45: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            45: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            45: ( (0.3090167953033752, 9.452989085945168e-9, 0.9510565809774054, 0), (0.5230811027317409, 0.8351646643722863, -0.16995924025740042, 0), (-0.7942888518576716, 0.5499999848944787, 0.25807990319026286, 0), (-3.9714443683624276, 2.750000000000001, 1.290399551391602, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam46"
+    {
+        float4[] clippingPlanes.timeSamples = {
             46: [],
+        }
+        float2 clippingRange.timeSamples = {
+            46: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            46: 50,
+        }
+        float focusDistance.timeSamples = {
+            46: 0,
+        }
+        float fStop.timeSamples = {
+            46: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            46: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            46: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            46: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            46: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            46: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            46: ( (0.30901679558419404, -2.719462266487227e-9, 0.9510565808861617, 0), (0.6181868127760417, 0.7599341765955575, -0.20086092639393852, 0), (-0.7227403991452779, 0.6500000363400236, 0.2348324257876079, 0), (-3.613702058792114, 3.250000238418579, 1.1741621494293213, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam47"
+    {
+        float4[] clippingPlanes.timeSamples = {
             47: [],
+        }
+        float2 clippingRange.timeSamples = {
+            47: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            47: 50,
+        }
+        float focusDistance.timeSamples = {
+            47: 0,
+        }
+        float fStop.timeSamples = {
+            47: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            47: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            47: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            47: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            47: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            47: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            47: ( (0.30901679531306325, 1.0230773117569925e-8, 0.9510565809742575, 0), (0.7132924351368936, 0.6614378259809698, -0.23176260340712615, 0), (-0.6290647996756176, 0.7500000015743788, 0.2043953899859458, 0), (-3.1453239917755127, 3.7500000000000004, 1.021976947784424, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam48"
+    {
+        float4[] clippingPlanes.timeSamples = {
             48: [],
+        }
+        float2 clippingRange.timeSamples = {
+            48: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            48: 50,
+        }
+        float focusDistance.timeSamples = {
+            48: 0,
+        }
+        float fStop.timeSamples = {
+            48: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            48: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            48: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            48: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            48: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            48: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            48: ( (0.30901677658210885, -8.251531680159019e-10, 0.9510565870603089, 0), (0.8083980896768986, 0.5267827036903032, -0.26266425660807957, 0), (-0.5010001600773635, 0.8499999900545494, 0.16278469372063792, 0), (-2.505000829696655, 4.249999999999999, 0.8139234781265259, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam49"
+    {
+        float4[] clippingPlanes.timeSamples = {
             49: [],
+        }
+        float2 clippingRange.timeSamples = {
+            49: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            49: 50,
+        }
+        float focusDistance.timeSamples = {
+            49: 0,
+        }
+        float fStop.timeSamples = {
+            49: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            49: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            49: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            49: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            49: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            49: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            49: ( (0.3090167742820411, -5.416157175530679e-9, 0.9510565878076458, 0), (0.9035038034795058, 0.3122497574373621, -0.2935659484313114, 0), (-0.29696718726214333, 0.9500000468317401, 0.09649041770716203, 0), (-1.4848358631134035, 4.75, 0.4824520647525788, 0.9999999999999999) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam50"
+    {
+        float4[] clippingPlanes.timeSamples = {
             50: [],
+        }
+        float2 clippingRange.timeSamples = {
+            50: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            50: 50,
+        }
+        float focusDistance.timeSamples = {
+            50: 0,
+        }
+        float fStop.timeSamples = {
+            50: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            50: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            50: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            50: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            50: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            50: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            50: ( (-0.30901722165953555, 1.1008705405601832e-10, 0.951056442445884, 0), (0.0475528226997214, 0.998749217743302, 0.015450861154986792, 0), (-0.9498668779208538, 0.05000000057141819, -0.30863070840690476, 0), (-4.749334335327148, 0.25, -1.5431535243988035, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam51"
+    {
+        float4[] clippingPlanes.timeSamples = {
             51: [],
+        }
+        float2 clippingRange.timeSamples = {
+            51: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            51: 50,
+        }
+        float focusDistance.timeSamples = {
+            51: 0,
+        }
+        float fStop.timeSamples = {
+            51: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            51: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            51: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            51: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            51: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            51: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            51: ( (-0.3090172362989644, -1.0911095638110882e-10, 0.9510564376892416, 0), (0.1426584669384785, 0.9886859964539384, 0.046352585975824846, 0), (-0.9402961817857782, 0.1500000013862773, -0.30552101417611804, 0), (-4.701480865478516, 0.7499999999999999, -1.5276050567626953, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam52"
+    {
+        float4[] clippingPlanes.timeSamples = {
             52: [],
+        }
+        float2 clippingRange.timeSamples = {
+            52: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            52: 50,
+        }
+        float focusDistance.timeSamples = {
+            52: 0,
+        }
+        float fStop.timeSamples = {
+            52: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            52: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            52: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            52: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            52: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            52: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            52: ( (-0.30901723635644196, 4.4625002304510275e-9, 0.9510564376705659, 0), (0.23776412413713993, 0.9682458329181993, 0.07725430932861413, 0), (-0.9208564322998052, 0.25000001407308453, -0.2992046524630457, 0), (-4.604281902313233, 1.2500000000000002, -1.4960231781005862, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam53"
+    {
+        float4[] clippingPlanes.timeSamples = {
             53: [],
+        }
+        float2 clippingRange.timeSamples = {
+            53: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            53: 50,
+        }
+        float focusDistance.timeSamples = {
+            53: 0,
+        }
+        float fStop.timeSamples = {
+            53: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            53: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            53: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            53: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            53: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            53: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            53: ( (-0.3090172262739724, 3.1026743813056228e-9, 0.9510564409465612, 0), (0.33286980099147045, 0.9367496817816683, 0.10815604130071166, 0), (-0.8909018180775247, 0.35000004811705726, -0.28947178940998414, 0), (-4.454508781433105, 1.750000119209289, -1.4473588466644285, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam54"
+    {
+        float4[] clippingPlanes.timeSamples = {
             54: [],
+        }
+        float2 clippingRange.timeSamples = {
+            54: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            54: 50,
+        }
+        float focusDistance.timeSamples = {
+            54: 0,
+        }
+        float fStop.timeSamples = {
+            54: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            54: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            54: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            54: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            54: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            54: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            54: ( (-0.3090172169378068, 7.626672474114747e-9, 0.9510564439800681, 0), (0.4279754234985104, 0.8930285435286539, 0.1390577481637088, 0), (-0.8493205499205132, 0.45000002271454476, -0.2759611984312761, 0), (-4.246602535247804, 2.25, -1.3798059225082402, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam55"
+    {
+        float4[] clippingPlanes.timeSamples = {
             55: [],
+        }
+        float2 clippingRange.timeSamples = {
+            55: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            55: 50,
+        }
+        float focusDistance.timeSamples = {
+            55: 0,
+        }
+        float fStop.timeSamples = {
+            55: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            55: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            55: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            55: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            55: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            55: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            55: ( (-0.3090172128738612, 8.188146577436942e-9, 0.9510564453005254, 0), (0.5230810668482686, 0.8351646407004264, 0.16995946701671347, 0), (-0.7942887130335847, 0.5500000208397524, -0.25808025384310995, 0), (-3.971443414688111, 2.7500000000000004, -1.2904012203216557, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam56"
+    {
+        float4[] clippingPlanes.timeSamples = {
             56: [],
+        }
+        float2 clippingRange.timeSamples = {
+            56: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            56: 50,
+        }
+        float focusDistance.timeSamples = {
+            56: 0,
+        }
+        float fStop.timeSamples = {
+            56: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            56: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            56: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            56: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            56: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            56: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            56: ( (-0.30901722104629925, 1.207952543547109e-9, 0.9510564426451371, 0), (0.6181867414833124, 0.7599341595807579, 0.2008612101838776, 0), (-0.7227402782127665, 0.6500000562325264, -0.23483274291854095, 0), (-3.6137013435363774, 3.250000238418579, -1.1741636991500854, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam57"
+    {
+        float4[] clippingPlanes.timeSamples = {
             57: [],
+        }
+        float2 clippingRange.timeSamples = {
+            57: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            57: 50,
+        }
+        float focusDistance.timeSamples = {
+            57: 0,
+        }
+        float fStop.timeSamples = {
+            57: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            57: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            57: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            57: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            57: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            57: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            57: ( (-0.30901723284730964, 5.782216427885347e-9, 0.9510564388107532, 0), (0.7132923542633759, 0.661437799183891, 0.23176292878754717, 0), (-0.6290646764465498, 0.7500000252071802, -0.20439568252883125, 0), (-3.145323276519776, 3.7500000000000004, -1.0219783782958987, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam58"
+    {
+        float4[] clippingPlanes.timeSamples = {
             58: [],
+        }
+        float2 clippingRange.timeSamples = {
+            58: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            58: 50,
+        }
+        float focusDistance.timeSamples = {
+            58: 0,
+        }
+        float fStop.timeSamples = {
+            58: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            58: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            58: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            58: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            58: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            58: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            58: ( (-0.3090172262754937, 1.322008846837974e-8, 0.9510564409460669, 0), (0.8083979956283479, 0.5267826559633263, 0.2626646417778625, 0), (-0.501000034460148, 0.8500000196330723, -0.16278492588291787, 0), (-2.505000114440918, 4.249999999999999, -0.8139246106147765, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam59"
+    {
+        float4[] clippingPlanes.timeSamples = {
             59: [],
+        }
+        float2 clippingRange.timeSamples = {
+            59: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            59: 50,
+        }
+        float focusDistance.timeSamples = {
+            59: 0,
+        }
+        float fStop.timeSamples = {
+            59: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            59: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            59: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            59: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            59: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            59: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            59: ( (-0.3090172514307205, -6.732074453452693e-9, 0.9510564327726314, 0), (0.9035036558666092, 0.3122497547419954, 0.2935664056039707, 0), (-0.2969671398553621, 0.9500000477176638, -0.09649055488783413, 0), (-1.4848356246948242, 4.750000000000002, -0.48245275020599365, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam60"
+    {
+        float4[] clippingPlanes.timeSamples = {
             60: [],
+        }
+        float2 clippingRange.timeSamples = {
+            60: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            60: 50,
+        }
+        float focusDistance.timeSamples = {
+            60: 0,
+        }
+        float fStop.timeSamples = {
+            60: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            60: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            60: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            60: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            60: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            60: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            60: ( (-0.8090171382553399, 6.248127050467736e-10, 0.5877850542580515, 0), (0.02938925308843235, 0.9987492177829238, 0.040450856367974006, 0), (-0.5870498631394478, 0.04999999977998392, -0.8080052340238629, 0), (-2.9352493286132817, 0.25, -4.0400261878967285, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam61"
+    {
+        float4[] clippingPlanes.timeSamples = {
             61: [],
+        }
+        float2 clippingRange.timeSamples = {
+            61: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            61: 50,
+        }
+        float focusDistance.timeSamples = {
+            61: 0,
+        }
+        float fStop.timeSamples = {
+            61: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            61: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            61: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            61: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            61: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            61: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            61: ( (-0.8090171406968717, -1.7627263537711713e-9, 0.5877850508975694, 0), (0.08816775700456476, 0.9886859964629626, 0.12135257320231278, 0), (-0.5811348489666078, 0.15000000132679553, -0.7998639177500877, 0), (-2.90567421913147, 0.7500000000000001, -3.9993195533752437, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam62"
+    {
+        float4[] clippingPlanes.timeSamples = {
             62: [],
+        }
+        float2 clippingRange.timeSamples = {
+            62: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            62: 50,
+        }
+        float focusDistance.timeSamples = {
+            62: 0,
+        }
+        float fStop.timeSamples = {
+            62: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            62: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            62: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            62: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            62: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            62: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            62: ( (-0.8090171301526726, -2.185207334526318e-9, 0.5877850654104215, 0), (0.14694626174212833, 0.9682458378251981, 0.20225427979203336, 0), (-0.56912044356142, 0.24999999506836035, -0.7833274686785039, 0), (-2.84560227394104, 1.25, -3.9166374206542973, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam63"
+    {
+        float4[] clippingPlanes.timeSamples = {
             63: [],
+        }
+        float2 clippingRange.timeSamples = {
+            63: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            63: 50,
+        }
+        float focusDistance.timeSamples = {
+            63: 0,
+        }
+        float fStop.timeSamples = {
+            63: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            63: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            63: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            63: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            63: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            63: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            63: ( (-0.8090171241880068, -1.764581758489924e-9, 0.5877850736200834, 0), (0.2057247871193793, 0.9367496916934481, 0.2831560119031829, 0), (-0.5506074869952758, 0.3500000215888985, -0.7578465412948175, 0), (-2.7530374526977535, 1.7500001192092893, -3.7892327308654785, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam64"
+    {
+        float4[] clippingPlanes.timeSamples = {
             64: [],
+        }
+        float2 clippingRange.timeSamples = {
+            64: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            64: 50,
+        }
+        float focusDistance.timeSamples = {
+            64: 0,
+        }
+        float fStop.timeSamples = {
+            64: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            64: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            64: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            64: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            64: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            64: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            64: ( (-0.8090171571581488, -1.199151614117433e-8, 0.5877850282405525, 0), (0.26450325004035485, 0.8930285584074563, 0.3640577215041454, 0), (-0.5249088207887505, 0.44999999318744466, -0.7224754224120452, 0), (-2.624544143676758, 2.25, -3.6123771667480473, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam65"
+    {
+        float4[] clippingPlanes.timeSamples = {
             65: [],
+        }
+        float2 clippingRange.timeSamples = {
+            65: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            65: 50,
+        }
+        float focusDistance.timeSamples = {
+            65: 0,
+        }
+        float fStop.timeSamples = {
+            65: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            65: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            65: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            65: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            65: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            65: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            65: ( (-0.8090171271894893, -2.0360643726569086e-9, 0.5877850694888954, 0), (0.32328178392202017, 0.835164657697385, 0.4449594169330565, 0), (-0.4908973172652931, 0.5499999950301905, -0.6756625114423093, 0), (-2.4544866085052495, 2.75, -3.378312587738038, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam66"
+    {
+        float4[] clippingPlanes.timeSamples = {
             66: [],
+        }
+        float2 clippingRange.timeSamples = {
+            66: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            66: 50,
+        }
+        float focusDistance.timeSamples = {
+            66: 0,
+        }
+        float fStop.timeSamples = {
+            66: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            66: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            66: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            66: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            66: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            66: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            66: ( (-0.8090171383556501, -1.3096611517493525e-8, 0.5877850541199855, 0), (0.38206029597403557, 0.7599341802514006, 0.5258611717229783, 0), (-0.4466779601536959, 0.6500000320658694, -0.6147997708419399, 0), (-2.2333898544311523, 3.2500002384185787, -3.0739989280700684, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam67"
+    {
+        float4[] clippingPlanes.timeSamples = {
             67: [],
+        }
+        float2 clippingRange.timeSamples = {
+            67: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            67: 50,
+        }
+        float focusDistance.timeSamples = {
+            67: 0,
+        }
+        float fStop.timeSamples = {
+            67: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            67: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            67: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            67: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            67: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            67: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            67: ( (-0.8090171267524003, 1.3748178262495976e-8, 0.5877850700904973, 0), (0.4408388136214947, 0.6614378206347228, 0.6067628448074107, 0), (-0.38878326742040237, 0.7500000062893257, -0.5351145312360034, 0), (-1.9439163208007815, 3.750000000000001, -2.6755726337432866, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam68"
+    {
+        float4[] clippingPlanes.timeSamples = {
             68: [],
+        }
+        float2 clippingRange.timeSamples = {
+            68: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            68: 50,
+        }
+        float focusDistance.timeSamples = {
+            68: 0,
+        }
+        float fStop.timeSamples = {
+            68: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            68: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            68: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            68: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            68: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            68: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            68: ( (-0.8090171007980185, 6.52697829117699e-9, 0.5877851058136545, 0), (0.49961734003938396, 0.5267826950102967, 0.6876645299633095, 0), (-0.3096350176390578, 0.8499999954339346, -0.4261762119287885, 0), (-1.5481750965118406, 4.249999999999999, -2.130881071090698, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam69"
+    {
+        float4[] clippingPlanes.timeSamples = {
             69: [],
+        }
+        float2 clippingRange.timeSamples = {
+            69: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            69: 50,
+        }
+        float focusDistance.timeSamples = {
+            69: 0,
+        }
+        float fStop.timeSamples = {
+            69: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            69: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            69: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            69: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            69: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            69: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            69: ( (-0.8090171540800264, -1.1325464538414213e-8, 0.5877850324772269, 0), (0.558395802764596, 0.3122497716963821, 0.7685663325507044, 0), (-0.18353575090193538, 0.9500000421450292, -0.2526154153358532, 0), (-0.9176787137985232, 4.749999999999999, -1.2630770206451416, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam70"
+    {
+        float4[] clippingPlanes.timeSamples = {
             70: [],
+        }
+        float2 clippingRange.timeSamples = {
+            70: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            70: 50,
+        }
+        float focusDistance.timeSamples = {
+            70: 0,
+        }
+        float fStop.timeSamples = {
+            70: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            70: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            70: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            70: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            70: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            70: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            70: ( (-0.9999999999999998, -1.1294282517973256e-17, -1.1924880679294578e-8, 0), (-5.962440791914483e-10, 0.9987492176293955, 0.050000002846700455, 0), (1.1909965248204644e-8, 0.05000000284670046, -0.9987492176293955, 0), (5.9549822850613054e-8, 0.25, -4.993745803833008, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam71"
+    {
+        float4[] clippingPlanes.timeSamples = {
             71: [],
+        }
+        float2 clippingRange.timeSamples = {
+            71: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            71: 50,
+        }
+        float focusDistance.timeSamples = {
+            71: 0,
+        }
+        float fStop.timeSamples = {
+            71: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            71: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            71: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            71: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            71: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            71: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            71: ( (-1, -1.0609951447714773e-16, -1.192488138971004e-8, 0), (-1.78873232623799e-9, 0.988685996500361, 0.15000000108029418, 0), (1.1789963224019151e-8, 0.15000000108029418, -0.9886859965003608, 0), (5.894981569554147e-8, 0.75, -4.943429946899413, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam72"
+    {
+        float4[] clippingPlanes.timeSamples = {
             72: [],
+        }
+        float2 clippingRange.timeSamples = {
+            72: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            72: 50,
+        }
+        float focusDistance.timeSamples = {
+            72: 0,
+        }
+        float fStop.timeSamples = {
+            72: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            72: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            72: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            72: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            72: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            72: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            72: ( (-0.9999999999999999, -1.0260988142311565e-17, -1.192488042136226e-8, 0), (-2.981219967471198e-9, 0.9682458397521349, 0.24999998760536618, 0), (1.1546215854960446e-8, 0.2499999876053662, -0.9682458397521349, 0), (5.7731082137024714e-8, 1.25, -4.841229438781738, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam73"
+    {
+        float4[] clippingPlanes.timeSamples = {
             73: [],
+        }
+        float2 clippingRange.timeSamples = {
+            73: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            73: 50,
+        }
+        float focusDistance.timeSamples = {
+            73: 0,
+        }
+        float fStop.timeSamples = {
+            73: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            73: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            73: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            73: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            73: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            73: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            73: ( (-1, 3.33474364976762e-17, -1.1924880676732808e-8, 0), (-4.17370865337083e-9, 0.936749685730701, 0.3500000375477591, 0), (1.1170628237977172e-8, 0.3500000375477591, -0.9367496857307009, 0), (5.585313900269285e-8, 1.7500001192092896, -4.683748245239258, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam74"
+    {
+        float4[] clippingPlanes.timeSamples = {
             74: [],
+        }
+        float2 clippingRange.timeSamples = {
+            74: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            74: 50,
+        }
+        float focusDistance.timeSamples = {
+            74: 0,
+        }
+        float fStop.timeSamples = {
+            74: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            74: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            74: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            74: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            74: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            74: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            74: ( (-0.9999999999999998, -8.667827942776774e-17, -1.1924881176875012e-8, 0), (-5.366196652980528e-9, 0.8930285530316103, 0.4500000038558534, 0), (1.0649259343453354e-8, 0.4500000038558535, -0.8930285530316103, 0), (5.324629626102253e-8, 2.25, -4.465142726898194, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam75"
+    {
+        float4[] clippingPlanes.timeSamples = {
             75: [],
+        }
+        float2 clippingRange.timeSamples = {
+            75: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            75: 50,
+        }
+        float focusDistance.timeSamples = {
+            75: 0,
+        }
+        float fStop.timeSamples = {
+            75: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            75: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            75: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            75: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            75: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            75: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            75: ( (-0.9999999999999998, -1.73704108716067e-16, -1.1924880439674025e-8, 0), (-6.5586844531190455e-9, 0.8351646507671211, 0.5500000055536657, 0), (9.959238512302773e-9, 0.5500000055536658, -0.8351646507671211, 0), (4.9796192058693116e-8, 2.75, -4.175823211669922, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam76"
+    {
+        float4[] clippingPlanes.timeSamples = {
             76: [],
+        }
+        float2 clippingRange.timeSamples = {
+            76: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            76: 50,
+        }
+        float focusDistance.timeSamples = {
+            76: 0,
+        }
+        float fStop.timeSamples = {
+            76: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            76: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            76: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            76: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            76: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            76: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            76: ( (-0.9999999999999999, -3.211071752307725e-16, -1.1924880563483994e-8, 0), (-7.751173060849269e-9, 0.7599341753608531, 0.6500000377835529, 0), (9.062124068568199e-9, 0.650000037783553, -0.7599341753608531, 0), (4.5310621032967915e-8, 3.250000238418579, -3.7996709346771245, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam77"
+    {
+        float4[] clippingPlanes.timeSamples = {
             77: [],
+        }
+        float2 clippingRange.timeSamples = {
+            77: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            77: 50,
+        }
+        float focusDistance.timeSamples = {
+            77: 0,
+        }
+        float fStop.timeSamples = {
+            77: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            77: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            77: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            77: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            77: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            77: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            77: ( (-0.9999999999999998, 3.3301776955043874e-17, -1.1924881259991409e-8, 0), (-8.943661101736806e-9, 0.6614378107675315, 0.7500000149913696, 0), (7.887567379247817e-9, 0.7500000149913697, -0.6614378107675315, 0), (3.9437836107936164e-8, 3.7499999999999996, -3.3071889877319336, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam78"
+    {
+        float4[] clippingPlanes.timeSamples = {
             78: [],
+        }
+        float2 clippingRange.timeSamples = {
+            78: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            78: 50,
+        }
+        float focusDistance.timeSamples = {
+            78: 0,
+        }
+        float fStop.timeSamples = {
+            78: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            78: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            78: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            78: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            78: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            78: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            78: ( (-0.9999999999999998, -3.9928462703681234e-16, -1.1924881414955271e-8, 0), (-1.0136149328912844e-8, 0.5267826990270846, 0.8499999929445526, 0), (6.281820877956128e-9, 0.8499999929445528, -0.5267826990270846, 0), (3.1409104650492736e-8, 4.25, -2.6339135169982915, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam79"
+    {
+        float4[] clippingPlanes.timeSamples = {
             79: [],
+        }
+        float2 clippingRange.timeSamples = {
+            79: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            79: 50,
+        }
+        float focusDistance.timeSamples = {
+            79: 0,
+        }
+        float fStop.timeSamples = {
+            79: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            79: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            79: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            79: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            79: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            79: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            79: ( (-0.9999999999999998, -4.689443382727299e-16, -1.1924881662423237e-8, 0), (-1.132863823532462e-8, 0.31224976990526937, 0.9500000427337391, 0), (3.7235411097420805e-9, 0.9500000427337392, -0.31224976990526937, 0), (1.861770471123237e-8, 4.750000000000001, -1.561248779296875, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam80"
+    {
+        float4[] clippingPlanes.timeSamples = {
             80: [],
+        }
+        float2 clippingRange.timeSamples = {
+            80: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            80: 50,
+        }
+        float focusDistance.timeSamples = {
+            80: 0,
+        }
+        float fStop.timeSamples = {
+            80: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            80: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            80: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            80: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            80: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            80: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            80: ( (-0.8090168576600405, -5.83698436806834e-10, -0.5877854404643531, 0), (-0.029389272578019505, 0.998749217764825, 0.0404508426548162, 0), (0.5870502488537148, 0.05000000014149828, -0.808004953763677, 0), (2.935251235961914, 0.25000000000000006, -4.040024757385255, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam81"
+    {
+        float4[] clippingPlanes.timeSamples = {
             81: [],
+        }
+        float2 clippingRange.timeSamples = {
+            81: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            81: 50,
+        }
+        float focusDistance.timeSamples = {
+            81: 0,
+        }
+        float fStop.timeSamples = {
+            81: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            81: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            81: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            81: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            81: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            81: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            81: ( (-0.8090168346353557, 5.412246109615103e-9, -0.5877854721550962, 0), (-0.08816781546194144, 0.9886859969307027, 0.1213525269197614, 0), (0.5811352661758349, 0.1499999982438078, -0.7998636152079922, 0), (2.905676364898682, 0.75, -3.9993181228637695, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam82"
+    {
+        float4[] clippingPlanes.timeSamples = {
             82: [],
+        }
+        float2 clippingRange.timeSamples = {
+            82: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            82: 50,
+        }
+        float focusDistance.timeSamples = {
+            82: 0,
+        }
+        float fStop.timeSamples = {
+            82: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            82: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            82: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            82: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            82: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            82: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            82: ( (-0.8090168180155056, 6.914776973232504e-9, -0.5877854950303435, 0), (-0.14694636248452, 0.9682458391244768, 0.20225420037839886, 0), (0.5691208612593938, 0.24999999003627466, -0.7833271668091363, 0), (2.845604419708252, 1.25, -3.9166359901428223, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam83"
+    {
+        float4[] clippingPlanes.timeSamples = {
             83: [],
+        }
+        float2 clippingRange.timeSamples = {
+            83: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            83: 50,
+        }
+        float focusDistance.timeSamples = {
+            83: 0,
+        }
+        float fStop.timeSamples = {
+            83: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            83: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            83: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            83: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            83: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            83: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            83: ( (-0.8090168298925249, 2.3951278599332333e-8, -0.587785478683039, 0), (-0.20572491347242777, 0.9367496908066311, 0.28315592303613146, 0), (0.5506078721989106, 0.35000002396240043, -0.7578462603318086, 0), (2.7530393600463863, 1.7500001192092898, -3.7892313003540044, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam84"
+    {
+        float4[] clippingPlanes.timeSamples = {
             84: [],
+        }
+        float2 clippingRange.timeSamples = {
+            84: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            84: 50,
+        }
+        float focusDistance.timeSamples = {
+            84: 0,
+        }
+        float fStop.timeSamples = {
+            84: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            84: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            84: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            84: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            84: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            84: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            84: ( (-0.8090168197371033, -5.425113497325993e-9, -0.5877854926607692, 0), (-0.26450348243475674, 0.8930285491296613, 0.3640575754180343, 0), (0.5249092237352563, 0.45000001159930136, -0.7224751181862796, 0), (2.62454605102539, 2.2499999999999996, -3.6123754978179923, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam85"
+    {
+        float4[] clippingPlanes.timeSamples = {
             85: [],
+        }
+        float2 clippingRange.timeSamples = {
+            85: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            85: 50,
+        }
+        float focusDistance.timeSamples = {
+            85: 0,
+        }
+        float fStop.timeSamples = {
+            85: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            85: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            85: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            85: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            85: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            85: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            85: ( (-0.8090168372945076, -1.0997922017530475e-9, -0.5877854684950901, 0), (-0.3232820046005751, 0.835164658698606, 0.4449592547214577, 0), (0.49089764969433936, 0.5499999935098556, -0.675662271156036, 0), (2.4544882774353027, 2.750000000000001, -3.3783113956451416, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam86"
+    {
+        float4[] clippingPlanes.timeSamples = {
             86: [],
+        }
+        float2 clippingRange.timeSamples = {
+            86: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            86: 50,
+        }
+        float focusDistance.timeSamples = {
+            86: 0,
+        }
+        float fStop.timeSamples = {
+            86: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            86: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            86: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            86: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            86: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            86: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            86: ( (-0.809016845134683, 1.5609586956344401e-9, -0.58778545770402, 0), (-0.3820605725724248, 0.7599341698080582, 0.5258609858544065, 0), (0.4466782546464013, 0.650000044275489, -0.6147995439717789, 0), (2.233391284942627, 3.25000023841858, -3.0739977359771724, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam87"
+    {
+        float4[] clippingPlanes.timeSamples = {
             87: [],
+        }
+        float2 clippingRange.timeSamples = {
+            87: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            87: 50,
+        }
+        float focusDistance.timeSamples = {
+            87: 0,
+        }
+        float fStop.timeSamples = {
+            87: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            87: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            87: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            87: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            87: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            87: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            87: ( (-0.8090168248416094, 2.8730189005621298e-8, -0.5877854856350231, 0), (-0.4408391097565583, 0.6614378067308702, 0.6067626448094027, 0), (0.38878355987907454, 0.7500000185513701, -0.5351143015662158, 0), (1.943917751312256, 3.750000000000001, -2.675571441650391, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam88"
+    {
+        float4[] clippingPlanes.timeSamples = {
             88: [],
+        }
+        float2 clippingRange.timeSamples = {
+            88: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            88: 50,
+        }
+        float focusDistance.timeSamples = {
+            88: 0,
+        }
+        float fStop.timeSamples = {
+            88: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            88: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            88: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            88: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            88: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            88: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            88: ( (-0.8090168540111851, 1.3728008341207246e-8, -0.5877854454865695, 0), (-0.499617621081827, 0.5267826923950913, 0.6876643277773792, 0), (0.30963520896432484, 0.8499999970546934, -0.4261760696902637, 0), (1.548176050186158, 4.250000000000001, -2.1308803558349614, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam89"
+    {
+        float4[] clippingPlanes.timeSamples = {
             89: [],
+        }
+        float2 clippingRange.timeSamples = {
+            89: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            89: 50,
+        }
+        float focusDistance.timeSamples = {
+            89: 0,
+        }
+        float fStop.timeSamples = {
+            89: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            89: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            89: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            89: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            89: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            89: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            89: ( (-0.8090168037295087, -1.3911283069933937e-8, -0.5877855146933186, 0), (-0.5583962672585995, 0.3122497716264736, 0.7685659951044397, 0), (0.18353588203659887, 0.9500000421680068, -0.25261531997452724, 0), (0.9176793694496157, 4.750000000000002, -1.2630765438079836, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam90"
+    {
+        float4[] clippingPlanes.timeSamples = {
             90: [],
+        }
+        float2 clippingRange.timeSamples = {
+            90: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            90: 50,
+        }
+        float focusDistance.timeSamples = {
+            90: 0,
+        }
+        float fStop.timeSamples = {
+            90: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            90: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            90: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            90: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            90: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            90: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            90: ( (-0.30901651778044, 1.3853451372169978e-10, -0.9510566711499642, 0), (-0.04755283594018641, 0.9987492176442361, 0.015450826808684596, 0), (0.9498671062484986, 0.05000000255026244, -0.30863000536577273, 0), (4.749335289001465, 0.25, -1.5431499481201167, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam91"
+    {
+        float4[] clippingPlanes.timeSamples = {
             91: [],
+        }
+        float2 clippingRange.timeSamples = {
+            91: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            91: 50,
+        }
+        float focusDistance.timeSamples = {
+            91: 0,
+        }
+        float fStop.timeSamples = {
+            91: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            91: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            91: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            91: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            91: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            91: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            91: ( (-0.30901652527093876, 2.988109482071621e-10, -0.9510566687161576, 0), (-0.1426585071236515, 0.9886859955623428, 0.04635248131599743, 0), (0.9402964093596903, 0.1500000072629959, -0.3055203108900861, 0), (4.701481819152832, 0.7500000000000001, -1.5276014804840092, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam92"
+    {
+        float4[] clippingPlanes.timeSamples = {
             92: [],
+        }
+        float2 clippingRange.timeSamples = {
+            92: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            92: 50,
+        }
+        float focusDistance.timeSamples = {
+            92: 0,
+        }
+        float fStop.timeSamples = {
+            92: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            92: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            92: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            92: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            92: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            92: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            92: ( (-0.3090164836325804, 4.859986746374999e-9, -0.9510566822452566, 0), (-0.23776417073367112, 0.9682458361102859, 0.07725412591197207, 0), (0.9208566728642871, 0.25000000171018627, -0.2992039224111576, 0), (4.604283332824706, 1.25, -1.4960196018218994, 0.9999999999999998) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam93"
+    {
+        float4[] clippingPlanes.timeSamples = {
             93: [],
+        }
+        float2 clippingRange.timeSamples = {
+            93: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            93: 50,
+        }
+        float focusDistance.timeSamples = {
+            93: 0,
+        }
+        float fStop.timeSamples = {
+            93: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            93: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            93: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            93: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            93: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            93: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            93: ( (-0.30901651645786565, 1.171623242868236e-9, -0.9510566715796938, 0), (-0.33286985765836596, 0.9367496907457286, 0.1081557892592021, 0), (0.890902043110658, 0.3500000241254017, -0.28947112583723, 0), (4.454510211944579, 1.7500001192092893, -1.4473556280136108, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam94"
+    {
+        float4[] clippingPlanes.timeSamples = {
             94: [],
+        }
+        float2 clippingRange.timeSamples = {
+            94: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            94: 50,
+        }
+        float focusDistance.timeSamples = {
+            94: 0,
+        }
+        float fStop.timeSamples = {
+            94: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            94: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            94: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            94: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            94: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            94: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            94: ( (-0.30901649981571333, 2.5774602036010567e-9, -0.9510566769870477, 0), (-0.4279754947524322, 0.8930285598387192, 0.13905742412325386, 0), (0.849320774933156, 0.44999999034709276, -0.2759605586937385, 0), (4.246603965759278, 2.2500000000000004, -1.3798028230667116, 1.0000000000000002) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam95"
+    {
+        float4[] clippingPlanes.timeSamples = {
             95: [],
+        }
+        float2 clippingRange.timeSamples = {
+            95: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            95: 50,
+        }
+        float focusDistance.timeSamples = {
+            95: 0,
+        }
+        float fStop.timeSamples = {
+            95: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            95: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            95: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            95: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            95: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            95: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            95: ( (-0.30901647948046723, -1.4507738538283025e-8, -0.9510566835943577, 0), (-0.5230811809476135, 0.8351646535751769, 0.1699590525894553, 0), (0.7942889232187166, 0.5500000012896863, -0.25807964862305016, 0), (3.9714446067810054, 2.75, -1.2903982400894163, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam96"
+    {
+        float4[] clippingPlanes.timeSamples = {
             96: [],
+        }
+        float2 clippingRange.timeSamples = {
+            96: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            96: 50,
+        }
+        float focusDistance.timeSamples = {
+            96: 0,
+        }
+        float fStop.timeSamples = {
+            96: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            96: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            96: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            96: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            96: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            96: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            96: ( (-0.30901649577616114, 2.427328060772282e-10, -0.9510566782995752, 0), (-0.6181868887058867, 0.7599341646280762, 0.20086073798321916, 0), (0.7227404623862963, 0.6500000503315579, -0.23483219242389824, 0), (3.6137022972106934, 3.250000238418579, -1.1741609573364262, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam97"
+    {
+        float4[] clippingPlanes.timeSamples = {
             97: [],
+        }
+        float2 clippingRange.timeSamples = {
+            97: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            97: 50,
+        }
+        float focusDistance.timeSamples = {
+            97: 0,
+        }
+        float fStop.timeSamples = {
+            97: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            97: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            97: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            97: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            97: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            97: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            97: ( (-0.30901650716351803, 4.541966608373473e-9, -0.9510566745996054, 0), (-0.7132925129305723, 0.6614378183364075, 0.2317623857996884, 0), (0.6290648530140985, 0.7500000083162494, -0.20439520108842332, 0), (3.145324230194093, 3.750000000000001, -1.021975994110108, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam98"
+    {
+        float4[] clippingPlanes.timeSamples = {
             98: [],
+        }
+        float2 clippingRange.timeSamples = {
+            98: (1, 1000000),
+        }
+        float focalLength.timeSamples = {
+            98: 50,
+        }
+        float focusDistance.timeSamples = {
+            98: 0,
+        }
+        float fStop.timeSamples = {
+            98: 0,
+        }
+        float horizontalAperture.timeSamples = {
+            98: 20.955,
+        }
+        float horizontalApertureOffset.timeSamples = {
+            98: 0,
+        }
+        token projection = "perspective"
+        token projection.timeSamples = {
+            98: "perspective",
+        }
+        float verticalAperture.timeSamples = {
+            98: 15.2908,
+        }
+        float verticalApertureOffset.timeSamples = {
+            98: 0,
+        }
+        matrix4d xformOp:transform.timeSamples = {
+            98: ( (-0.3090165480302414, 1.0300355929304667e-8, -0.9510566613212237, 0), (-0.8083981698124002, 0.5267826717520553, 0.26266407402941044, 0), (0.5010001717439175, 0.8500000098480976, -0.16278455446017906, 0), (2.505000829696655, 4.25, -0.8139227628707886, 1) ),
+        }
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+
+    def Camera "MyCam99"
+    {
+        float4[] clippingPlanes.timeSamples = {
             99: [],
         }
         float2 clippingRange.timeSamples = {
-            0: (1, 1000000),
-            1: (1, 1000000),
-            2: (1, 1000000),
-            3: (1, 1000000),
-            4: (1, 1000000),
-            5: (1, 1000000),
-            6: (1, 1000000),
-            7: (1, 1000000),
-            8: (1, 1000000),
-            9: (1, 1000000),
-            10: (1, 1000000),
-            11: (1, 1000000),
-            12: (1, 1000000),
-            13: (1, 1000000),
-            14: (1, 1000000),
-            15: (1, 1000000),
-            16: (1, 1000000),
-            17: (1, 1000000),
-            18: (1, 1000000),
-            19: (1, 1000000),
-            20: (1, 1000000),
-            21: (1, 1000000),
-            22: (1, 1000000),
-            23: (1, 1000000),
-            24: (1, 1000000),
-            25: (1, 1000000),
-            26: (1, 1000000),
-            27: (1, 1000000),
-            28: (1, 1000000),
-            29: (1, 1000000),
-            30: (1, 1000000),
-            31: (1, 1000000),
-            32: (1, 1000000),
-            33: (1, 1000000),
-            34: (1, 1000000),
-            35: (1, 1000000),
-            36: (1, 1000000),
-            37: (1, 1000000),
-            38: (1, 1000000),
-            39: (1, 1000000),
-            40: (1, 1000000),
-            41: (1, 1000000),
-            42: (1, 1000000),
-            43: (1, 1000000),
-            44: (1, 1000000),
-            45: (1, 1000000),
-            46: (1, 1000000),
-            47: (1, 1000000),
-            48: (1, 1000000),
-            49: (1, 1000000),
-            50: (1, 1000000),
-            51: (1, 1000000),
-            52: (1, 1000000),
-            53: (1, 1000000),
-            54: (1, 1000000),
-            55: (1, 1000000),
-            56: (1, 1000000),
-            57: (1, 1000000),
-            58: (1, 1000000),
-            59: (1, 1000000),
-            60: (1, 1000000),
-            61: (1, 1000000),
-            62: (1, 1000000),
-            63: (1, 1000000),
-            64: (1, 1000000),
-            65: (1, 1000000),
-            66: (1, 1000000),
-            67: (1, 1000000),
-            68: (1, 1000000),
-            69: (1, 1000000),
-            70: (1, 1000000),
-            71: (1, 1000000),
-            72: (1, 1000000),
-            73: (1, 1000000),
-            74: (1, 1000000),
-            75: (1, 1000000),
-            76: (1, 1000000),
-            77: (1, 1000000),
-            78: (1, 1000000),
-            79: (1, 1000000),
-            80: (1, 1000000),
-            81: (1, 1000000),
-            82: (1, 1000000),
-            83: (1, 1000000),
-            84: (1, 1000000),
-            85: (1, 1000000),
-            86: (1, 1000000),
-            87: (1, 1000000),
-            88: (1, 1000000),
-            89: (1, 1000000),
-            90: (1, 1000000),
-            91: (1, 1000000),
-            92: (1, 1000000),
-            93: (1, 1000000),
-            94: (1, 1000000),
-            95: (1, 1000000),
-            96: (1, 1000000),
-            97: (1, 1000000),
-            98: (1, 1000000),
             99: (1, 1000000),
         }
         float focalLength.timeSamples = {
-            0: 50,
-            1: 50,
-            2: 50,
-            3: 50,
-            4: 50,
-            5: 50,
-            6: 50,
-            7: 50,
-            8: 50,
-            9: 50,
-            10: 50,
-            11: 50,
-            12: 50,
-            13: 50,
-            14: 50,
-            15: 50,
-            16: 50,
-            17: 50,
-            18: 50,
-            19: 50,
-            20: 50,
-            21: 50,
-            22: 50,
-            23: 50,
-            24: 50,
-            25: 50,
-            26: 50,
-            27: 50,
-            28: 50,
-            29: 50,
-            30: 50,
-            31: 50,
-            32: 50,
-            33: 50,
-            34: 50,
-            35: 50,
-            36: 50,
-            37: 50,
-            38: 50,
-            39: 50,
-            40: 50,
-            41: 50,
-            42: 50,
-            43: 50,
-            44: 50,
-            45: 50,
-            46: 50,
-            47: 50,
-            48: 50,
-            49: 50,
-            50: 50,
-            51: 50,
-            52: 50,
-            53: 50,
-            54: 50,
-            55: 50,
-            56: 50,
-            57: 50,
-            58: 50,
-            59: 50,
-            60: 50,
-            61: 50,
-            62: 50,
-            63: 50,
-            64: 50,
-            65: 50,
-            66: 50,
-            67: 50,
-            68: 50,
-            69: 50,
-            70: 50,
-            71: 50,
-            72: 50,
-            73: 50,
-            74: 50,
-            75: 50,
-            76: 50,
-            77: 50,
-            78: 50,
-            79: 50,
-            80: 50,
-            81: 50,
-            82: 50,
-            83: 50,
-            84: 50,
-            85: 50,
-            86: 50,
-            87: 50,
-            88: 50,
-            89: 50,
-            90: 50,
-            91: 50,
-            92: 50,
-            93: 50,
-            94: 50,
-            95: 50,
-            96: 50,
-            97: 50,
-            98: 50,
             99: 50,
         }
         float focusDistance.timeSamples = {
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            13: 0,
-            14: 0,
-            15: 0,
-            16: 0,
-            17: 0,
-            18: 0,
-            19: 0,
-            20: 0,
-            21: 0,
-            22: 0,
-            23: 0,
-            24: 0,
-            25: 0,
-            26: 0,
-            27: 0,
-            28: 0,
-            29: 0,
-            30: 0,
-            31: 0,
-            32: 0,
-            33: 0,
-            34: 0,
-            35: 0,
-            36: 0,
-            37: 0,
-            38: 0,
-            39: 0,
-            40: 0,
-            41: 0,
-            42: 0,
-            43: 0,
-            44: 0,
-            45: 0,
-            46: 0,
-            47: 0,
-            48: 0,
-            49: 0,
-            50: 0,
-            51: 0,
-            52: 0,
-            53: 0,
-            54: 0,
-            55: 0,
-            56: 0,
-            57: 0,
-            58: 0,
-            59: 0,
-            60: 0,
-            61: 0,
-            62: 0,
-            63: 0,
-            64: 0,
-            65: 0,
-            66: 0,
-            67: 0,
-            68: 0,
-            69: 0,
-            70: 0,
-            71: 0,
-            72: 0,
-            73: 0,
-            74: 0,
-            75: 0,
-            76: 0,
-            77: 0,
-            78: 0,
-            79: 0,
-            80: 0,
-            81: 0,
-            82: 0,
-            83: 0,
-            84: 0,
-            85: 0,
-            86: 0,
-            87: 0,
-            88: 0,
-            89: 0,
-            90: 0,
-            91: 0,
-            92: 0,
-            93: 0,
-            94: 0,
-            95: 0,
-            96: 0,
-            97: 0,
-            98: 0,
             99: 0,
         }
         float fStop.timeSamples = {
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            13: 0,
-            14: 0,
-            15: 0,
-            16: 0,
-            17: 0,
-            18: 0,
-            19: 0,
-            20: 0,
-            21: 0,
-            22: 0,
-            23: 0,
-            24: 0,
-            25: 0,
-            26: 0,
-            27: 0,
-            28: 0,
-            29: 0,
-            30: 0,
-            31: 0,
-            32: 0,
-            33: 0,
-            34: 0,
-            35: 0,
-            36: 0,
-            37: 0,
-            38: 0,
-            39: 0,
-            40: 0,
-            41: 0,
-            42: 0,
-            43: 0,
-            44: 0,
-            45: 0,
-            46: 0,
-            47: 0,
-            48: 0,
-            49: 0,
-            50: 0,
-            51: 0,
-            52: 0,
-            53: 0,
-            54: 0,
-            55: 0,
-            56: 0,
-            57: 0,
-            58: 0,
-            59: 0,
-            60: 0,
-            61: 0,
-            62: 0,
-            63: 0,
-            64: 0,
-            65: 0,
-            66: 0,
-            67: 0,
-            68: 0,
-            69: 0,
-            70: 0,
-            71: 0,
-            72: 0,
-            73: 0,
-            74: 0,
-            75: 0,
-            76: 0,
-            77: 0,
-            78: 0,
-            79: 0,
-            80: 0,
-            81: 0,
-            82: 0,
-            83: 0,
-            84: 0,
-            85: 0,
-            86: 0,
-            87: 0,
-            88: 0,
-            89: 0,
-            90: 0,
-            91: 0,
-            92: 0,
-            93: 0,
-            94: 0,
-            95: 0,
-            96: 0,
-            97: 0,
-            98: 0,
             99: 0,
         }
         float horizontalAperture.timeSamples = {
-            0: 20.955,
-            1: 20.955,
-            2: 20.955,
-            3: 20.955,
-            4: 20.955,
-            5: 20.955,
-            6: 20.955,
-            7: 20.955,
-            8: 20.955,
-            9: 20.955,
-            10: 20.955,
-            11: 20.955,
-            12: 20.955,
-            13: 20.955,
-            14: 20.955,
-            15: 20.955,
-            16: 20.955,
-            17: 20.955,
-            18: 20.955,
-            19: 20.955,
-            20: 20.955,
-            21: 20.955,
-            22: 20.955,
-            23: 20.955,
-            24: 20.955,
-            25: 20.955,
-            26: 20.955,
-            27: 20.955,
-            28: 20.955,
-            29: 20.955,
-            30: 20.955,
-            31: 20.955,
-            32: 20.955,
-            33: 20.955,
-            34: 20.955,
-            35: 20.955,
-            36: 20.955,
-            37: 20.955,
-            38: 20.955,
-            39: 20.955,
-            40: 20.955,
-            41: 20.955,
-            42: 20.955,
-            43: 20.955,
-            44: 20.955,
-            45: 20.955,
-            46: 20.955,
-            47: 20.955,
-            48: 20.955,
-            49: 20.955,
-            50: 20.955,
-            51: 20.955,
-            52: 20.955,
-            53: 20.955,
-            54: 20.955,
-            55: 20.955,
-            56: 20.955,
-            57: 20.955,
-            58: 20.955,
-            59: 20.955,
-            60: 20.955,
-            61: 20.955,
-            62: 20.955,
-            63: 20.955,
-            64: 20.955,
-            65: 20.955,
-            66: 20.955,
-            67: 20.955,
-            68: 20.955,
-            69: 20.955,
-            70: 20.955,
-            71: 20.955,
-            72: 20.955,
-            73: 20.955,
-            74: 20.955,
-            75: 20.955,
-            76: 20.955,
-            77: 20.955,
-            78: 20.955,
-            79: 20.955,
-            80: 20.955,
-            81: 20.955,
-            82: 20.955,
-            83: 20.955,
-            84: 20.955,
-            85: 20.955,
-            86: 20.955,
-            87: 20.955,
-            88: 20.955,
-            89: 20.955,
-            90: 20.955,
-            91: 20.955,
-            92: 20.955,
-            93: 20.955,
-            94: 20.955,
-            95: 20.955,
-            96: 20.955,
-            97: 20.955,
-            98: 20.955,
             99: 20.955,
         }
         float horizontalApertureOffset.timeSamples = {
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            13: 0,
-            14: 0,
-            15: 0,
-            16: 0,
-            17: 0,
-            18: 0,
-            19: 0,
-            20: 0,
-            21: 0,
-            22: 0,
-            23: 0,
-            24: 0,
-            25: 0,
-            26: 0,
-            27: 0,
-            28: 0,
-            29: 0,
-            30: 0,
-            31: 0,
-            32: 0,
-            33: 0,
-            34: 0,
-            35: 0,
-            36: 0,
-            37: 0,
-            38: 0,
-            39: 0,
-            40: 0,
-            41: 0,
-            42: 0,
-            43: 0,
-            44: 0,
-            45: 0,
-            46: 0,
-            47: 0,
-            48: 0,
-            49: 0,
-            50: 0,
-            51: 0,
-            52: 0,
-            53: 0,
-            54: 0,
-            55: 0,
-            56: 0,
-            57: 0,
-            58: 0,
-            59: 0,
-            60: 0,
-            61: 0,
-            62: 0,
-            63: 0,
-            64: 0,
-            65: 0,
-            66: 0,
-            67: 0,
-            68: 0,
-            69: 0,
-            70: 0,
-            71: 0,
-            72: 0,
-            73: 0,
-            74: 0,
-            75: 0,
-            76: 0,
-            77: 0,
-            78: 0,
-            79: 0,
-            80: 0,
-            81: 0,
-            82: 0,
-            83: 0,
-            84: 0,
-            85: 0,
-            86: 0,
-            87: 0,
-            88: 0,
-            89: 0,
-            90: 0,
-            91: 0,
-            92: 0,
-            93: 0,
-            94: 0,
-            95: 0,
-            96: 0,
-            97: 0,
-            98: 0,
             99: 0,
         }
         token projection = "perspective"
         token projection.timeSamples = {
-            0: "perspective",
-            1: "perspective",
-            2: "perspective",
-            3: "perspective",
-            4: "perspective",
-            5: "perspective",
-            6: "perspective",
-            7: "perspective",
-            8: "perspective",
-            9: "perspective",
-            10: "perspective",
-            11: "perspective",
-            12: "perspective",
-            13: "perspective",
-            14: "perspective",
-            15: "perspective",
-            16: "perspective",
-            17: "perspective",
-            18: "perspective",
-            19: "perspective",
-            20: "perspective",
-            21: "perspective",
-            22: "perspective",
-            23: "perspective",
-            24: "perspective",
-            25: "perspective",
-            26: "perspective",
-            27: "perspective",
-            28: "perspective",
-            29: "perspective",
-            30: "perspective",
-            31: "perspective",
-            32: "perspective",
-            33: "perspective",
-            34: "perspective",
-            35: "perspective",
-            36: "perspective",
-            37: "perspective",
-            38: "perspective",
-            39: "perspective",
-            40: "perspective",
-            41: "perspective",
-            42: "perspective",
-            43: "perspective",
-            44: "perspective",
-            45: "perspective",
-            46: "perspective",
-            47: "perspective",
-            48: "perspective",
-            49: "perspective",
-            50: "perspective",
-            51: "perspective",
-            52: "perspective",
-            53: "perspective",
-            54: "perspective",
-            55: "perspective",
-            56: "perspective",
-            57: "perspective",
-            58: "perspective",
-            59: "perspective",
-            60: "perspective",
-            61: "perspective",
-            62: "perspective",
-            63: "perspective",
-            64: "perspective",
-            65: "perspective",
-            66: "perspective",
-            67: "perspective",
-            68: "perspective",
-            69: "perspective",
-            70: "perspective",
-            71: "perspective",
-            72: "perspective",
-            73: "perspective",
-            74: "perspective",
-            75: "perspective",
-            76: "perspective",
-            77: "perspective",
-            78: "perspective",
-            79: "perspective",
-            80: "perspective",
-            81: "perspective",
-            82: "perspective",
-            83: "perspective",
-            84: "perspective",
-            85: "perspective",
-            86: "perspective",
-            87: "perspective",
-            88: "perspective",
-            89: "perspective",
-            90: "perspective",
-            91: "perspective",
-            92: "perspective",
-            93: "perspective",
-            94: "perspective",
-            95: "perspective",
-            96: "perspective",
-            97: "perspective",
-            98: "perspective",
             99: "perspective",
         }
         float verticalAperture.timeSamples = {
-            0: 15.2908,
-            1: 15.2908,
-            2: 15.2908,
-            3: 15.2908,
-            4: 15.2908,
-            5: 15.2908,
-            6: 15.2908,
-            7: 15.2908,
-            8: 15.2908,
-            9: 15.2908,
-            10: 15.2908,
-            11: 15.2908,
-            12: 15.2908,
-            13: 15.2908,
-            14: 15.2908,
-            15: 15.2908,
-            16: 15.2908,
-            17: 15.2908,
-            18: 15.2908,
-            19: 15.2908,
-            20: 15.2908,
-            21: 15.2908,
-            22: 15.2908,
-            23: 15.2908,
-            24: 15.2908,
-            25: 15.2908,
-            26: 15.2908,
-            27: 15.2908,
-            28: 15.2908,
-            29: 15.2908,
-            30: 15.2908,
-            31: 15.2908,
-            32: 15.2908,
-            33: 15.2908,
-            34: 15.2908,
-            35: 15.2908,
-            36: 15.2908,
-            37: 15.2908,
-            38: 15.2908,
-            39: 15.2908,
-            40: 15.2908,
-            41: 15.2908,
-            42: 15.2908,
-            43: 15.2908,
-            44: 15.2908,
-            45: 15.2908,
-            46: 15.2908,
-            47: 15.2908,
-            48: 15.2908,
-            49: 15.2908,
-            50: 15.2908,
-            51: 15.2908,
-            52: 15.2908,
-            53: 15.2908,
-            54: 15.2908,
-            55: 15.2908,
-            56: 15.2908,
-            57: 15.2908,
-            58: 15.2908,
-            59: 15.2908,
-            60: 15.2908,
-            61: 15.2908,
-            62: 15.2908,
-            63: 15.2908,
-            64: 15.2908,
-            65: 15.2908,
-            66: 15.2908,
-            67: 15.2908,
-            68: 15.2908,
-            69: 15.2908,
-            70: 15.2908,
-            71: 15.2908,
-            72: 15.2908,
-            73: 15.2908,
-            74: 15.2908,
-            75: 15.2908,
-            76: 15.2908,
-            77: 15.2908,
-            78: 15.2908,
-            79: 15.2908,
-            80: 15.2908,
-            81: 15.2908,
-            82: 15.2908,
-            83: 15.2908,
-            84: 15.2908,
-            85: 15.2908,
-            86: 15.2908,
-            87: 15.2908,
-            88: 15.2908,
-            89: 15.2908,
-            90: 15.2908,
-            91: 15.2908,
-            92: 15.2908,
-            93: 15.2908,
-            94: 15.2908,
-            95: 15.2908,
-            96: 15.2908,
-            97: 15.2908,
-            98: 15.2908,
             99: 15.2908,
         }
         float verticalApertureOffset.timeSamples = {
-            0: 0,
-            1: 0,
-            2: 0,
-            3: 0,
-            4: 0,
-            5: 0,
-            6: 0,
-            7: 0,
-            8: 0,
-            9: 0,
-            10: 0,
-            11: 0,
-            12: 0,
-            13: 0,
-            14: 0,
-            15: 0,
-            16: 0,
-            17: 0,
-            18: 0,
-            19: 0,
-            20: 0,
-            21: 0,
-            22: 0,
-            23: 0,
-            24: 0,
-            25: 0,
-            26: 0,
-            27: 0,
-            28: 0,
-            29: 0,
-            30: 0,
-            31: 0,
-            32: 0,
-            33: 0,
-            34: 0,
-            35: 0,
-            36: 0,
-            37: 0,
-            38: 0,
-            39: 0,
-            40: 0,
-            41: 0,
-            42: 0,
-            43: 0,
-            44: 0,
-            45: 0,
-            46: 0,
-            47: 0,
-            48: 0,
-            49: 0,
-            50: 0,
-            51: 0,
-            52: 0,
-            53: 0,
-            54: 0,
-            55: 0,
-            56: 0,
-            57: 0,
-            58: 0,
-            59: 0,
-            60: 0,
-            61: 0,
-            62: 0,
-            63: 0,
-            64: 0,
-            65: 0,
-            66: 0,
-            67: 0,
-            68: 0,
-            69: 0,
-            70: 0,
-            71: 0,
-            72: 0,
-            73: 0,
-            74: 0,
-            75: 0,
-            76: 0,
-            77: 0,
-            78: 0,
-            79: 0,
-            80: 0,
-            81: 0,
-            82: 0,
-            83: 0,
-            84: 0,
-            85: 0,
-            86: 0,
-            87: 0,
-            88: 0,
-            89: 0,
-            90: 0,
-            91: 0,
-            92: 0,
-            93: 0,
-            94: 0,
-            95: 0,
-            96: 0,
-            97: 0,
-            98: 0,
             99: 0,
         }
         matrix4d xformOp:transform.timeSamples = {
-            0: ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 5, 1) ),
-            1: ( (-0.7847798687928741, 1.1433521490689105e-9, 0.6197746022042526, 0), (0.12155170468675439, 0.9805794158035377, 0.15391293769575373, 0), (-0.6077382171833392, 0.19612243446988137, -0.7695389854142697, 0), (-3.0386910438537593, 0.9806121587753294, -3.847694873809814, 1) ),
-            2: ( (0.8847575490293534, -7.390606654444911e-9, -0.46605158452211226, 0), (-0.1461148081570619, 0.9495827861619716, -0.2773860037242197, 0), (0.4425545641757597, 0.3135163986538308, 0.8401505374052534, 0), (2.2127728462219243, 1.5675820112228398, 4.20075273513794, 1.0000000000000002) ),
-            3: ( (0.2880152175209262, 1.4038449569486738e-9, 0.9576258321893647, 0), (0.6055642595327574, 0.774674670718102, -0.18212930056512922, 0), (-0.741848476478126, 0.6323599880983932, 0.2231180929447077, 0), (-3.709242343902589, 3.161799907684327, 1.1155904531478886, 1.0000000000000002) ),
-            4: ( (-0.985388938938054, 1.0466560673716432e-9, 0.17031922680230818, 0), (0.06351348176352839, 0.9278681368855676, 0.3674598728933268, 0), (-0.158033783264244, 0.37290846135815414, -0.9143109989465753, 0), (-0.7901689410209658, 1.864542365074158, -4.571555137634278, 1) ),
-            5: ( (0.910692372505265, -1.0057676635977233e-9, -0.4130852244522089, 0), (-0.2447144764017608, 0.8056390241611505, -0.5395003130565185, 0), (0.33279757766567925, 0.5924067544759, 0.7336893140500186, 0), (1.6639878749847408, 2.962033748626708, 3.6684465408325195, 1) ),
-            6: ( (-0.6674671366994502, 2.0779728632236427e-8, -0.7446392558992823, 0), (-0.6524258688478819, 0.48201368707193004, 0.584810474541462, 0), (0.35892632542671454, 0.8761636864623661, -0.3217282820026135, 0), (1.7946316003799438, 4.3808183670043945, -1.6086413860321043, 1.0000000000000002) ),
-            7: ( (0.12440966084077684, 8.047162554369878e-9, -0.9922309389902548, 0), (-0.7480130439913918, 0.6570237186847067, -0.09378869390524362, 0), (0.6519192605746627, 0.7538699046159881, 0.0817401040252929, 0), (3.259596347808837, 3.769349575042724, 0.4087005257606505, 1) ),
-            8: ( (-0.09535805107168471, 3.334932614784681e-9, -0.9954430380970125, 0), (-0.5879447309318836, 0.8069379371012456, 0.05632192322907199, 0), (0.8032607518516295, 0.5906362380236979, -0.07694802705702439, 0), (4.016303539276123, 2.9531810283660884, -0.38474011421203613, 1) ),
-            9: ( (0.8426900359162699, -1.4585622876150953e-8, -0.5383990187281511, 0), (-0.42137418723469894, 0.6224708964372873, -0.6595254183281014, 0), (0.335137729448257, 0.7826429473831347, 0.5245500159295652, 0), (1.6756886243820197, 3.9132146835327153, 2.622750043869019, 1.0000000000000002) ),
-            10: ( (0.9995672392107456, -1.7750869697741306e-10, -0.02941656500354711, 0), (-0.013635100539831392, 0.8860876221899733, -0.4633171805955262, 0), (0.026065654219232664, 0.4635177729081364, 0.8857041582088254, 0), (0.13032826781272883, 2.3175888061523438, 4.428520679473876, 0.9999999999999998) ),
-            11: ( (0.9950058813871596, 4.378561187234898e-9, -0.09981631131714763, 0), (-0.06817501855830993, 0.7304139258022655, -0.6795937491168504, 0), (0.07290722083261608, 0.6830047562016845, 0.726766152318847, 0), (0.3645361065864562, 3.4150238037109375, 3.6338307857513428, 1) ),
-            12: ( (-0.07221404193915756, -1.6532565108584593e-9, -0.9973891578249736, 0), (-0.7709179211198123, 0.6344840744446941, 0.05581682696434402, 0), (0.6328275365714716, 0.7729359347811826, -0.04581866083620176, 0), (3.164137601852418, 3.8646795749664316, -0.22909329831600192, 1.0000000000000002) ),
-            13: ( (0.30553293280011246, -7.110734556725619e-9, -0.952181509468947, 0), (-0.6407157349026105, 0.7397403382503811, -0.2055908047881026, 0), (0.7043670733522186, 0.6728924371437174, 0.2260150305002266, 0), (3.5218355655670166, 3.3644623756408696, 1.130075216293335, 1) ),
-            14: ( (-0.8321411960738251, -1.6407966374476506e-9, 0.5545638194083922, 0), (0.4351799323088088, 0.6198444379601113, 0.6530017605225995, 0), (-0.3437433000256506, 0.7847247114306481, -0.5157980912697933, 0), (-1.7187165021896362, 3.9236235618591313, -2.5789904594421387, 1.0000000000000002) ),
-            15: ( (-0.9751149940689225, -6.39921865497328e-11, 0.22169968051840921, 0), (0.10265283044350401, 0.8863444286454069, 0.45150409766820926, 0), (-0.19650227668885145, 0.46302651523346555, -0.8642877422750199, 0), (-0.9825114011764523, 2.315132617950439, -4.321438789367676, 1) ),
-            16: ( (0.33227415068994354, -1.7560097542723688e-9, 0.9431828501320815, 0), (0.5807065208228098, 0.7879898988754669, -0.2045772615519592, 0), (-0.743218558337414, 0.6156881672325946, 0.2618286754208267, 0), (-3.7160925865173335, 3.0784406661987305, 1.309143304824829, 1) ),
-            17: ( (0.41900654757512457, 9.82328166032609e-9, 0.907983211898312, 0), (0.4673637562320317, 0.8573539480789195, -0.21567412240270198, 0), (-0.7784629936290235, 0.5147273139376708, 0.3592369132434048, 0), (-3.8923149108886714, 2.5736365318298335, 1.7961845397949214, 0.9999999999999999) ),
-            18: ( (-0.9263198724015547, 7.66581395583721e-9, 0.3767379646305472, 0), (0.35343645724590445, 0.3462310008096307, 0.8690263314582739, 0), (-0.13043835587522343, 0.9381492919990728, -0.3207206592008179, 0), (-0.652191758155823, 4.690746307373047, -1.6036032438278203, 1) ),
-            19: ( (-0.864424290991525, -1.0283162321655936e-8, -0.5027630109144858, 0), (-0.1717397023484547, 0.9398484346182745, 0.29528019673327777, 0), (0.4725210257555358, 0.3415917445512683, -0.8124278185004237, 0), (2.3626050949096684, 1.7079586982727049, -4.06213903427124, 1) ),
-            20: ( (0.8904633424117231, -4.360481420384588e-9, 0.4550549810967268, 0), (0.23101764753955206, 0.8615517596284776, -0.45206129231152403, 0), (-0.39205341772038377, 0.5076697405608038, 0.7671802605468239, 0), (-1.9602670669555666, 2.53834867477417, 3.8359012603759775, 1) ),
-            21: ( (-0.2131445942056363, 8.37593482072574e-9, -0.9770206660869128, 0), (-0.7872051224965743, 0.5922965710170651, 0.17173487437495208, 0), (0.5786859917745275, 0.8057200332382377, -0.12624480568524335, 0), (2.89342999458313, 4.028600215911865, -0.6312240362167356, 1) ),
-            22: ( (0.6936220181623656, -9.628016328644408e-9, -0.7203391533995406, 0), (-0.6942952962880183, 0.26646350197910185, -0.668544122452188, 0), (0.19194409986425673, 0.9638450093832686, 0.18482494532466967, 0), (0.9597205519676206, 4.819225311279296, 0.924124777317047, 0.9999999999999999) ),
-            23: ( (0.7952156861709712, 4.623965099703752e-9, -0.6063266549209521, 0), (-0.3058913211935077, 0.8634121540491655, -0.40118568251954123, 0), (0.5235098013276558, 0.5044992093553565, 0.6865988899449944, 0), (2.617548942565918, 2.522495985031128, 3.4329943656921382, 1) ),
-            24: ( (0.19551947715387946, -1.5732706942772617e-9, 0.9806998185242382, 0), (0.5047855326802926, 0.857358509375885, -0.10063772849897501, 0), (-0.8408113343968113, 0.5147197163512974, 0.1676302882807668, 0), (-4.204056739807129, 2.5735986232757564, 0.8381514549255373, 1) ),
-            25: ( (0.6119372388496681, 1.2993923187432083e-8, 0.790906325495658, 0), (0.42166195549598123, 0.8460284958841452, -0.3262468075542129, 0), (-0.6691292931835738, 0.5331376784208846, 0.5177163362804386, 0), (-3.345646619796753, 2.665688514709473, 2.588581800460815, 1) ),
-            26: ( (0.9729476378574555, 5.509593142827287e-9, 0.2310257431274662, 0), (0.20485504887416192, 0.46230766315526156, -0.8627317274441032, 0), (-0.10680497618726738, 0.8867195862209888, 0.4498011477016438, 0), (-0.5340248942375182, 4.433598041534424, 2.2490057945251465, 1) ),
-            27: ( (-0.8115672285764269, -8.177166721523579e-10, -0.5842590465716195, 0), (-0.5463263858256293, 0.35444830325431137, 0.7588767228416258, 0), (0.20708962709774606, 0.9350756120871402, -0.2876586275924586, 0), (1.0354481935501096, 4.6753783226013175, -1.438293218612671, 1) ),
-            28: ( (0.9994327367498259, 1.2835999971261283e-10, -0.0336779558873965, 0), (-0.029970323195288147, 0.45613769519083475, -0.8894043977592889, 0), (0.015361785063051695, 0.8899092105523987, 0.4558789450431808, 0), (0.07680892199277876, 4.449545860290527, 2.2793946266174316, 1) ),
-            29: ( (-0.8003171960418313, 2.479542504651988e-8, 0.5995768388786715, 0), (0.2581403746119827, 0.9025726556454067, 0.34456660934626765, 0), (-0.5411616511865251, 0.43053757243845464, -0.7223444233908615, 0), (-2.705808162689209, 2.1526877880096436, -3.611721992492676, 1) ),
-            30: ( (0.9532448629306349, -6.039101441146498e-10, 0.30219899287779683, 0), (0.184957968779807, 0.7908265591224871, -0.5834242908650059, 0), (-0.23898698935549328, 0.6120403200659963, 0.753851355064319, 0), (-1.1949349641799927, 3.0602016448974605, 3.7692568302154537, 0.9999999999999998) ),
-            31: ( (-0.7147116298782168, -1.1465039223557127e-8, 0.6994192491752157, 0), (0.5219177457560824, 0.6657040325435775, 0.533329173888049, 0), (-0.4656062207291823, 0.7462158809990709, -0.4757864081319144, 0), (-2.3280310630798335, 3.731079339981079, -2.3789319992065425, 1) ),
-            32: ( (0.2059751511663595, 5.7897068389545225e-9, 0.9785572221909127, 0), (0.685162412724389, 0.7139701535557555, -0.14421888926650658, 0), (-0.6986606510257247, 0.7001761348629151, 0.14706010634002614, 0), (-3.4933032989501958, 3.500880718231202, 0.7353005409240724, 1.0000000000000002) ),
-            33: ( (0.8788270221531904, -9.487166052757345e-9, 0.47714050879521425, 0), (0.30010804687686055, 0.7774279192982424, -0.5527576236429143, 0), (-0.37094234772146467, 0.6289720425389393, 0.6832246661027999, 0), (-1.8547117710113528, 3.14486026763916, 3.416123390197754, 1) ),
-            34: ( (0.7603327803368478, 1.4474316856194495e-8, 0.6495337274886029, 0), (0.49494981773034286, 0.6475677387780081, -0.579379583367103, 0), (-0.4206170955559692, 0.7620078895221081, 0.4923669721174678, 0), (-2.1030855178833012, 3.810039520263672, 2.4618349075317374, 0.9999999999999999) ),
-            35: ( (-0.4646437698459535, -8.443556340220761e-10, -0.885497694600805, 0), (-0.877377941520363, 0.1351122778274544, 0.46038312318520924, 0), (0.11964161013974728, 0.9908302944401111, -0.06277907886304127, 0), (0.5982080698013305, 4.954151630401611, -0.3138954043388366, 1) ),
-            36: ( (-0.07605386219079809, 3.554953699469456e-9, -0.9971037107773009, 0), (-0.48590169741239775, 0.87322731586916, 0.03706204624266385, 0), (0.8706981971369954, 0.48731309732033945, -0.06641230821499557, 0), (4.353490829467773, 2.436565399169922, -0.33206152915954595, 1) ),
-            37: ( (0.7543167571031911, 5.6678638449270125e-9, 0.6565106472505421, 0), (0.6117406090920414, 0.362956519560386, -0.7028769395109712, 0), (-0.23828482356420377, 0.9318060768789884, 0.2737841813369888, 0), (-1.1914241313934328, 4.659030437469483, 1.3689209222793581, 1.0000000000000002) ),
-            38: ( (0.5978043584789944, -1.9904237841261715e-8, -0.801642032944579, 0), (-0.3082074424499745, 0.9231374132950104, -0.22983796160217443, 0), (0.7400257572557618, 0.38447017592395455, 0.5518555630081478, 0), (3.7001287937164307, 1.922350883483887, 2.7592778205871586, 1) ),
-            39: ( (-0.6886365377068524, -1.7446523781217135e-8, -0.7251066948629824, 0), (-0.5015738482483336, 0.7221617879763248, 0.47634654059853865, 0), (0.5236443389252635, 0.6917241877994708, -0.4973070020869266, 0), (2.6182217597961417, 3.4586210250854488, -2.4865350723266606, 1) ),
-            40: ( (0.6552999692025102, 1.190439977150071e-8, 0.7553687512488118, 0), (0.3219255510670629, 0.9046368234759143, -0.279277921042061, 0), (-0.6833343910073291, 0.42618331456241654, 0.5928084787308928, 0), (-3.416671991348268, 2.1309165954589853, 2.96404242515564, 1.0000000000000002) ),
-            41: ( (-0.3210846387144706, 4.896855768099505e-9, -0.9470505027619159, 0), (-0.3076994534729369, 0.9457473793025271, 0.10432133470607928, 0), (0.8956705315650693, 0.3249029001754245, -0.30366495409174943, 0), (4.4783525466918945, 1.6245144605636597, -1.5183247327804568, 1) ),
-            42: ( (0.05802905298402081, -1.3485239210020428e-9, 0.998314894714978, 0), (0.7859778574906165, 0.6165643096339726, -0.04568653652929829, 0), (-0.6155253337956431, 0.787304548497964, 0.03577864405171594, 0), (-3.077626466751098, 3.9365224838256836, 0.17889320850372312, 1) ),
-            43: ( (-0.8504854223629373, 5.87551651082263e-9, 0.5259986181998352, 0), (0.06607433800765634, 0.9920788205611036, 0.10683536704172127, 0), (-0.5218320881327497, 0.12561693275227384, -0.843748575110456, 0), (-2.6091604232788086, 0.6280846595764161, -4.218742847442628, 1) ),
-            44: ( (-0.9890545150428535, 5.500438993166768e-10, -0.14755055497471462, 0), (-0.05197114798164233, 0.9359149602757492, 0.3483707606983018, 0), (0.13809477198944398, 0.35222604550493314, -0.9256709171282959, 0), (0.6904738545417786, 1.761130213737488, -4.628354549407959, 1) ),
-            45: ( (0.4001332077502943, -1.128660589988506e-8, -0.9164569908377914, 0), (-0.7084505935005635, 0.6343670075600251, -0.30931578732427867, 0), (0.5813700823263604, 0.7730320172666453, 0.25383129762994533, 0), (2.906850337982178, 3.8651599884033203, 1.2691564559936521, 1) ),
-            46: ( (-0.4316530386722767, -2.446817665147094e-9, -0.9020397187513364, 0), (-0.3689408465427094, 0.9125311031911882, 0.17654924939240596, 0), (0.8231392992424423, 0.4090073174268072, -0.39389682447817226, 0), (4.115696430206299, 2.045036554336548, -1.969484090805054, 1) ),
-            47: ( (-0.7864249483699921, -5.2786567061868794e-9, -0.6176858429503265, 0), (-0.13730473096708712, 0.9749808358597402, 0.17481355942917673, 0), (0.6022318585356567, 0.22228893293693786, -0.7667492542275124, 0), (3.0111594200134277, 1.1114447116851809, -3.8337464332580575, 1.0000000000000002) ),
-            48: ( (0.7777649008645497, 1.3398692211286093e-8, 0.6285552950879957, 0), (0.3739227867954437, 0.8038053128967744, -0.4626864688685504, 0), (-0.5052360918405241, 0.5948924431852523, 0.6251715544894815, 0), (-2.526180505752564, 2.974462270736694, 3.125857830047608, 1) ),
-            49: ( (-0.8167831196395621, -4.037372214327206e-9, -0.5769448287937633, 0), (-0.4356720635060293, 0.6555676655970636, 0.6167826917999686, 0), (0.37822637210044363, 0.7551364352377765, -0.5354566048001651, 0), (1.8911318778991697, 3.775682210922241, -2.6772830486297607, 1.0000000000000002) ),
-            50: ( (-0.989319886543157, -1.184668710352277e-9, -0.145760632854813, 0), (-0.11351185274448697, 0.6273279249764346, 0.7704380142693344, 0), (0.09143971443934792, 0.7787552083580316, -0.6206279916975141, 0), (0.45719856023788474, 3.893775939941407, -3.1031398773193373, 1.0000000000000002) ),
-            51: ( (0.46991035168474526, 1.891780149199107e-9, -0.8827141447714086, 0), (-0.5929592701214025, 0.7407819925672297, -0.3156601708566012, 0), (0.6538987424338822, 0.6717455169095846, 0.34810112777074176, 0), (3.2694938182830806, 3.3587276935577393, 1.7405056953430176, 1) ),
-            52: ( (0.9135119688870877, 5.078436282612842e-9, -0.406811851720223, 0), (-0.3780265589341746, 0.36947228463289894, -0.8488734603158079, 0), (0.1503056999598611, 0.9292417505085243, 0.33751735610399375, 0), (0.7515285015106202, 4.646208763122559, 1.687586784362793, 1) ),
-            53: ( (0.9998617583185683, -4.167174973146448e-10, -0.01662721420144702, 0), (-0.01271614512271637, 0.644292616875521, -0.7646733443065157, 0), (0.010712791667852889, 0.7647790686464249, 0.644203548775531, 0), (0.05356395989656448, 3.8238954544067374, 3.2210178375244127, 0.9999999999999999) ),
-            54: ( (0.9431785740781273, -4.024718669448646e-9, -0.3322862883116765, 0), (-0.2564733279561822, 0.6358113961029446, -0.7279871569146705, 0), (0.21127141180725603, 0.771844458803472, 0.5996836849267656, 0), (1.056357026100159, 3.8592221736907963, 2.998418331146241, 1) ),
-            55: ( (-0.9076084729524736, -3.6258825664159405e-9, -0.4198176506828644, 0), (-0.31487784853048534, 0.6613983697278671, 0.6807379356449389, 0), (0.27766670727635384, 0.7500347968736651, -0.6002907655036748, 0), (1.3883335590362553, 3.7501740455627446, -3.0014538764953613, 1) ),
-            56: ( (-0.45942373223192395, -3.7121194729206053e-9, 0.8882172224529816, 0), (0.7898801565252205, 0.4573492920283723, 0.4085596203846386, 0), (-0.4062255193729006, 0.8892871443359266, -0.21011711574517344, 0), (-2.031127691268921, 4.4464359283447275, -1.0505856275558474, 1.0000000000000002) ),
-            57: ( (0.41633666210542847, -7.839642546247917e-9, 0.9092105277585111, 0), (0.8652559262922913, 0.30716492274392027, -0.39620940454738135, 0), (-0.2792775784107619, 0.9516562983744294, 0.12788402543437274, 0), (-1.3963878154754634, 4.758281230926512, 0.6394200921058653, 0.9999999999999998) ),
-            58: ( (-0.9309715812610151, 2.195864004517212e-9, 0.3650916527180065, 0), (0.09992711238976763, 0.961813923460572, 0.2548108099096737, 0), (-0.3511502343638805, 0.27370417723772705, -0.8954214294223759, 0), (-1.755751132965088, 1.3685208559036255, -4.477107048034668, 1) ),
-            59: ( (0.9750152107672085, -1.606739664927748e-9, 0.22213810742998624, 0), (0.04853284695196258, 0.9758413138698354, -0.2130218132293757, 0), (-0.21677154227276577, 0.21848050289395077, 0.9514601243961267, 0), (-1.0838576555252077, 1.0924024581909177, 4.75730037689209, 1) ),
-            60: ( (0.5284733597609959, 1.4065933973128608e-9, 0.8489498854602227, 0), (0.47069697993189197, 0.8322196142392804, -0.2930100113621027, 0), (-0.7065127465983336, 0.5544461323477903, 0.4398058949339531, 0), (-3.5325636863708496, 2.7722306251525874, 2.1990294456481934, 1) ),
-            61: ( (-0.8146651869723183, -1.6567486382790257e-8, -0.5799315762530588, 0), (-0.30216909684081494, 0.8535306420163764, 0.42447529969777775, 0), (0.4949893635723538, 0.521042650019278, -0.6953417050710566, 0), (2.47494673728943, 2.605213165283203, -3.4767084121704106, 1) ),
-            62: ( (-0.9454504217911153, 1.5862638702568436e-9, -0.3257660202277128, 0), (-0.27234034761856235, 0.5487296494970874, 0.7903964238417357, 0), (0.1787574753513912, 0.8359998634944888, -0.5187966781343083, 0), (0.8937873840332032, 4.179999351501465, -2.5939834117889404, 1) ),
-            63: ( (-0.8655888885401933, -6.3653817217179665e-9, 0.5007553055492802, 0), (0.15382324307291143, 0.9516506366220221, 0.2658937301017686, 0), (-0.4765441070103427, 0.30718246339415295, -0.8237382158530797, 0), (-2.382720470428467, 1.535912275314331, -4.1186909675598145, 1) ),
-            64: ( (-0.1452995132526076, -3.666376105493363e-9, 0.9893877154324058, 0), (0.7467809685315301, 0.6559653245499758, 0.10967077107030332, 0), (-0.6490040342614715, 0.7547910260383632, -0.09531143962972034, 0), (-3.245020151138305, 3.7739551067352295, -0.47655719518661505, 1) ),
-            65: ( (-0.6311880923737295, -1.2646695510265538e-8, 0.7756298034794772, 0), (0.1809970500232955, 0.9723916212300869, 0.14729087834753365, 0), (-0.7542159239425252, 0.2333549548681646, -0.6137620101554021, 0), (-3.771079540252686, 1.1667747497558596, -3.0688099861145024, 1) ),
-            66: ( (-0.18320851208721833, 2.930525377919934e-9, 0.9830740771166675, 0), (0.8145718299898885, 0.559846129056979, 0.15180594707336173, 0), (-0.5503702162051571, 0.8285965917018462, -0.10256857868944132, 0), (-2.751851081848144, 4.142982959747313, -0.5128428936004639, 0.9999999999999998) ),
-            67: ( (-0.6399634894098483, -2.25275640086675e-8, 0.7684053176692428, 0), (0.3641583893663616, 0.8805708780024805, 0.30328797580523575, 0), (-0.6766353520741195, 0.4739144741553473, -0.56353320355556, 0), (-3.3831768035888663, 2.3695724010467525, -2.817666053771972, 0.9999999999999996) ),
-            68: ( (-0.9210079043488538, 6.2327955019370035e-9, 0.3895438872924748, 0), (0.21498580265672054, 0.8339162022671567, 0.5082960478425618, 0), (-0.3248469559392207, 0.5518910830918744, -0.7680434151925916, 0), (-1.6242347955703733, 2.759455442428589, -3.840217113494873, 1) ),
-            69: ( (0.49413081058253283, 7.131040952179646e-9, 0.8693875672178946, 0), (0.7548589224368092, 0.49610042716869696, -0.42903656415342495, 0), (-0.43130354653142905, 0.8682651473847356, 0.24513850082427913, 0), (-2.1565177440643315, 4.341325759887696, 1.2256925106048586, 1.0000000000000002) ),
-            70: ( (-0.09233569588223531, -1.128095339364422e-9, -0.9957279343605581, 0), (-0.659713586769336, 0.7490229795624999, 0.061176462134168726, 0), (0.7458231041593453, 0.662544018226197, -0.06916155879390852, 0), (3.7291154861450195, 3.3127200603485107, -0.34580779075622553, 1) ),
-            71: ( (-0.36298660848884184, 2.70036201732715e-9, 0.9317943560989023, 0), (0.47568611679410844, 0.8598745052789514, 0.18530664710317352, 0), (-0.8012262104718677, 0.5105054702657733, -0.3121229316817521, 0), (-4.006131172180176, 2.5525274276733403, -1.5606147050857544, 0.9999999999999998) ),
-            72: ( (0.6702598757100747, -1.1678883582444404e-8, 0.7421264710365176, 0), (0.5183635806892019, 0.715625528045914, -0.46816589135057296, 0), (-0.5310846422447035, 0.6984841469990618, 0.47965508353691866, 0), (-2.655423164367676, 3.4924206733703618, 2.398275375366211, 0.9999999999999999) ),
-            73: ( (-0.3310123483571638, -8.808051232822576e-10, -0.9436264224973119, 0), (-0.347631133293897, 0.9296677345623812, 0.12194465334097483, 0), (0.877259038368871, 0.3683991087308026, -0.3077315003155735, 0), (4.386295318603516, 1.8419955968856812, -1.538657546043396, 1) ),
-            74: ( (0.7113589654375563, -5.869750741016588e-9, 0.7028288712706737, 0), (0.22632717107038985, 0.9467317945389633, -0.22907405100601988, 0), (-0.6653904372072715, 0.3220231501135191, 0.6734661512385623, 0), (-3.3269522190093994, 1.6101157665252683, 3.36733078956604, 0.9999999999999999) ),
-            75: ( (0.27487730810005956, -4.011867602016216e-9, -0.961479311005528, 0), (-0.5156213512979485, 0.8440406527797502, -0.1474109851429343, 0), (0.8115276258867237, 0.5362791963661585, 0.23200762049451018, 0), (4.057638168334961, 2.681396007537842, 1.1600381135940554, 0.9999999999999998) ),
-            76: ( (-0.8736310260812239, -1.0630163110869619e-8, 0.48658897466780726, 0), (0.22258949843584486, 0.8892359994991941, 0.3996414047377334, 0), (-0.4326924374822689, 0.4574487263012869, -0.776864156304681, 0), (-2.1634621620178223, 2.287243604660034, -3.884320735931397, 1.0000000000000002) ),
-            77: ( (-0.9549277755027242, 9.26038259962958e-10, -0.29683824479574494, 0), (-0.07327357463674149, 0.9690545132235573, 0.23572088083368473, 0), (0.28765244103496235, 0.2468468156591337, -0.9253770705855928, 0), (1.4382622241973875, 1.2342340946197508, -4.626885414123534, 0.9999999999999999) ),
-            78: ( (-0.9665915558994114, 9.412418327386926e-11, 0.25632160280388944, 0), (0.005585987459069258, 0.9997625068669996, 0.021064819180791238, 0), (-0.2562607281814012, 0.02179288560545183, -0.9663619970429952, 0), (-1.281303644180298, 0.1089644283056259, -4.831809997558594, 1) ),
-            79: ( (-0.8894242640921872, 6.3159107388521834e-9, -0.4570825728947358, 0), (-0.42709402139145525, 0.35624811438986803, 0.8310703808254383, 0), (0.1628348099631853, 0.9343913960400446, -0.31685571427794995, 0), (0.8141740560531617, 4.671957015991212, -1.5842785835266118, 1) ),
-            80: ( (-0.9633664542931669, 1.3511197535787108e-8, -0.26818850598526994, 0), (-0.14688119561253116, 0.8366885552897946, 0.527615556842773, 0), (0.22439026074686194, 0.5476789766341921, -0.8060376848726609, 0), (1.1219513416290283, 2.738394975662232, -4.030188560485839, 0.9999999999999998) ),
-            81: ( (0.3725795813488204, -7.0052757206173766e-9, -0.9280002454535978, 0), (-0.7795909579206355, 0.5424683461842794, -0.3129952582971167, 0), (0.5034107606024366, 0.8400762426042608, 0.2021126238550762, 0), (2.517053842544555, 4.200381278991699, 1.0105631351470947, 1) ),
-            82: ( (0.07669283647195527, -9.978374029828707e-10, -0.9970547672188754, 0), (-0.7672632521481498, 0.638611029137598, -0.05901741579281887, 0), (0.636730171059084, 0.7695296962845669, 0.04897689046123289, 0), (3.183650970458984, 3.8476486206054683, 0.24488446116447454, 1) ),
-            83: ( (0.5103927192645817, -3.605440140885819e-9, 0.8599414352859771, 0), (0.7122886638854146, 0.5602862706271385, -0.422757796199034, 0), (-0.48181337820990083, 0.8282990371518808, 0.2859660358001106, 0), (-2.409066915512085, 4.141495227813721, 1.4298301935195923, 1) ),
-            84: ( (0.4900977199807963, 1.2248252939661697e-8, -0.8716674967380766, 0), (-0.7219989526916777, 0.5602903392061925, -0.4059461147792035, 0), (0.48838687245025897, 0.828296285028618, 0.2745970266154477, 0), (2.44193434715271, 4.141481399536133, 1.3729851245880127, 1) ),
-            85: ( (0.9842763658322944, 2.088526802890289e-9, -0.1766353182802666, 0), (-0.16532836250849187, 0.35203456423315577, -0.9212698834410211, 0), (0.06218173537488159, 0.9359870007565128, 0.3464993018760588, 0), (0.3109086751937866, 4.679934978485107, 1.732496500015259, 1) ),
-            86: ( (-0.057264970272661815, -1.033280971202144e-9, 0.9983590151742364, 0), (0.9565246362990819, 0.28644442620775445, 0.054865388428584086, 0), (-0.2859743753076143, 0.958096858722807, -0.016403230563198017, 0), (-1.429871916770935, 4.790484428405762, -0.08201615512371062, 1) ),
-            87: ( (0.7573347973395523, 6.15537509851549e-9, 0.6530268024657633, 0), (0.40359191783325804, 0.7861523865770349, -0.4680576769361919, 0), (-0.5133785821383002, 0.6180327055093702, 0.5953805558820647, 0), (-2.566892862319946, 3.0901634693145748, 2.976902723312379, 0.9999999999999998) ),
-            88: ( (-0.43254629709526216, 5.609492287339533e-9, -0.9016117240082768, 0), (-0.684688185183441, 0.6506185453494042, 0.32847769713883346, 0), (0.5866053101868267, 0.759404706627122, -0.28142263877163765, 0), (2.9330265522003183, 3.797023534774781, -1.4071131944656377, 1.0000000000000002) ),
-            89: ( (0.4900228771214937, -5.975563627247382e-9, -0.8717095731363592, 0), (-0.6493570295442851, 0.6671497833108455, -0.3650296081274976, 0), (0.5815608550091692, 0.7449235978463106, 0.32691865240868734, 0), (2.9078042507171635, 3.724617958068848, 1.6345932483673098, 1) ),
-            90: ( (-0.8703315914042793, 8.686110108957479e-9, -0.4924661622931009, 0), (-0.25142663918467867, 0.8598504218169164, 0.44434434531067063, 0), (0.4234472412379046, 0.5105460332832594, -0.7483549838056381, 0), (2.1172361373901367, 2.5527300834655766, -3.741774797439576, 1.0000000000000002) ),
-            91: ( (-0.6842750908018261, -1.0307871362025269e-8, 0.7292239711557436, 0), (0.41510009639670664, 0.8221745886717813, 0.3895136142856018, 0), (-0.5995494225496324, 0.5692354045053659, -0.5625935870395388, 0), (-2.9977469444274902, 2.8461768627166752, -2.8129677772521986, 1.0000000000000002) ),
-            92: ( (0.9983473667240772, -8.235197662687099e-10, -0.057467689662114796, 0), (-0.041333852448007746, 0.694747436058037, -0.7180651173344866, 0), (0.03992553064027402, 0.719253780032322, 0.6935992732928061, 0), (0.19962765276432037, 3.596268892288208, 3.46799635887146, 1) ),
-            93: ( (0.6035228644820338, -2.237505186686307e-8, -0.7973456916842283, 0), (-0.6030957588601316, 0.6541332972304122, -0.45649220705220334, 0), (0.5215703765479046, 0.7563792894140274, 0.394784387803277, 0), (2.6078519821166997, 3.781896591186524, 1.9739220142364504, 1.0000000000000002) ),
-            94: ( (-0.5898687044469614, -3.473667020692516e-9, 0.8074991712157129, 0), (0.26176974488210536, 0.9459976801001035, 0.1912197424681337, 0), (-0.7638923433170545, 0.32417339379600835, -0.5580144250611783, 0), (-3.8194618225097656, 1.6208670139312742, -2.790072202682495, 0.9999999999999998) ),
-            95: ( (-0.5344870397795387, 9.904965736495797e-11, 0.8451766704705626, 0), (0.5572468172429482, 0.751857325743118, 0.3524011157743564, 0), (-0.6354522712055645, 0.6593258388129553, -0.40185799642819464, 0), (-3.1772613525390625, 3.2966291904449463, -2.009289979934693, 1) ),
-            96: ( (-0.11266738178709848, -1.4062095307632032e-9, 0.993632759665884, 0), (0.7865531111717523, 0.6110482192198973, 0.08918675402900209, 0), (-0.6071575284778057, 0.7915933765439126, -0.0688452018991163, 0), (-3.035787582397461, 3.9579668045043945, -0.3442260026931762, 1) ),
-            97: ( (0.853847095650076, -6.255989393189054e-9, -0.5205239065114395, 0), (-0.3798333161627924, 0.6837530351477679, -0.6230637518416486, 0), (0.3559098048420501, 0.729713496467083, 0.5838205408266128, 0), (1.7795490026474003, 3.648567438125611, 2.9191026687622075, 1.0000000000000002) ),
-            98: ( (-0.44005723331060737, 1.7713488176251953e-9, 0.8979697274468742, 0), (0.8187200334979824, 0.4107551433339522, 0.40122028734071596, 0), (-0.36884568339628976, 0.9117456949307214, -0.18075577339387977, 0), (-1.8442285060882566, 4.5587286949157715, -0.9037789106369017, 1) ),
-            99: ( (-0.999999791604379, -3.641354307925419e-12, 0.0006455936790069457, 0), (0.000447325675329754, 0.7210428977388089, 0.6928902795682453, 0), (-0.00046550073959608575, 0.6928904239635738, -0.721042747476625, 0), (-0.0023275036364793773, 3.4644520282745357, -3.6052136421203604, 1) ),
+            99: ( (-0.3090164629597319, -7.991745695767884e-9, -0.95105668896226, 0), (-0.9035038948252939, 0.3122497734311748, 0.2935656502857658, 0), (0.29696723330256686, 0.9500000415748308, -0.09649032776625266, 0), (1.4848361015319822, 4.75, -0.482451617717743, 1) ),
         }
         uniform token[] xformOpOrder = ["xformOp:transform"]
     }
