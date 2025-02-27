@@ -70,3 +70,6 @@
 
 ## **CODE SOURCES**
 1. [USD Plugin Examples](https://github.com/wetadigital/USDPluginExamples?tab=readme-ov-file)
+
+2. [HDR Texture](https://www.hdri-hub.com/hdrishop/freesamples/freehdri/item/76-hdr-sky-cloudy)
+3. [Japanese Plane Toy](https://www.turbosquid.com/3d-models/wooden-plane-toy-1395253)

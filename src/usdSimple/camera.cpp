@@ -11,6 +11,7 @@
 #include <pxr/base/gf/matrix4d.h>
 #include <pxr/base/gf/vec3d.h>
 #include <pxr/usdImaging/usdviewq/utils.h>
+#include <pxr/usd/usdLux/domeLight.h>
 
 Point2f PolarToCartesian(const float& r, const float& theta)
 {
@@ -153,15 +154,32 @@ Camera::Camera()
         return;
     }
 
-    pxr::UsdGeomXform p = pxr::UsdGeomXform::Get(stage, pxr::SdfPath("/japanese_toy"));
-    // p.ClearXformOpOrder();
-    
+    pxr::SdfAssetPath hdriFilePath = pxr::SdfAssetPath(
+        "/Users/liu.amy05/Documents/Neural-for-USD/assets/HDR_029_Sky_Cloudy_Ref.hdr");
 
-    stage->Save();
+    pxr::UsdGeomXform dp = pxr::UsdGeomXform::Get(stage, pxr::SdfPath("/japanese_toy"));
+    pxr::UsdLuxDomeLight hdri = pxr::UsdLuxDomeLight::Define(stage,
+                                                             pxr::SdfPath("/lights/domeLight"));
 
-    // createUsdCamera(stage, "MyCam");
+    hdri.CreateTextureFileAttr().Set(hdriFilePath);
+    hdri.CreateTextureFormatAttr().Set(pxr::UsdLuxTokens->latlong);
+    pxr::UsdPrim prim = stage->GetPrimAtPath(pxr::SdfPath("/lights/domeLight"));
 
-    // stage->Export("/Users/liu.amy05/Documents/Neural-for-USD/japanesePlaneToy.usda");
+    // hdri.GetIntensityAttr().Set(0.5f);
+    // hdri.GetExposureAttr().Set(1.f);
+    // hdri.GetEnableColorTemperatureAttr().Set(true);
+    // hdri.GetColorTemperatureAttr().Set(9000.f);
+    // hdri.GetColorAttr().Set(pxr::GfVec3f(0.5, 0.5, 0.5));
+
+    prim.CreateAttribute(std::vector<std::string>({"karma:light:renderlightgeo"}),
+                         pxr::SdfValueTypeNames->Bool)
+        .Set(true);
+
+    // stage->Save();
+
+    createUsdCamera(stage, "MyCam");
+
+    stage->Export("/Users/liu.amy05/Documents/Neural-for-USD/japanesePlaneToy.usda");
 
     std::cout << "Done" << std::endl;
 
