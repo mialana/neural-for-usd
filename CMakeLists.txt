@@ -3,19 +3,17 @@ cmake_minimum_required(VERSION 3.13)
 
 # Define project.
 project(
-    Neural-for-USD
-    VERSION 0.0.0
-    DESCRIPTION "A collection of example plugins for Pixar's USD (Universal Scene Description)."
-    LANGUAGES CXX
-)
+  Neural-for-USD
+  VERSION 0.0.0
+  DESCRIPTION
+    "A collection of example plugins for Pixar's USD (Universal Scene Description)."
+  LANGUAGES CXX)
 
 include_directories(./include)
 
 # Discover cmake modules.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages
-)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/
+                      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages)
 
 # Exposes build options (with default values) for this project.
 include(Options)

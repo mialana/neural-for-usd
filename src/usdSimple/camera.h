@@ -1,20 +1,11 @@
 #pragma once
 
-// #define GLM_FORCE_RADIANS
-// // Primary GLM library
-#include <glm/glm.hpp>
-// // For glm::translate, glm::rotate, and glm::scale.
-#include <glm/gtc/matrix_transform.hpp>
-// // For glm::to_string.
-// #include <glm/gtx/string_cast.hpp>
-// // For glm::value_ptr.
-// #include <glm/gtc/type_ptr.hpp>
-
 #include <pxr/usd/usdGeom/xform.h>
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
-#include <vector>
+
+#define GLMMat4ToGF(_glmMtxPtr) (*reinterpret_cast<pxr::GfMatrix4d*>(_glmMtxPtr))
 
 class Camera
 {
@@ -25,6 +16,7 @@ private:
 
     void createUsdCameraParams();
     void createUsdCamera(const pxr::UsdStagePtr& stage, const char* path);
+    void generateCameraTransforms(int numSamples);
 
 public:
     Camera();
