@@ -28,5 +28,6 @@ replay_pid*
 temp/**
 
 build/**
+data/**
 **copy.**
 build-**

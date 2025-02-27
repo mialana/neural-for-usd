@@ -109,13 +109,6 @@ void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamp
                                                         pxr::GfVec3d(up.x, up.y, up.z));
         m = m.GetInverse();
 
-        std::ostringstream p;
-        p << "/Xform_MyCam/MyCam";
-        p << i;
-        const pxr::SdfPath& cameraPath = pxr::SdfPath(p.str());
-        m_usdCamera = pxr::UsdGeomCamera::Define(stage, cameraPath);
-        m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
-
         m_usdCameraParams.SetTransform(m);
         m_usdCamera.SetFromCamera(m_usdCameraParams, i);
     }
@@ -162,12 +155,13 @@ Camera::Camera()
 
     pxr::UsdGeomXform p = pxr::UsdGeomXform::Get(stage, pxr::SdfPath("/japanese_toy"));
     // p.ClearXformOpOrder();
-    p.AddRotateXOp().Set(-90.f);
-    p.AddTranslateYOp().Set(-0.1);
+    
 
-    createUsdCamera(stage, "MyCam");
+    stage->Save();
 
-    stage->Export("/Users/liu.amy05/Documents/Neural-for-USD/japanesePlaneToy.usda");
+    // createUsdCamera(stage, "MyCam");
+
+    // stage->Export("/Users/liu.amy05/Documents/Neural-for-USD/japanesePlaneToy.usda");
 
     std::cout << "Done" << std::endl;
 

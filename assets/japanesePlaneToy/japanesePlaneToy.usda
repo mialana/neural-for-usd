@@ -1,10 +1,10 @@
 #usda 1.0
 (
+    defaultPrim = "japanese_toy"
     doc = """Blender v2.83.4
 
 Generated from Composed Stage of root layer /Users/liu.amy05/Documents/Neural-for-USD/tmp/woodenPlane-orig.usda
 """
-    defaultPrim = "japanese_toy"
     metersPerUnit = 1
     upAxis = "Z"
 )
@@ -68,8 +68,10 @@ def Xform "Camera"
 
 def Xform "japanese_toy"
 {
+    float xformOp:rotateX = -90
     matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, -1.6292068494294654e-7, 1, 0), (0, -1, -1.6292068494294654e-7, 0), (0, 0, 0, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
+    double xformOp:translateY = -0.1
+    uniform token[] xformOpOrder = ["xformOp:transform", "xformOp:rotateX", "xformOp:translateY"]
 
     def Mesh "japanese_toy" (
         apiSchemas = ["MaterialBindingAPI"]
@@ -102,8 +104,8 @@ def "_materials"
         {
             uniform token info:id = "UsdPreviewSurface"
             color3f inputs:diffuseColor.connect = </_materials/japanese_toy/file1.outputs:rgb>
-            normal3f inputs:normal.connect = </_materials/japanese_toy/file2.outputs:rgb>
             float inputs:metallic = 0
+            normal3f inputs:normal.connect = </_materials/japanese_toy/file2.outputs:rgb>
             float inputs:roughness = 0.5527864
             token outputs:surface
         }
@@ -122,13 +124,13 @@ def "_materials"
         def Shader "file2"
         {
             uniform token info:id = "UsdUVTexture"
+            float4 inputs:bias = (-1, -1, -1, 0)
             asset inputs:file = @textures/japanesePlaneToy_Normal.png@
+            float4 inputs:scale = (2, 2, 2, 1)
             token inputs:sourceColorSpace = "raw"
             float2 inputs:st.connect = </_materials/japanese_toy/place2dTexture2.outputs:result>
             token inputs:wrapS = "repeat"
             token inputs:wrapT = "repeat"
-            float4 inputs:scale = (2, 2, 2, 1)
-            float4 inputs:bias = (-1, -1, -1, 0)
             float3 outputs:rgb
         }
 
