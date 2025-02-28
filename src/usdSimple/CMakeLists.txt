@@ -22,4 +22,5 @@ usd_executable(simple
         tf
         gf
         usdLux
+        usdAppUtils
 )

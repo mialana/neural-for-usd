@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QPixmap>
+#include <QTimer>
 
 namespace Ui
 {
@@ -20,4 +22,12 @@ public slots:
 
 private:
     Ui::MainWindow* ui;
+    QPixmap* pm;
+    QTimer* timer;
+
+    int frame = 0;
+
+    void record();
+
+    void setUpOpenGLFormat();
 };

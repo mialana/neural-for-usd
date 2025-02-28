@@ -795,7 +795,7 @@ function(_usd_target_properties
     set(_LINK_LIBRARIES "")
     list(APPEND _LINK_LIBRARIES ${args_LIBRARIES} ${TBB_LIBRARIES})
     if (ENABLE_PYTHON_SUPPORT)
-        list(APPEND _LINK_LIBRARIES ${Boost_PYTHON_LIBRARY} ${Python3_LIBRARIES} Qt6::Widgets)
+        list(APPEND _LINK_LIBRARIES ${Boost_PYTHON_LIBRARY} ${Python3_LIBRARIES} Qt6::Widgets Qt6::OpenGL)
     endif()
 
     target_link_libraries(${TARGET_NAME}
