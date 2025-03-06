@@ -1,10 +1,10 @@
 # 3.13 for target_link_directories.
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.23)
 
 # Define project.
 project(
   Neural-for-USD
-  VERSION 0.0.0
+  VERSION 0.0.1
   DESCRIPTION
     "A collection of example plugins for Pixar's USD (Universal Scene Description)."
   LANGUAGES CXX)
@@ -29,3 +29,10 @@ include(USDPluginTools)
 
 # Recurse into source tree.
 add_subdirectory(src)
+
+
+target_sources(simple
+  PRIVATE
+    log.txt
+)
+

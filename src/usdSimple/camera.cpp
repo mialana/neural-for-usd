@@ -1,6 +1,6 @@
 #include "camera.h"
-#include "math_utils.h"
-#include "glm_utils.h"
+#include "mycpp/math_utils.h"
+#include "mycpp/glmutils.h"
 
 #include <iostream>
 #include <pcg32.h>

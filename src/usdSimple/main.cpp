@@ -10,8 +10,6 @@ int main(int argc, char* argv[])
 
     QApplication a(argc, argv);
 
-    qDebug() << "HELLO!";
-
     MainWindow w;
     w.show();
 

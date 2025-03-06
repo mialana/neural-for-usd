@@ -755,6 +755,8 @@ function(_usd_target_properties
             ${platform_definitions}
     )
 
+    target_compile_definitions(${TARGET_NAME} PUBLIC PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
+
     target_compile_features(${TARGET_NAME}
         PRIVATE
             cxx_std_17

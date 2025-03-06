@@ -143,10 +143,10 @@ void startup::_customizeQDebugHandler(QtMsgType type,
     QTextStream qStdOut(stdout);
     qStdOut << out;
 
-    QString outFilePath = QString("/Users/liu.amy05/Documents/Neural-for-USD") + "/log.txt";
+    QString outFilePath = QString(PROJECT_SOURCE_DIR) + "/log.txt";
 
     QFile outFile(outFilePath);
-    outFile.open(QIODevice::Append | QIODevice::Text);
+    outFile.open(QIODevice::ReadWrite | QIODevice::Append | QIODevice::Text);
 
     QTextStream qOutFile(&outFile);
     qOutFile << inputMsg << " " << location << qEndl;
