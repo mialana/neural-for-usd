@@ -1,23 +1,43 @@
 #pragma once
 
+#include <QProgressBar>
+
 #include <pxr/usd/usdGeom/xform.h>
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
 
-#define GLMMat4ToGF(_glmMtxPtr) (*reinterpret_cast<pxr::GfMatrix4d*>(_glmMtxPtr))
-
 class Camera
 {
 private:
+    const QString m_stageFilePath;
+    const QString m_hdriFilePath;
+    const QString m_outputStageFilePath;
+    const QString m_outputDataFilePath;
+    QString m_outputRendersDirPath;
+
     pxr::UsdGeomXform m_usdCameraXform;
     pxr::UsdGeomCamera m_usdCamera;
     pxr::GfCamera m_usdCameraParams;
+    pxr::UsdStageRefPtr m_usdStage;
 
-    void createUsdCameraParams();
-    void createUsdCamera(const pxr::UsdStagePtr& stage, const char* path);
-    void generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamples);
+    bool createUsdCameraParams();
+    bool createUsdCamera(const char* name);
+    bool createDomeLight();
+
+    bool generateCameraTransforms(int numSamples);
+
+    bool writeData();
 
 public:
-    Camera();
+    /**
+     * @brief Parameters correlate to path-related members
+     * @param sfp
+     * @param hfp
+     * @param odfp
+     * @param ordp
+     */
+    Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp);
+
+    bool record(QString outputPrefix, QProgressBar* b);
 };

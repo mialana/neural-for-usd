@@ -27,7 +27,7 @@ replay_pid*
 
 temp/**
 
-data/**
+**data**
 **copy.**
 build**
 *.autosave

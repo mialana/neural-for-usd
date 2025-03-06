@@ -1,8 +1,8 @@
 #pragma once
 
+#include "camera.h"
+
 #include <QMainWindow>
-#include <QPixmap>
-#include <QTimer>
 
 namespace Ui
 {
@@ -19,15 +19,9 @@ public:
 
 public slots:
     void slot_beginDataCollection();
+    void slot_findUsdFilePath();
 
 private:
-    Ui::MainWindow* ui;
-    QPixmap* pm;
-    QTimer* timer;
-
-    int frame = 0;
-
-    void record();
-
-    void setUpOpenGLFormat();
+    Ui::MainWindow* m_ui;
+    Camera* m_camera;
 };

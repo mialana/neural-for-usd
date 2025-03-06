@@ -1,76 +1,105 @@
 #include "camera.h"
-#include "mycpp/math_utils.h"
-#include "mycpp/glmutils.h"
+
+#include <MyCpp/mydefines.h>
+#include <MyCpp/mymath.h>
+#include <MyCpp/myglm.h>
+#include <MyCpp/mysampling.h>
 
 #include <iostream>
 #include <pcg32.h>
 
+#include <QDir>
+
 #include <pxr/usd/sdf/path.h>
-#include <pxr/usd/usd/stage.h>
 #include <pxr/usd/usdGeom/tokens.h>
 #include <pxr/base/gf/matrix4d.h>
 #include <pxr/base/gf/vec3d.h>
-#include <pxr/usdImaging/usdviewq/utils.h>
 #include <pxr/usd/usdLux/domeLight.h>
+#include <pxr/usdImaging/usdAppUtils/frameRecorder.h>
 
-Point2f PolarToCartesian(const float& r, const float& theta)
+Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp)
+    : m_stageFilePath(sfp)
+    , m_hdriFilePath(hfp)
+    , m_outputStageFilePath(osfp)
+    , m_outputDataFilePath(odfp)
+    , m_outputRendersDirPath(ordp)
 {
-    const float x = r * cos(theta);
-    const float y = r * sin(theta);
+    qDebug() << "Stage Path:" << m_stageFilePath.toLocal8Bit();
 
-    return Point2f(x, y);
-}
+    // Create a USD stage
+    m_usdStage = pxr::UsdStage::Open(CCP(m_stageFilePath));
 
-glm::vec3 squareToDiskConcentric(const glm::vec2& sample)
-{
-    const Point2f offsetSample = 2.f * sample - glm::vec2(1.f);
-
-    float r;
-    AngleRad theta;
-
-    // handle undef behavior at origin
-    if (fequal(offsetSample.x, 0.f) && fequal(offsetSample.y, 0.f)) {
-        return glm::vec3(0.f);
+    if (!m_usdStage) {
+        std::cout << "Failed to open USD stage." << std::endl;
+        return;
     }
 
-    if (std::abs(offsetSample.x) > std::abs(offsetSample.y)) {  // case 1
-        r = offsetSample.x;
-        theta = (M_PI / 4.f) * (offsetSample.y / offsetSample.x);
-    } else {  // case 2 ("inverse" case)
-        r = offsetSample.y;
-        theta = (M_PI / 2.f) - ((M_PI / 4.f) * (offsetSample.x / offsetSample.y));
+    createUsdCamera("MyCam");
+    createDomeLight();
+
+    qDebug() << "Camera initiation status:" << m_usdStage->Export(CCP(m_outputStageFilePath));
+
+    return;
+}
+
+bool Camera::createDomeLight()
+{
+    pxr::SdfAssetPath hdriFilePath = pxr::SdfAssetPath(CCP(m_hdriFilePath));
+
+    pxr::UsdLuxDomeLight hdri = pxr::UsdLuxDomeLight::Define(m_usdStage,
+                                                             pxr::SdfPath("/lights/domeLight"));
+
+    try {
+        // TODO: Make camera scene separate?
+        hdri.CreateTextureFileAttr().Set(hdriFilePath);
+        hdri.CreateTextureFormatAttr().Set(pxr::UsdLuxTokens->latlong);
+
+        hdri.GetExposureAttr().Set(1.f);
+        // TODO: Add as possible attributes to set
+        // hdri.GetIntensityAttr().Set(0.5f);
+        // hdri.GetEnableColorTemperatureAttr().Set(true);
+        // hdri.GetColorTemperatureAttr().Set(9000.f);
+        // hdri.GetColorAttr().Set(pxr::GfVec3f(0.5, 0.5, 0.5));
+    } catch (std::exception e) {
+        qDebug() << "Domelight creation error.";
+        return false;
     }
 
-    const Point2f xy = PolarToCartesian(r, theta);
-
-    return glm::vec3(xy, 0.f);
+    return true;
 }
 
-glm::vec3 squareToHemisphereCosine(const glm::vec2& sample)
+bool Camera::writeData()
 {
-    const glm::vec3 xy0 = squareToDiskConcentric(sample);
-    const float& x = xy0.x;
-    const float& z = xy0.y;
-
-    float y = sqrt(std::fmax(0.f, (1.f - pow(x, 2.f) - pow(z, 2.f))));  // use eq of unit sphere
-
-    return glm::vec3(x, y, z) * 5.f;
+    return false;
 }
 
-glm::vec3 squareToHemisphereUniform(const glm::vec2& sample)
+bool Camera::record(QString outputPrefix, QProgressBar* b)
 {
-    const float y = sample.x;  // z range is positive
+    if (!QDir().mkpath(m_outputRendersDirPath)) {
+        qDebug() << "Output render path creation failure.";
+        return false;
+    }
 
-    float r = sqrt(std::fmax(0.f, 1.f - pow(y, 2.f)));
+    pxr::UsdAppUtilsFrameRecorder frameRecorder = pxr::UsdAppUtilsFrameRecorder(pxr::TfToken(),
+                                                                                true);
 
-    const AngleRad phi = 2.f * M_PI * sample.y;
+    frameRecorder.SetColorCorrectionMode(pxr::TfToken::Find("sRGB"));
+    frameRecorder.SetComplexity(4.0);
+    frameRecorder.SetDomeLightVisibility(true);
 
-    const Point2f xz = PolarToCartesian(r, phi);
+    for (int frame = 0; frame < 100; frame++) {
+        QString outputImagePath = m_outputRendersDirPath + outputPrefix;
+        outputImagePath += QString::number(frame);
+        outputImagePath += ".png";
 
-    return glm::vec3(xz.x, y, xz.y) * 4.f;
+        if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
+            b->setValue(frame + 1);
+        }
+    }
+    return true;
 }
 
-void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamples)
+bool Camera::generateCameraTransforms(int numSamples)
 {
     int sqrtVal = (int)(std::sqrt((float)numSamples) + 0.5);
     float invSqrtVal = 1.f / sqrtVal;
@@ -92,7 +121,7 @@ void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamp
 
         // sample = glm::vec2(rng.nextFloat(), rng.nextFloat());
 
-        glm::vec3 warpResult = squareToHemisphereUniform(sample);
+        glm::vec3 warpResult = sampling::squareToHemisphereUniform(sample);
 
         glm::vec3 target = glm::vec3(0.f);
         glm::vec3 look = glm::normalize(target - warpResult);
@@ -113,75 +142,28 @@ void Camera::generateCameraTransforms(const pxr::UsdStagePtr& stage, int numSamp
         m_usdCameraParams.SetTransform(m);
         m_usdCamera.SetFromCamera(m_usdCameraParams, i);
     }
+    return true;
 }
 
-void Camera::createUsdCameraParams()
+bool Camera::createUsdCameraParams()
 {
     m_usdCameraParams = pxr::GfCamera(m_usdCamera.GetCamera(0));
 
-    return;
+    return true;
 }
 
-void Camera::createUsdCamera(const pxr::UsdStagePtr& stage, const char* name)
+bool Camera::createUsdCamera(const char* name)
 {
     const pxr::SdfPath& cameraXformPath = pxr::SdfPath("/Xform_MyCam");
-    m_usdCameraXform = pxr::UsdGeomXform::Define(stage, cameraXformPath);
+    m_usdCameraXform = pxr::UsdGeomXform::Define(m_usdStage, cameraXformPath);
 
     const pxr::SdfPath& cameraPath = pxr::SdfPath("/Xform_MyCam/MyCam");
-    m_usdCamera = pxr::UsdGeomCamera::Define(stage, cameraPath);
+    m_usdCamera = pxr::UsdGeomCamera::Define(m_usdStage, cameraPath);
     m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
 
-    createUsdCameraParams();
-
-    generateCameraTransforms(stage, 100);
-
-    return;
-}
-
-Camera::Camera()
-{
-    // Path to the USD file
-    std::string filePath
-        = "/Users/liu.amy05/Documents/Neural-for-USD/assets/japanesePlaneToy/japanesePlaneToy.usda";
-
-    std::cout << filePath << std::endl;
-
-    // Create a USD stage
-    pxr::UsdStageRefPtr stage = pxr::UsdStage::Open(filePath);
-
-    if (!stage) {
-        std::cout << "Failed to open USD stage." << std::endl;
-        return;
+    if (createUsdCameraParams()) {
+        return generateCameraTransforms(100);
     }
 
-    pxr::SdfAssetPath hdriFilePath = pxr::SdfAssetPath(
-        "/Users/liu.amy05/Documents/Neural-for-USD/assets/HDR_029_Sky_Cloudy_Ref.hdr");
-
-    pxr::UsdGeomXform dp = pxr::UsdGeomXform::Get(stage, pxr::SdfPath("/japanese_toy"));
-    pxr::UsdLuxDomeLight hdri = pxr::UsdLuxDomeLight::Define(stage,
-                                                             pxr::SdfPath("/lights/domeLight"));
-
-    hdri.CreateTextureFileAttr().Set(hdriFilePath);
-    hdri.CreateTextureFormatAttr().Set(pxr::UsdLuxTokens->latlong);
-    pxr::UsdPrim prim = stage->GetPrimAtPath(pxr::SdfPath("/lights/domeLight"));
-
-    // hdri.GetIntensityAttr().Set(0.5f);
-    hdri.GetExposureAttr().Set(1.f);
-    // hdri.GetEnableColorTemperatureAttr().Set(true);
-    // hdri.GetColorTemperatureAttr().Set(9000.f);
-    // hdri.GetColorAttr().Set(pxr::GfVec3f(0.5, 0.5, 0.5));
-
-    prim.CreateAttribute(std::vector<std::string>({"karma:light:renderlightgeo"}),
-                         pxr::SdfValueTypeNames->Bool)
-        .Set(true);
-
-    // stage->Save();
-
-    createUsdCamera(stage, "MyCam");
-
-    stage->Export("/Users/liu.amy05/Documents/Neural-for-USD/japanesePlaneToy.usda");
-
-    std::cout << "Done" << std::endl;
-
-    return;
+    return false;
 }

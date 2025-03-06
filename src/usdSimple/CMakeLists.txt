@@ -7,12 +7,6 @@ usd_executable(simple
         mainwindow.h
         mainwindow.cpp
         mainwindow.ui
-        mycpp/glmutils.h
-        
-        mycpp/mydefines.h
-        mycpp/myutils.cpp
-        mycpp/myutils.h
-        mycpp/math_utils.h
 
     LIBRARIES
         sdf

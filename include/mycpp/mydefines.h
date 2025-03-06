@@ -21,3 +21,6 @@
 #define sPtr std::shared_ptr
 
 #define myOpt std::optional
+
+#define CCP(_qStr) (_qStr.toLocal8Bit().data())
+#define GLMMat4ToGF(_glmMtxPtr) (*reinterpret_cast<pxr::GfMatrix4d*>(_glmMtxPtr))

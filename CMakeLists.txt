@@ -1,38 +1,35 @@
-# 3.13 for target_link_directories.
 cmake_minimum_required(VERSION 3.23)
 
-# Define project.
+#Define project.
 project(
   Neural-for-USD
   VERSION 0.0.1
-  DESCRIPTION
-    "A collection of example plugins for Pixar's USD (Universal Scene Description)."
+  DESCRIPTION ""
   LANGUAGES CXX)
 
 include_directories(./include)
 
-# Discover cmake modules.
+#Discover cmake modules.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/
                       ${CMAKE_CURRENT_SOURCE_DIR}/cmake/packages)
 
-# Exposes build options (with default values) for this project.
+#Exposes build options(with default values) for this project.
 include(Options)
 
-# Set project defaults.
+#Set project defaults.
 include(Defaults)
 
-# Import the package dependencies (USD, TBB, ...).
+#Import the package dependencies(USD, TBB, ...).
 include(Packages)
 
-# Include USD plugin building CMake utilities.
+#Include USD plugin building CMake utilities.
 include(USDPluginTools)
 
-# Recurse into source tree.
+#Recurse into source tree.
 add_subdirectory(src)
-
 
 target_sources(simple
   PRIVATE
     log.txt
+    .gitignore
 )
-

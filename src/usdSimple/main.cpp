@@ -1,4 +1,4 @@
-#include "mycpp/myutils.h"
+#include "MyCpp/mystartup.h"
 #include "mainwindow.h"
 
 #include <QDebug>
