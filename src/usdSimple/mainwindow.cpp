@@ -35,6 +35,9 @@ void MainWindow::slot_findUsdFilePath()
                                                "Select USD File",
                                                PROJECT_SOURCE_DIR,
                                                "USD Files (*.usd *.usda *.usdc)");
+
+    m_ui->lineEdit->setText(sfp);
+
     QString assetDir = QFileInfo(sfp).dir().absolutePath();
 
     QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/HDR_029_Sky_Cloudy_Ref.hdr";

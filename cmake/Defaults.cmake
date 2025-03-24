@@ -1,8 +1,18 @@
 # Default build configurations for the USDPluginExamples project.
 
 set(USD_ROOT /Users/liu.amy05/usd)
-set(CMAKE_INSTALL_PREFIX /Users/liu.amy05/Documents/Neural-for-USD)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
+# Find Qt
+set(CMAKE_PREFIX_PATH /Users/liu.amy05/Qt/6.8.1/macos)
 set(CMAKE_BUILD_TYPE "Release")
+
+# To find Qt UI files
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_OSX_ARCHITECTURES "x86_64")
 
 # By default, build for release.
 if(NOT CMAKE_BUILD_TYPE)

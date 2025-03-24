@@ -93,6 +93,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b)
         outputImagePath += ".png";
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
+            qDebug() << "Recorded frame" << frame;
             b->setValue(frame + 1);
         }
     }
