@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QFileInfo>
 
 #include <pxr/usd/sdf/path.h>
 #include <pxr/usd/usdGeom/tokens.h>
@@ -93,7 +94,11 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
 
-        m_cameraPoses[frame]->m_outputPath = outputImagePath;
+        QFileInfo dataFileInfo(m_outputDataFilePath);
+        QString dataFileDir = dataFileInfo.absolutePath();
+
+        QString relativePath = QDir(dataFileDir).relativeFilePath(outputImagePath);
+        m_cameraPoses[frame]->m_outputPath = relativePath;
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
@@ -148,6 +153,12 @@ bool Camera::generateCameraPoses(int numSamples)
         uPtr<CameraPose> currCamPose = mkU<CameraPose>(i, QString("Not set"), m);
         m_cameraPoses.push_back(std::move(currCamPose));
     }
+
+    m_usdStage->Export(CCP(m_outputStageFilePath));
+
+    // 20.955
+    // 15.2908
+
     return true;
 }
 
@@ -195,6 +206,7 @@ void Camera::toJson() const
     }
 
     json["frames"] = framesArray;
+    json["camera_angle_x"] = 0.413;
 
     QJsonDocument document;
     document.setObject(json);
