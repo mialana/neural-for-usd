@@ -24,7 +24,10 @@ MainWindow::~MainWindow()
 void MainWindow::slot_beginDataCollection()
 {
     QString outputPrefix = "/r";
-    m_camera->record(outputPrefix, m_ui->progressBar);
+    m_camera->record(outputPrefix, m_ui->progressBar, 100);
+
+    m_camera->toJson();
+
     return;
 }
 
@@ -33,9 +36,12 @@ void MainWindow::slot_findUsdFilePath()
     // Open file dialog with USD file filter and default directory
     QString sfp = QFileDialog::getOpenFileName(nullptr,
                                                "Select USD File",
-                                               PROJECT_SOURCE_DIR,
+                                               PROJECT_SOURCE_DIR + QString("/assets/"),
                                                "USD Files (*.usd *.usda *.usdc)");
 
+    if (!QFile(sfp).exists()) {
+        return;
+    }
     m_ui->lineEdit->setText(sfp);
 
     QString assetDir = QFileInfo(sfp).dir().absolutePath();

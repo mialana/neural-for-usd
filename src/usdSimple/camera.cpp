@@ -1,14 +1,15 @@
 #include "camera.h"
 
-#include <MyCpp/mydefines.h>
-#include <MyCpp/mymath.h>
-#include <MyCpp/myglm.h>
-#include <MyCpp/mysampling.h>
+#include <mycpp/mymath.h>
+#include <mycpp/myglm.h>
+#include <mycpp/mysampling.h>
 
 #include <iostream>
 #include <pcg32.h>
 
 #include <QDir>
+#include <QJsonArray>
+#include <QJsonDocument>
 
 #include <pxr/usd/sdf/path.h>
 #include <pxr/usd/usdGeom/tokens.h>
@@ -68,17 +69,17 @@ bool Camera::createDomeLight()
     return true;
 }
 
-bool Camera::writeData()
+bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
 {
-    return false;
-}
+    m_outputPrefix = outputPrefix;
+    m_numFrames = numFrames;
 
-bool Camera::record(QString outputPrefix, QProgressBar* b)
-{
     if (!QDir().mkpath(m_outputRendersDirPath)) {
         qDebug() << "Output render path creation failure.";
         return false;
     }
+
+    generateCameraPoses(m_numFrames);
 
     pxr::UsdAppUtilsFrameRecorder frameRecorder = pxr::UsdAppUtilsFrameRecorder(pxr::TfToken(),
                                                                                 true);
@@ -87,10 +88,12 @@ bool Camera::record(QString outputPrefix, QProgressBar* b)
     frameRecorder.SetComplexity(4.0);
     frameRecorder.SetDomeLightVisibility(true);
 
-    for (int frame = 0; frame < 100; frame++) {
+    for (int frame = 0; frame < numFrames; frame++) {
         QString outputImagePath = m_outputRendersDirPath + outputPrefix;
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
+
+        m_cameraPoses[frame]->m_outputPath = outputImagePath;
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
@@ -100,7 +103,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b)
     return true;
 }
 
-bool Camera::generateCameraTransforms(int numSamples)
+bool Camera::generateCameraPoses(int numSamples)
 {
     int sqrtVal = (int)(std::sqrt((float)numSamples) + 0.5);
     float invSqrtVal = 1.f / sqrtVal;
@@ -140,15 +143,25 @@ bool Camera::generateCameraTransforms(int numSamples)
                                                         pxr::GfVec3d(up.x, up.y, up.z));
         m = m.GetInverse();
 
-        m_usdCameraParams.SetTransform(m);
-        m_usdCamera.SetFromCamera(m_usdCameraParams, i);
+        setCameraTransformAtFrame(m, i);
+
+        uPtr<CameraPose> currCamPose = mkU<CameraPose>(i, QString("Not set"), m);
+        m_cameraPoses.push_back(std::move(currCamPose));
     }
     return true;
 }
 
-bool Camera::createUsdCameraParams()
+void Camera::setCameraTransformAtFrame(pxr::GfMatrix4d transform, int frame)
 {
-    m_usdCameraParams = pxr::GfCamera(m_usdCamera.GetCamera(0));
+    m_gfCamera.SetTransform(transform);
+    m_usdCamera.SetFromCamera(m_gfCamera, frame);
+
+    return;
+}
+
+bool Camera::createGfCamera()
+{
+    m_gfCamera = pxr::GfCamera(m_usdCamera.GetCamera(0));
 
     return true;
 }
@@ -162,9 +175,35 @@ bool Camera::createUsdCamera(const char* name)
     m_usdCamera = pxr::UsdGeomCamera::Define(m_usdStage, cameraPath);
     m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
 
-    if (createUsdCameraParams()) {
-        return generateCameraTransforms(100);
+    createGfCamera();
+
+    return true;
+}
+
+void Camera::toJson() const
+{
+    if (!QDir(m_outputRendersDirPath).exists() || m_cameraPoses.empty()) {
+        qFatal() << "Camera data have not been recorded yet.";
     }
 
-    return false;
+    QJsonObject json;
+    QJsonArray framesArray;
+
+    for (int frame = 0; frame < m_numFrames; frame++) {
+        framesArray.append(m_cameraPoses[frame]->toJson());
+        qDebug() << "Wrote pose" << frame;
+    }
+
+    json["frames"] = framesArray;
+
+    QJsonDocument document;
+    document.setObject(json);
+
+    QFile jsonFile(m_outputDataFilePath);
+    jsonFile.open(QFile::WriteOnly);
+    jsonFile.write(document.toJson());
+
+    jsonFile.close();
+
+    return;
 }

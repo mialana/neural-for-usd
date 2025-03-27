@@ -6,8 +6,12 @@ usd_executable(simple
         camera.cpp
         mainwindow.h
         mainwindow.cpp
+        camerapose.h
+        camerapose.cpp
+        scene.h
+        scene.cpp
         mainwindow.ui
-
+        
     LIBRARIES
         sdf
         usd
