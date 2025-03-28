@@ -89,7 +89,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
     frameRecorder.SetComplexity(4.0);
     frameRecorder.SetDomeLightVisibility(true);
 
-    for (int frame = 0; frame < numFrames; frame++) {
+    for (int frame = 0; frame < m_numFrames; frame++) {
         QString outputImagePath = m_outputRendersDirPath + outputPrefix;
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
@@ -102,7 +102,8 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
-            b->setValue(frame + 1);
+
+            // b->setValue((int)(frame + 1 / m_numFrames));
         }
     }
     return true;
@@ -110,14 +111,14 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
 
 bool Camera::generateCameraPoses(int numSamples)
 {
-    int sqrtVal = (int)(std::sqrt((float)numSamples) + 0.5);
+    int sqrtVal = (int)(std::sqrt((float)m_numFrames) + 0.5);
     float invSqrtVal = 1.f / sqrtVal;
 
-    numSamples = sqrtVal * sqrtVal;
+    // numSamples = sqrtVal * sqrtVal;
 
     pcg32 rng;
 
-    for (int i = 0; i < numSamples; ++i) {
+    for (int i = 0; i < m_numFrames; ++i) {
         int y = i / sqrtVal;
         int x = i % sqrtVal;
         glm::vec2 sample;

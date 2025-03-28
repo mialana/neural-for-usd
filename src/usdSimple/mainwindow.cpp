@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
 void MainWindow::slot_beginDataCollection()
 {
     QString outputPrefix = "/r";
-    m_camera->record(outputPrefix, m_ui->progressBar, 100);
+    m_camera->record(outputPrefix, m_ui->progressBar, 106);
 
     m_camera->toJson();
 
