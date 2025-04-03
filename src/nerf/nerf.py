@@ -822,6 +822,8 @@ def train():
         optimizer.zero_grad()
         psnr = -10.0 * torch.log10(loss)  # higher psnr is better quality
         train_psnrs.append(psnr.item())
+        logging.info(f"Loss: {loss.item()}")
+        logging.info(f"PSNR: {psnr.item()}")
 
         # Evaluate testimg at given display rate.
         if i % display_rate == 0:
@@ -849,11 +851,11 @@ def train():
 
             rgb_predicted = outputs["rgb_map"]
             loss = torch.nn.functional.mse_loss(rgb_predicted, testimg.reshape(-1, 3))
-            logging.info("Loss:")
-            logging.info(loss.item())
             val_psnr = -10.0 * torch.log10(loss)
             val_psnrs.append(val_psnr.item())
             iternums.append(i)
+            logging.info(f"Val Loss: {loss.item()}")
+            logging.info(f"Val PSNR: {val_psnr}")
 
             # Plot example outputs
             fig, ax = plt.subplots(
