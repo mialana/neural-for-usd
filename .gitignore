@@ -27,9 +27,12 @@ replay_pid*
 
 temp/**
 
-**data**
+**/data/**
+**data.npz**
 **copy.**
 build**
 *.autosave
 log.txt
 *.user
+
+**.pyc**
