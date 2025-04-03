@@ -13,6 +13,7 @@ def train(model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper)
     # Shuffle rays across all images.
     if not one_image_per_step:
         height, width = r.images.shape[1:3]
+        logger.debug(height, " ", width)
         all_rays = torch.stack(
             [
                 torch.stack(r.get_rays(height, width, r.focal, p), 0)

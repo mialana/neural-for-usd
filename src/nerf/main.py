@@ -9,8 +9,9 @@ if __name__ == "__main__":
     
     def signal_handler(sig, frame):
         print('You pressed Ctrl+C!')
-        torch.save(model.state_dict(), "nerf.pt")
-        torch.save(fine_model.state_dict(), "nerf-fine.pt")
+        torch.save(model.state_dict(), "data/nerf.pt")
+        torch.save(fine_model.state_dict(), "data/nerf-fine.pt")
+        torch.save(optimizer.state_dict(), "data/optimizer.pt")
         sys.exit(0)
 
     signal.signal(signal.SIGINT, signal_handler)
@@ -28,5 +29,5 @@ if __name__ == "__main__":
     print("")
     print(f"Done!")
 
-    torch.save(model.state_dict(), "nerf.pt")
-    torch.save(fine_model.state_dict(), "nerf-fine.pt")
+    torch.save(model.state_dict(), "data/nerf.pt")
+    torch.save(fine_model.state_dict(), "data/nerf-fine.pt")

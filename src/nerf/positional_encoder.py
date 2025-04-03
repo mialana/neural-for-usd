@@ -6,7 +6,7 @@ class PositionalEncoder(nn.Module):
     Sine-cosine positional encoder for input points.
     """
 
-    def __init__(self, d_input: int, n_freqs: int, log_space: bool = False):
+    def __init__(self, d_input: int, n_freqs: int, log_space: bool):
         super().__init__()
         self.d_input = d_input
         self.n_freqs = n_freqs

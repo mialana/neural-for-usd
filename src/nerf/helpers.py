@@ -1,5 +1,5 @@
-from encoder import PositionalEncoder
-from nerf import NeRF
+from src.nerf.positional_encoder import PositionalEncoder
+from src.nerf.mlp import MLP
 
 from typing import Optional
 
@@ -83,7 +83,7 @@ def init_models():
         d_viewdirs = encoder_viewdirs.d_output
 
     # Models
-    model = NeRF(
+    model = MLP(
         encoder.d_output,
         n_layers=n_layers,
         d_filter=d_filter,
@@ -95,7 +95,7 @@ def init_models():
 
     fine_model = None
     if use_fine_model:
-        fine_model = NeRF(
+        fine_model = MLP(
             encoder.d_output,
             n_layers=n_layers,
             d_filter=d_filter,
