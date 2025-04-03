@@ -36,3 +36,6 @@ log.txt
 *.user
 
 **.pyc**
+
+**/visuals/**
+**/checkpoints/**

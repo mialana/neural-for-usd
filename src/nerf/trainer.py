@@ -32,7 +32,7 @@ def train(model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper)
     val_psnrs = []
     iternums = []
     for i in trange(n_iters):
-        model.train()
+        model.train() # tells that you are training model, doesn't perform forward()
 
         if one_image_per_step:
             # Randomly pick an image as the target.
@@ -84,10 +84,10 @@ def train(model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper)
         # Backprop!
         rgb_predicted = outputs["rgb_map"]
         loss = torch.nn.functional.mse_loss(rgb_predicted, target_img)
-        loss.backward()
+        loss.backward() # rgb_predicted and target_img now have grad()
         optimizer.step()
         optimizer.zero_grad()
-        psnr = -10.0 * torch.log10(loss)
+        psnr = -10.0 * torch.log10(loss) # higher psnr is better quality
         train_psnrs.append(psnr.item())
 
         # Evaluate testimg at given display rate.

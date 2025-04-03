@@ -1,5 +1,5 @@
-from src.nerf.positional_encoder import PositionalEncoder
-from src.nerf.mlp import MLP
+from positional_encoder import PositionalEncoder
+from mlp import MLP
 
 from typing import Optional
 

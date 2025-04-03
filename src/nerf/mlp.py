@@ -6,7 +6,7 @@ from torch import nn
 
 class MLP(nn.Module):
     r"""
-    Neural radiance fields module.
+    Multilayer Perceptron module.
     """
 
     def __init__(
