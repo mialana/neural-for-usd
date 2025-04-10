@@ -20,4 +20,6 @@ usd_executable(simple
         gf
         usdLux
         usdAppUtils
+        usdUtils
+        usdviewq
 )

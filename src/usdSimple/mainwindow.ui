@@ -117,6 +117,19 @@
          <string>Choose skydome texture</string>
         </property>
        </widget>
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>100</y>
+          <width>131</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Launch UsdView</string>
+        </property>
+       </widget>
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
