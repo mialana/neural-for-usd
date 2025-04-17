@@ -17,7 +17,7 @@ public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
-public slots:
+public Q_SLOTS:
     void slot_beginDataCollection();
     void slot_findUsdFilePath();
 

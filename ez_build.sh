@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cmake_install_prefix="/Users/liu.amy05/Documents/Neural-for-USD"
+cmake_install_prefix="/Users/Dev/Projects/Neural-for-USD"
 
 find src/usdSimple -iname '*.h' -o -iname '*.cpp' | xargs clang-format -i
 
@@ -15,7 +15,7 @@ fi
 
 cd build
 cmake \
-  -DUSD_ROOT="/Users/liu.amy05/usd" \
+  -DUSD_ROOT="/opt/usd" \
   -DCMAKE_INSTALL_PREFIX=${cmake_install_prefix} \
   ..
 

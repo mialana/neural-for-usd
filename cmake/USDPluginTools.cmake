@@ -629,17 +629,15 @@ function(_usd_target_properties TARGET_NAME)
   # Link to libraries.
   set(_LINK_LIBRARIES "")
   list(APPEND _LINK_LIBRARIES ${args_LIBRARIES} ${TBB_LIBRARIES})
-  if(ENABLE_PYTHON_SUPPORT)
-    list(
-      APPEND
-      _LINK_LIBRARIES
-      ${Boost_PYTHON_LIBRARY}
-      ${Python3_LIBRARIES}
-      Qt6::Core
-      Qt6::Widgets
-      Qt6::OpenGL
-      Qt6::OpenGLWidgets)
-  endif()
+  list(
+    APPEND
+    _LINK_LIBRARIES
+    ${Boost_PYTHON_LIBRARY}
+    ${Python3_LIBRARIES}
+    Qt6::Core
+    Qt6::Widgets
+    Qt6::OpenGL
+    Qt6::OpenGLWidgets)
 
   target_link_libraries(${TARGET_NAME} PRIVATE ${_LINK_LIBRARIES})
 endfunction() # _usd_target_properties
@@ -678,8 +676,6 @@ function(_usd_set_test_properties TARGET_NAME USE_PYTHONPATH)
     list(APPEND TEST_PYTHON_PATH
          "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}/python"
          "${USD_ROOT}/${CMAKE_INSTALL_LIBDIR}/python")
-
-    list(APPEND TEST_ENV_VARS "${TEST_PYTHON_PATH}")
   endif()
 
   # Add MSVC-required paths

@@ -4,13 +4,13 @@
 
 #include <mycpp/mydefines.h>
 
-#include <QProgressBar>
-#include <QJsonObject>
-
 #include <pxr/usd/usdGeom/xform.h>
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
+
+#include <QProgressBar>
+#include <QJsonObject>
 
 class Camera
 {

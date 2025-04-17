@@ -69,4 +69,4 @@ pv_api.RemovePrimvar('uv')
             
 # UsdShade.MaterialBindingAPI(geom).Bind(material)
 
-stage.Export("/Users/liu.amy05/Documents/Neural-for-USD/src/USDC_Wooden_Plane/woodenPlaneEditedFirst.usda")
+stage.Export("./src/USDC_Wooden_Plane/woodenPlaneEditedFirst.usda")

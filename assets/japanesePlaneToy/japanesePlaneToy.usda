@@ -2,8 +2,6 @@
 (
     defaultPrim = "japanese_toy"
     doc = """Blender v2.83.4
-
-Generated from Composed Stage of root layer /Users/liu.amy05/Documents/Neural-for-USD/tmp/woodenPlane-orig.usda
 """
     metersPerUnit = 1
     upAxis = "Z"

@@ -4,9 +4,9 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/include/**",
-                "/Users/liu.amy05/usd/include/**",
-                "/Users/liu.amy05/usd/include/boost/**",
-                "/usr/local/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/include/python3.9/**"
+                "/opt/usd/include/**",
+                "/opt/usd/include/boost/**",
+                "/Users/Dev/.pyenv/versions/3.9.13/include/python3.9/**"
             ],
             "defines": [],
             "macFrameworkPath": [
@@ -15,7 +15,7 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "macos-clang-x86"
+            "intelliSenseMode": "macos-clang-arm64"
         }
     ],
     "version": 4

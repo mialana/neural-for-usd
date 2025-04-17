@@ -396,7 +396,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>/Users/liu.amy05/Documents/Neural-for-USD/assets/japanesePlaneToy/data/data.json</string>
+         <string>/Users/Dev/Projects/Neural-for-USD/assets/japanesePlaneToy/data/data.json</string>
         </property>
         <property name="placeholderText">
          <string>Data file path</string>
