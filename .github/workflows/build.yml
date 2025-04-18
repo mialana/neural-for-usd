@@ -82,6 +82,7 @@ jobs:
         run: |
           find . \
             -name ".git" -prune -o \
+            -name "include" -prune -o \
             -name "*.cpp" -type f -exec clang-format -i --verbose {} + -o \
             -name "*.h" -type f -exec clang-format -i --verbose {} +
       - name: Check for code differences

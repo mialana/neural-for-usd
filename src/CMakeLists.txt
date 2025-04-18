@@ -1,4 +1,4 @@
-add_subdirectory(usdSimple)
+add_subdirectory(base)
 
 # Install top level python __init__.py
 install(FILES __init__.py

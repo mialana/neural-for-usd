@@ -2,7 +2,7 @@
 
 cmake_install_prefix="/Users/Dev/Projects/Neural-for-USD"
 
-find src/usdSimple -iname '*.h' -o -iname '*.cpp' | xargs clang-format -i
+find src/usdSimple -iname '*.h' -o -iname '*.cpp' - | xargs clang-format -i
 
 if [ -f japanesePlaneToy.usda ]; then
   trash japanesePlaneToy.usda

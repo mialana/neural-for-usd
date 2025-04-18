@@ -27,9 +27,3 @@ include(USDPluginTools)
 
 #Recurse into source tree.
 add_subdirectory(src)
-
-target_sources(simple
-  PRIVATE
-    log.txt
-    .gitignore
-)

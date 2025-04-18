@@ -46,7 +46,7 @@ void MainWindow::slot_findUsdFilePath()
 
     QString assetDir = QFileInfo(sfp).dir().absolutePath();
 
-    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/HDR_029_Sky_Cloudy_Ref.hdr";
+    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelight/HDR_029_Sky_Cloudy_Ref.hdr";
     QString osfp = assetDir + "/data/mystage.usda";
     QString odfp = assetDir + "/data/data.json";
     QString ordp = assetDir + "/data/internalVal";

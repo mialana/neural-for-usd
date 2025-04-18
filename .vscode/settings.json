@@ -1,4 +1,6 @@
 {
+  "editor.formatOnSave": true,
+  "python.terminal.activateEnvironment": true,
   "files.associations": {
     "__bit_reference": "cpp",
     "__hash_table": "cpp",
@@ -54,9 +56,4 @@
     "vector": "cpp",
     "algorithm": "cpp"
   },
-  "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "C_Cpp.clang_format_path": "/usr/local/bin/clang-format",
-  "C_Cpp.formatting": "clangFormat"
 }
