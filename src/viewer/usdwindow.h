@@ -14,6 +14,4 @@ class UsdWindow : public QMainWindow
 public:
     explicit UsdWindow(QWidget* parent = nullptr);
     Ui::UsdWindow* m_ui;
-
-Q_SIGNALS:
 };

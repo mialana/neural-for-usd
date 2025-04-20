@@ -1,7 +1,7 @@
 #pragma once
 
 #include "openglcontext.h"
-#include "model.h"
+#include "models/model.h"
 #include "engine.h"
 
 #include <pxr/usd/usd/stage.h>
@@ -30,6 +30,10 @@ private:
     QTimer m_timer;
     int m_width;
     int m_height;
+
+    GLuint m_fbo;
+    GLuint m_vao;
+    GLuint m_vbo;
 
 public:
     explicit UsdGL(QWidget* parent = nullptr);

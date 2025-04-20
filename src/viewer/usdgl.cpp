@@ -1,6 +1,7 @@
 #include "usdgl.h"
 
-#include "xformfiltersceneindex.h"
+#include "sceneindices/xformfiltersceneindex.h"
+#include "sceneindices/gridsceneindex.h"
 
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/base/gf/frustum.h>
@@ -40,6 +41,8 @@ void UsdGL::initializeGL()
     // enable blending if you ever have transparent AOVs
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 
     // Load USD stage and get camera
     m_stage = pxr::UsdStage::Open(

@@ -7,6 +7,7 @@
 #include <pxr/imaging/hd/rendererPluginRegistry.h>
 #include <pxr/imaging/hdx/pickTask.h>
 #include <pxr/imaging/hgi/tokens.h>
+#include <QDebug>
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -58,7 +59,6 @@ void Engine::Initialize()
 
     // init render index
     _renderIndex = HdRenderIndex::New(_renderDelegate.Get(), {&_hgiDriver});
-
     _renderIndex->InsertSceneIndex(_sceneIndex, _taskControllerId);
 
     // init task controller
@@ -149,12 +149,11 @@ string Engine::GetRendererPluginName(TfToken plugin)
     if (!foundPlugin) { return std::string(); }
 
     // TODO: fix that will be eventually delegate to Hgi
-#if defined(__APPLE__)
+#if __APPLE__
     if (pluginDescriptor.id == TfToken("HdStormRendererPlugin")) {
         return "Metal";
     }
 #endif
-
     return pluginDescriptor.displayName;
 }
 

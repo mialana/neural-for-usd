@@ -1,4 +1,4 @@
-file(GLOB SOURCEFILES *.cpp *.h *.ui)
+file(GLOB_RECURSE SOURCEFILES *.cpp *.h *.ui)
 file(GLOB STATICFILES *.usd *.usd* *.txt)
 list(FILTER STATICFILES EXCLUDE REGEX "CMakeLists.txt")
 

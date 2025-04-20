@@ -1,5 +1,0 @@
-#include "scene.h"
-
-#include <pxr/usdImaging/usdviewq/utils.h>
-
-Scene::Scene() {}
