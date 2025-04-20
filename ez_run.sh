@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-build/src/usdSimple/simple
+build/src/viewer/viewer
 
 make high

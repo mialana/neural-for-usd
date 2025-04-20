@@ -17,10 +17,10 @@
    <widget class="UsdGL" name="openGLWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>-30</y>
-      <width>541</width>
-      <height>381</height>
+      <x>120</x>
+      <y>20</y>
+      <width>400</width>
+      <height>400</height>
      </rect>
     </property>
    </widget>

@@ -22,8 +22,8 @@ include(Defaults)
 #Import the package dependencies(USD, TBB, ...).
 include(Packages)
 
-#Include USD plugin building CMake utilities.
-include(USDPluginTools)
+#Include CMake utilities for USD projects.
+include(Utils)
 
 #Recurse into source tree.
 add_subdirectory(src)

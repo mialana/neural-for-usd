@@ -4,10 +4,6 @@ cmake_install_prefix="/Users/Dev/Projects/Neural-for-USD"
 
 find src/usdSimple -iname '*.h' -o -iname '*.cpp' - | xargs clang-format -i
 
-if [ -f japanesePlaneToy.usda ]; then
-  trash japanesePlaneToy.usda
-fi
-
 if [ -e build ]; then
   trash build
   mkdir build
@@ -19,4 +15,4 @@ cmake \
   -DCMAKE_INSTALL_PREFIX=${cmake_install_prefix} \
   ..
 
-cmake --build . -j8 -- simple
+cmake --build . -j8 -- viewer

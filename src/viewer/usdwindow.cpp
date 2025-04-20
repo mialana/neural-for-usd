@@ -8,6 +8,4 @@ UsdWindow::UsdWindow(QWidget* parent)
     m_ui->setupUi(this);
 
     this->move(QPoint(0, 0));
-
-    this->updatesEnabled();
 }

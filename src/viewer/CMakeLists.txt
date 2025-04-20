@@ -1,28 +1,25 @@
-file(GLOB CPPFILES *.cpp)
-file(GLOB HEADERFILES *.h)
-file(GLOB UIFILES *.ui)
-file(GLOB RESOURCE_FILES *.usd *.usd* *.txt)
+file(GLOB SOURCEFILES *.cpp *.h *.ui)
+file(GLOB STATICFILES *.usd *.usd* *.txt)
+list(FILTER STATICFILES EXCLUDE REGEX "CMakeLists.txt")
 
 usd_executable(viewer
 
     CPPFILES
-        ${CPPFILES}
-        ${HEADERFILES}
-        ${UIFILES}
+        ${SOURCEFILES}
         
     LIBRARIES
-        sdf
         usd
         usdGeom
-        tf
-        gf
         usdLux
-        usdAppUtils
-        usdUtils
-        usdviewq
         usdImaging
+        usdAppUtils
+        gf
         glf
-
-    RESOURCE_FILES
-        ${RESOURCE_FILES}
+        hd
+        hdx
+        sdf
+        tf
+    
+    STATICFILES
+        ${STATICFILES}
 )

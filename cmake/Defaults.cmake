@@ -4,7 +4,6 @@ set(USD_ROOT /opt/usd)
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR})
 # Find Qt
 set(CMAKE_PREFIX_PATH /opt/Qt/6.9.0/macos)
-set(CMAKE_BUILD_TYPE "Release")
 
 # To find Qt UI files
 set(CMAKE_AUTOMOC ON)
@@ -17,9 +16,9 @@ set(CMAKE_OSX_ARCHITECTURES "arm64")
 ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 
 # By default, build for release.
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
-endif()
+# if(NOT CMAKE_BUILD_TYPE)
+    # set(CMAKE_BUILD_TYPE "Release")
+# endif()
 
 # Check if CTest should be enabled.
 if (BUILD_TESTING)
