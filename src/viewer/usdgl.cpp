@@ -1,8 +1,5 @@
 #include "usdgl.h"
 
-#include "sceneindices/xformfiltersceneindex.h"
-#include "sceneindices/gridsceneindex.h"
-
 #include <pxr/usd/usdGeom/camera.h>
 #include <pxr/base/gf/frustum.h>
 #include <pxr/imaging/hd/pluginRenderDelegateUniqueHandle.h>
@@ -15,6 +12,7 @@ UsdGL::UsdGL(QWidget* parent)
     , m_engine(nullptr)
     , m_stage(nullptr)
     , m_camera()
+    , m_gridSceneIndex(nullptr)
     , m_timer()
     , m_width(400)
     , m_height(400)
@@ -25,24 +23,11 @@ UsdGL::UsdGL(QWidget* parent)
 UsdGL::~UsdGL()
 {
     makeCurrent();
+    // glDeleteFramebuffers(1, &m_fbo);
 }
 
 void UsdGL::initializeGL()
 {
-    initializeOpenGLFunctions();  // Qt function to load OpenGL symbols
-
-    // Set default clear color (background)
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-    // Enable depth testing (Hydra uses depth by default)
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    // enable blending if you ever have transparent AOVs
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
 
     // Load USD stage and get camera
     m_stage = pxr::UsdStage::Open(
@@ -53,20 +38,22 @@ void UsdGL::initializeGL()
     }
     m_camera = UsdGeomCamera::Define(m_stage, SdfPath("/Xform_MyCam/MyCam")).GetCamera(0);
 
-    m_model->SetStage(m_stage);
-
-    UsdImagingCreateSceneIndicesInfo info;
-    info.displayUnloadedPrimsWithBounds = false;
-
-    UsdImagingSceneIndices sceneIndices = UsdImagingCreateSceneIndices(info);
-    sceneIndices.stageSceneIndex->SetStage(m_stage);
-    sceneIndices.stageSceneIndex->SetTime(UsdTimeCode::Default());
-
-    HdSceneIndexBaseRefPtr filteredSceneIndex = XformFilterSceneIndex::New(
-        sceneIndices.finalSceneIndex);
+    m_gridSceneIndex = GridSceneIndex::New();
+    m_model->AddSceneIndexBase(m_gridSceneIndex);
 
     TfToken defaultRenderer = Engine::GetDefaultRendererPlugin();
-    m_engine = std::make_unique<Engine>(filteredSceneIndex, defaultRenderer);
+    m_engine = std::make_unique<Engine>(m_model->GetFinalSceneIndex(), defaultRenderer);
+
+    // OpenGL-related setup
+    initializeOpenGLFunctions();  // Qt function to load OpenGL symbols
+
+    // glEnable(GL_DEPTH_TEST);
+
+    // // Set default clear color (background)
+    // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    // glGenFramebuffers(1, &m_fbo);
+
+    // glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
     m_timer.start(16);
 }
@@ -89,9 +76,6 @@ void UsdGL::paintGL()
         return;
     }
 
-    // Clear buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // Get current size (in case resized)
     int w = width();
     int h = height();
@@ -110,6 +94,19 @@ void UsdGL::paintGL()
     // Execute Hydra render pipeline
     m_engine->Prepare();
     m_engine->Render();
+
+    // GLuint textureHandle = m_engine->GetRenderBufferData();
+
+    // Clear buffers
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // glBindTexture(GL_TEXTURE_2D, textureHandle);
+
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+    // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureHandle, 0);
+
 }
 
 void UsdGL::tick()

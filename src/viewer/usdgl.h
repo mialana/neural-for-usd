@@ -7,9 +7,13 @@
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
 
+#include "sceneindices/gridsceneindex.h"
+
 #include <QTimer>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+
+#include <QOpenGLShader>
 
 #define VALUE(string) #string
 #define TO_LITERAL(string) VALUE(string)
@@ -26,6 +30,9 @@ private:
 
     UsdStageRefPtr m_stage;
     GfCamera m_camera;
+    GridSceneIndexRefPtr m_gridSceneIndex;
+
+    // QOpenGLShader m_screenShader;
 
     QTimer m_timer;
     int m_width;

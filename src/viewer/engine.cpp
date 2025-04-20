@@ -303,11 +303,11 @@ SdfPath Engine::FindIntersection(GfVec2f screenPos)
     return path;
 }
 
-void* Engine::GetRenderBufferData()
+GLuint Engine::GetRenderBufferData()
 {
-    GLint id =
+    GLuint id =
         _drawTarget->GetAttachment(HdAovTokens->color)->GetGlTextureName();
-    return (void*)(uintptr_t)id;
+    return id;
 }
 
 GfFrustum Engine::GetFrustum()

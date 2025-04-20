@@ -122,7 +122,7 @@ class Engine {
          *
          * @return the data from the render buffer
          */
-        void *GetRenderBufferData();
+        GLuint GetRenderBufferData();
 
     private:
         UsdStageRefPtr _stage;
