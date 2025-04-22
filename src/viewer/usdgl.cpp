@@ -6,99 +6,111 @@
 #include <pxr/imaging/hd/rendererPluginRegistry.h>
 #include <pxr/imaging/hd/rendererPlugin.h>
 
+#include <pxr/usdImaging/usdAppUtils/frameRecorder.h>
+
 UsdGL::UsdGL(QWidget* parent)
     : OpenGLContext(parent)
-    , m_model(std::make_unique<Model>())
-    , m_engine(nullptr)
-    , m_stage(nullptr)
-    , m_camera()
-    , m_gridSceneIndex(nullptr)
+    , mp_scene(std::make_unique<Scene>())
+    , mp_engine(nullptr)
+    , _engine(nullptr)
+    , m_frameBuffer(this, this->width(), this->height(), this->devicePixelRatio())
     , m_timer()
-    , m_width(400)
-    , m_height(400)
 {
     connect(&m_timer, &QTimer::timeout, this, &UsdGL::tick);
+
+    std::string PATH = "/Users/Dev/Projects/Neural-for-USD/assets/testAssets/simpleCube.usda";
+    std::string CAM_PATH = "/SimpleCube/primaryCam";
+    mp_scene->initialize(PATH, SdfPath(CAM_PATH));
 }
 
 UsdGL::~UsdGL()
 {
     makeCurrent();
-    // glDeleteFramebuffers(1, &m_fbo);
 }
 
 void UsdGL::initializeGL()
 {
-
-    // Load USD stage and get camera
-    m_stage = pxr::UsdStage::Open(
-        "/Users/Dev/Projects/Neural-for-USD/assets/japanesePlaneToy/japanesePlaneToy.usda");
-    if (!m_stage) {
-        qWarning("Failed to open USD stage.");
-        return;
-    }
-    m_camera = UsdGeomCamera::Define(m_stage, SdfPath("/Xform_MyCam/MyCam")).GetCamera(0);
-
-    m_gridSceneIndex = GridSceneIndex::New();
-    m_model->AddSceneIndexBase(m_gridSceneIndex);
-
-    TfToken defaultRenderer = Engine::GetDefaultRendererPlugin();
-    m_engine = std::make_unique<Engine>(m_model->GetFinalSceneIndex(), defaultRenderer);
+    initializeOpenGLFunctions();
 
     // OpenGL-related setup
-    initializeOpenGLFunctions();  // Qt function to load OpenGL symbols
 
-    // glEnable(GL_DEPTH_TEST);
+    glClearColor(1., 0.5, 0.5, 1);
+    printGLErrorLog();
+    m_frameBuffer.create();
 
-    // // Set default clear color (background)
-    // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    // glGenFramebuffers(1, &m_fbo);
-
-    // glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+    TfToken plugin = Engine::GetDefaultRendererPlugin();
+    // _engine = std::make_unique<Engine>(mp_scene->getFinalSceneIndex(), plugin);
+    mp_engine = std::make_unique<MyEngine>(this, mp_scene.get(), width(), height());
 
     m_timer.start(16);
 }
 
 void UsdGL::resizeGL(int w, int h)
 {
-    m_width = w;
-    m_height = h;
+    glViewport(0, 0, w, h);
 
-    if (m_engine) {
-        m_engine->SetRenderSize(w, h);
+    m_frameBuffer.resize(width(), height(), devicePixelRatio());
+    m_frameBuffer.destroy();
+    m_frameBuffer.create();
+
+
+    if (mp_engine) {
+        mp_engine->setRenderSize(w, h);
     }
+
+    // if (_engine) {
+    //     _engine->SetRenderSize(w, h);
+    // }
+
+    qDebug() << "New width is:" << w;
+    qDebug() << "New height is:" << h;
+    qDebug() << "Device Pixel Ratio is:" << devicePixelRatio();
 }
 
 //This function is called by Qt any time your GL window is supposed to update
 //For example, when the function update() is called, paintGL is called implicitly.
 void UsdGL::paintGL()
 {
-    if (!m_engine) {
+    if (!mp_engine) {
         return;
     }
+
+    // if (!_engine) {
+    //     return;
+    // }
 
     // Get current size (in case resized)
     int w = width();
     int h = height();
-    m_width = w;
-    m_height = h;
 
+    m_frameBuffer.bindFrameBuffer();
     // Update engine's internal render size
-    m_engine->SetRenderSize(w, h);
+    mp_engine->setRenderSize(w, h);
+    // Setup engine's camera matrices from scene's primary camera
+    mp_engine->setCameraMatrices(mp_scene->getCamView(), mp_scene->getCamView());
 
-    // Setup camera matrices from your loaded GfCamera
-    GfMatrix4d viewMatrix = m_camera.GetFrustum().ComputeViewMatrix();
-    GfMatrix4d projMatrix = m_camera.GetFrustum().ComputeProjectionMatrix();
-
-    m_engine->SetCameraMatrices(viewMatrix, projMatrix);
+    mp_engine->prepareDefaultLighting();
 
     // Execute Hydra render pipeline
-    m_engine->Prepare();
-    m_engine->Render();
+    mp_engine->Render();
+
+    SdfPathVector paths;
+
+    paths.push_back(SdfPath("/SimpleCube/cubeShape"));
+
+    // _engine->SetSelection(paths);
+
+    // _engine->SetRenderSize(w, h);
+    // _engine->SetCameraMatrices(mp_scene->getCamView(), mp_scene->getCamView());
+
+    // _engine->Prepare();
+    // _engine->Render();
+
+    // qDebug() << "called";
 
     // GLuint textureHandle = m_engine->GetRenderBufferData();
 
     // Clear buffers
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // glBindTexture(GL_TEXTURE_2D, textureHandle);
@@ -106,10 +118,22 @@ void UsdGL::paintGL()
     // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
     // glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureHandle, 0);
-
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glViewport(0, 0, width(), height());
 }
 
 void UsdGL::tick()
 {
-    update();
+    this->update();
+}
+
+void UsdGL::slot_saveEngineRenderToFile(bool signaled)
+{
+    qDebug() << "Attempting save to file...";
+
+    this->makeCurrent();
+
+    // _engine->GetRenderBufferData();
+    mp_engine->renderToFile();
+    this->doneCurrent();
 }

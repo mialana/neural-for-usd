@@ -1,9 +1,9 @@
 #pragma once
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_3_2_Core>
+#include <QOpenGLFunctions_4_0_Core>
 
-class OpenGLContext : public QOpenGLWidget, public QOpenGLFunctions_3_2_Core
+class OpenGLContext : public QOpenGLWidget, public QOpenGLFunctions_4_0_Core
 {
     Q_OBJECT
 

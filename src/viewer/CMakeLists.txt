@@ -17,6 +17,7 @@ usd_executable(viewer
         glf
         hd
         hdx
+        hio
         sdf
         tf
     

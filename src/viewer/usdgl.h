@@ -1,22 +1,17 @@
 #pragma once
 
 #include "openglcontext.h"
-#include "models/model.h"
+#include "framebuffer.h"
+#include "scene.h"
+#include "myengine.h"
 #include "engine.h"
 
 #include <pxr/usd/usd/stage.h>
 #include <pxr/base/gf/camera.h>
 
-#include "sceneindices/gridsceneindex.h"
-
 #include <QTimer>
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-
-#include <QOpenGLShader>
-
-#define VALUE(string) #string
-#define TO_LITERAL(string) VALUE(string)
+#include <QOpenGLFunctions_4_0_Core>
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -25,22 +20,12 @@ class UsdGL : public OpenGLContext
     Q_OBJECT
 
 private:
-    std::unique_ptr<Model> m_model;
-    std::unique_ptr<Engine> m_engine;
-
-    UsdStageRefPtr m_stage;
-    GfCamera m_camera;
-    GridSceneIndexRefPtr m_gridSceneIndex;
-
-    // QOpenGLShader m_screenShader;
+    std::unique_ptr<Scene> mp_scene;
+    std::unique_ptr<MyEngine> mp_engine;
+    std::unique_ptr<Engine> _engine;
+    FrameBuffer2D m_frameBuffer;
 
     QTimer m_timer;
-    int m_width;
-    int m_height;
-
-    GLuint m_fbo;
-    GLuint m_vao;
-    GLuint m_vbo;
 
 public:
     explicit UsdGL(QWidget* parent = nullptr);
@@ -52,4 +37,6 @@ public:
 
 public Q_SLOTS:
     void tick();
+
+    void slot_saveEngineRenderToFile(bool signaled = true);
 };

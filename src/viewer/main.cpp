@@ -8,6 +8,8 @@ int main(int argc, char* argv[])
 {
     startup::doSimpleSetup();
 
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
+
     QApplication a(argc, argv);
 
     UsdWindow w = UsdWindow();

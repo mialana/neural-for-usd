@@ -8,4 +8,7 @@ UsdWindow::UsdWindow(QWidget* parent)
     m_ui->setupUi(this);
 
     this->move(QPoint(0, 0));
+
+    connect(m_ui->pushButton, &QPushButton::clicked, m_ui->MyUsdGL, &UsdGL::slot_saveEngineRenderToFile);
 }
+

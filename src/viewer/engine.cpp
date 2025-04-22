@@ -1,35 +1,35 @@
 #include "engine.h"
 
+#include <iostream>
 #include <pxr/base/gf/camera.h>
 #include <pxr/base/gf/frustum.h>
 #include <pxr/imaging/cameraUtil/conformWindow.h>
+#include <pxr/imaging/hd/renderBuffer.h>
 #include <pxr/imaging/hd/rendererPlugin.h>
 #include <pxr/imaging/hd/rendererPluginRegistry.h>
+#include <pxr/imaging/hd/rprim.h>
 #include <pxr/imaging/hdx/pickTask.h>
 #include <pxr/imaging/hgi/tokens.h>
-#include <QDebug>
+
+#include "pxr/base/tf/scoped.h"
+#include <pxr/imaging/hdSt/hioConversions.h>
+#include <pxr/imaging/hio/image.h>
 
 PXR_NAMESPACE_OPEN_SCOPE
 
 Engine::Engine(HdSceneIndexBaseRefPtr sceneIndex, TfToken plugin)
-    : _sceneIndex(sceneIndex),
-      _curRendererPlugin(plugin),
-      _hgi(Hgi::CreatePlatformDefaultHgi()),
-      _hgiDriver{HgiTokens->renderDriver, VtValue(_hgi.get())},
-      _engine(),
-      _renderDelegate(nullptr),
-      _renderIndex(nullptr),
-      _taskController(nullptr),
-      _taskControllerId("/defaultTaskController")
-{
+    : _sceneIndex(sceneIndex), _curRendererPlugin(plugin),
+    _hgi(Hgi::CreatePlatformDefaultHgi()),
+    _hgiDriver{HgiTokens->renderDriver, VtValue(_hgi.get())}, _engine(),
+    _renderDelegate(nullptr), _renderIndex(nullptr), _taskController(nullptr),
+    _taskControllerId("/defaultTaskController") {
     _width = 512;
     _height = 512;
 
     Initialize();
 }
 
-Engine::~Engine()
-{
+Engine::~Engine() {
     _drawTarget = GlfDrawTargetRefPtr();
 
     // Destroy objects in opposite order of construction.
@@ -44,14 +44,13 @@ Engine::~Engine()
     _renderDelegate = nullptr;
 }
 
-void Engine::Initialize()
-{
+void Engine::Initialize() {
     // init draw target
-    _drawTarget = GlfDrawTarget::New(GfVec2i(_width, _height));
+    _drawTarget = GlfDrawTarget::New(GfVec2i(_width, _height), false);
     _drawTarget->Bind();
     _drawTarget->AddAttachment(HdAovTokens->color, GL_RGBA, GL_FLOAT, GL_RGBA);
-    _drawTarget->AddAttachment(HdAovTokens->depth, GL_DEPTH_COMPONENT,
-                               GL_FLOAT, GL_DEPTH_COMPONENT);
+    _drawTarget->AddAttachment(HdAovTokens->depth, GL_DEPTH_COMPONENT, GL_FLOAT,
+                               GL_DEPTH_COMPONENT);
     _drawTarget->Unbind();
 
     // init render delegate
@@ -59,6 +58,7 @@ void Engine::Initialize()
 
     // init render index
     _renderIndex = HdRenderIndex::New(_renderDelegate.Get(), {&_hgiDriver});
+
     _renderIndex->InsertSceneIndex(_sceneIndex, _taskControllerId);
 
     // init task controller
@@ -88,8 +88,7 @@ void Engine::Initialize()
         _taskController->GetRenderOutputSettings(HdAovTokens->color);
     if (colorAovDesc.format != HdFormatInvalid) {
         colorAovDesc.clearValue = VtValue(clearColor);
-        _taskController->SetRenderOutputSettings(HdAovTokens->color,
-                                                 colorAovDesc);
+        _taskController->SetRenderOutputSettings(HdAovTokens->color, colorAovDesc);
     }
 
     // init selection
@@ -105,8 +104,7 @@ void Engine::Initialize()
     _taskController->SetOverrideWindowPolicy(CameraUtilFit);
 }
 
-TfTokenVector Engine::GetRendererPlugins()
-{
+TfTokenVector Engine::GetRendererPlugins() {
     HfPluginDescVector pluginDescriptors;
     HdRendererPluginRegistry::GetInstance().GetPluginDescs(&pluginDescriptors);
 
@@ -117,59 +115,53 @@ TfTokenVector Engine::GetRendererPlugins()
     return plugins;
 }
 
-TfToken Engine::GetDefaultRendererPlugin()
-{
-    HdRendererPluginRegistry& registry =
-        HdRendererPluginRegistry::GetInstance();
+TfToken Engine::GetDefaultRendererPlugin() {
+    HdRendererPluginRegistry &registry = HdRendererPluginRegistry::GetInstance();
     return registry.GetDefaultPluginId(true);
 }
 
-TfToken Engine::GetCurrentRendererPlugin()
-{
-    return _curRendererPlugin;
-}
+TfToken Engine::GetCurrentRendererPlugin() { return _curRendererPlugin; }
 
-HdPluginRenderDelegateUniqueHandle Engine::GetRenderDelegateFromPlugin(
-    TfToken plugin)
-{
-    HdRendererPluginRegistry& registry =
-        HdRendererPluginRegistry::GetInstance();
+HdPluginRenderDelegateUniqueHandle
+Engine::GetRenderDelegateFromPlugin(TfToken plugin) {
+    HdRendererPluginRegistry &registry = HdRendererPluginRegistry::GetInstance();
 
     TfToken resolvedId = registry.GetDefaultPluginId(true);
 
     return registry.CreateRenderDelegate(plugin);
 }
 
-string Engine::GetRendererPluginName(TfToken plugin)
-{
+string Engine::GetRendererPluginName(TfToken plugin) {
     HfPluginDesc pluginDescriptor;
     bool foundPlugin = HdRendererPluginRegistry::GetInstance().GetPluginDesc(
         plugin, &pluginDescriptor);
 
-    if (!foundPlugin) { return std::string(); }
+    if (!foundPlugin) {
+        return std::string();
+    }
 
-    // TODO: fix that will be eventually delegate to Hgi
-#if __APPLE__
+// TODO: fix that will be eventually delegate to Hgi
+#if defined(__APPLE__)
     if (pluginDescriptor.id == TfToken("HdStormRendererPlugin")) {
         return "Metal";
     }
 #endif
+
     return pluginDescriptor.displayName;
 }
 
-void Engine::SetCameraMatrices(GfMatrix4d view, GfMatrix4d proj)
-{
+void Engine::SetCameraMatrices(GfMatrix4d view, GfMatrix4d proj) {
     _camView = view;
     _camProj = proj;
+    _taskController->SetFreeCameraMatrices(_camView, _camProj);
 }
 
-void Engine::SetSelection(SdfPathVector paths)
-{
+void Engine::SetSelection(SdfPathVector paths) {
     HdSelectionSharedPtr const selection = std::make_shared<HdSelection>();
 
     HdSelection::HighlightMode mode = HdSelection::HighlightModeSelect;
 
-    for (auto&& path : paths) {
+    for (auto &&path : paths) {
         SdfPath realPath =
             path.ReplacePrefix(SdfPath::AbsoluteRootPath(), _taskControllerId);
         selection->AddRprim(mode, realPath);
@@ -178,8 +170,7 @@ void Engine::SetSelection(SdfPathVector paths)
     _selTracker->SetSelection(selection);
 }
 
-void Engine::SetRenderSize(int width, int height)
-{
+void Engine::SetRenderSize(int width, int height) {
     _width = width;
     _height = height;
 
@@ -198,26 +189,24 @@ void Engine::SetRenderSize(int width, int height)
     _drawTarget->Unbind();
 }
 
-void Engine::Present()
-{
+void Engine::Present() {
     VtValue aov;
     HgiTextureHandle aovTexture;
 
     if (_engine.GetTaskContextData(HdAovTokens->color, &aov)) {
         if (aov.IsHolding<HgiTextureHandle>()) {
+            std::cout << "holding";
             aovTexture = aov.Get<HgiTextureHandle>();
         }
     }
 
-    uint32_t framebuffer = 0;
-    _interop.TransferToApp(_hgi.get(), aovTexture,
-                           /*srcDepth*/ HgiTextureHandle(), HgiTokens->OpenGL,
-                           VtValue(framebuffer),
-                           GfVec4i(0, 0, _width, _height));
+    // uint32_t framebuffer = 0;
+    // _interop.TransferToApp(_hgi.get(), aovTexture,
+    //                        /*srcDepth*/ HgiTextureHandle(), HgiTokens->OpenGL,
+    //                        VtValue(framebuffer), GfVec4i(0, 0, _width, _height));
 }
 
-void Engine::PrepareDefaultLighting()
-{
+void Engine::PrepareDefaultLighting() {
     // set a spot light to the camera position
     GfVec3d camPos = _camView.GetInverse().ExtractTranslation();
     GlfSimpleLight l;
@@ -241,28 +230,11 @@ void Engine::PrepareDefaultLighting()
     _taskController->SetLightingState(lightingContextState);
 }
 
-void Engine::Prepare()
-{
-    PrepareDefaultLighting();
-    _taskController->SetFreeCameraMatrices(_camView, _camProj);
-}
+void Engine::Prepare() { PrepareDefaultLighting(); }
 
-void Engine::Render()
-{
-    _drawTarget->Bind();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    HdTaskSharedPtrVector tasks = _taskController->GetRenderingTasks();
-    _engine.Execute(_renderIndex, &tasks);
 
-    Present();
-
-    _drawTarget->Unbind();
-}
-
-SdfPath Engine::FindIntersection(GfVec2f screenPos)
-{
+SdfPath Engine::FindIntersection(GfVec2f screenPos) {
     // create a narrowed frustum on the given position
     float normalizedXPos = screenPos[0] / _width;
     float normalizedYPos = screenPos[1] / _height;
@@ -274,8 +246,7 @@ SdfPath Engine::FindIntersection(GfVec2f screenPos)
     GfFrustum frustum = gfCam.GetFrustum();
 
     auto nFrustum = frustum.ComputeNarrowedFrustum(
-        GfVec2d(2.0 * normalizedXPos - 1.0,
-                2.0 * (1.0 - normalizedYPos) - 1.0),
+        GfVec2d(2.0 * normalizedXPos - 1.0, 2.0 * (1.0 - normalizedYPos) - 1.0),
         size);
 
     // check the intersection from the narrowed frustum
@@ -295,7 +266,8 @@ SdfPath Engine::FindIntersection(GfVec2f screenPos)
     _engine.Execute(_renderIndex, &tasks);
 
     // get the hitting point
-    if (allHits.size() != 1) return SdfPath();
+    if (allHits.size() != 1)
+        return SdfPath();
 
     const SdfPath path = allHits[0].objectId.ReplacePrefix(
         _taskControllerId, SdfPath::AbsoluteRootPath());
@@ -303,15 +275,38 @@ SdfPath Engine::FindIntersection(GfVec2f screenPos)
     return path;
 }
 
-GLuint Engine::GetRenderBufferData()
-{
-    GLuint id =
-        _drawTarget->GetAttachment(HdAovTokens->color)->GetGlTextureName();
-    return id;
+void *Engine::GetRenderBufferData() {
+    std::string destFile = std::string("/Users/Dev/Projects/Neural-for-USD/engineDebug2.png");
+    // bool result = mp_drawTarget->WriteToFile("depth", destFile);
+    // qDebug() << "Success:" << result << "Destination file:" << destFile;
+    HdRenderBuffer *b = _taskController->GetRenderOutput(HdAovTokens->color);
+    b->Resolve();
+
+    HioImage::StorageSpec storage;
+    storage.width = _width;
+    storage.height = _height;
+    // std::cout << b->GetFormat() << std::endl;
+    storage.format = HdStHioConversions::GetHioFormat(b->GetFormat());
+    storage.flipped = true;
+    storage.data = b->Map();
+
+    TfScoped<> scopedUnmap([b]() { b->Unmap(); });
+    {
+        TRACE_FUNCTION_SCOPE("writing image");
+
+        const HioImageSharedPtr image = HioImage::OpenForWriting(destFile);
+        const bool writeSuccess = image && image->Write(storage);
+
+        if (!writeSuccess) {
+            TF_RUNTIME_ERROR("Failed to write image to %s", destFile.c_str());
+        }
+    }
+
+    GLint id = _drawTarget->GetAttachment(HdAovTokens->color)->GetGlTextureName();
+    return (void *)(uintptr_t)id;
 }
 
-GfFrustum Engine::GetFrustum()
-{
+GfFrustum Engine::GetFrustum() {
     GfCamera gfCam;
     gfCam.SetFromViewAndProjectionMatrix(_camView, _camProj);
     return gfCam.GetFrustum();

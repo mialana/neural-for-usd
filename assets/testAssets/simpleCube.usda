@@ -1,0 +1,21 @@
+#usda 1.0
+
+def Xform "SimpleCube"
+{
+    def Cube "cubeShape"
+    {
+        double size = 3
+        color3f[] primvars:displayColor = [(1, 0, 0)] (
+            interpolation = "constant"
+        )
+    }
+
+    def Camera "primaryCam"
+    {
+        float focalLength = 28.804348
+        float3 xformOp:rotateXYZ = (-26.41259, 41.83484, -1.5102152)
+        double3 xformOp:translate = (7.616828698829952, 5.438160155979084, 8.724068342002917)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+    }
+}
+
