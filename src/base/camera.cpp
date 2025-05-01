@@ -17,7 +17,7 @@
 #include <pxr/base/gf/matrix4d.h>
 #include <pxr/base/gf/vec3d.h>
 #include <pxr/usd/usdLux/domeLight.h>
-#include <pxr/usdImaging/usdAppUtils/frameRecorder.h>
+#include "myframerecorder.h"
 
 Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp)
     : m_stageFilePath(sfp)
@@ -82,7 +82,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
 
     generateCameraPoses(m_numFrames);
 
-    pxr::UsdAppUtilsFrameRecorder frameRecorder = pxr::UsdAppUtilsFrameRecorder(pxr::TfToken(),
+    pxr::MyFrameRecorder frameRecorder = pxr::MyFrameRecorder(pxr::TfToken(),
                                                                                 true);
 
     frameRecorder.SetColorCorrectionMode(pxr::TfToken::Find("sRGB"));

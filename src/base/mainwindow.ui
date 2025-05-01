@@ -20,6 +20,21 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>View</string>
+       </attribute>
+       <widget class="UsdGL" name="openGLWidget">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>20</y>
+          <width>960</width>
+          <height>700</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
         <string>Tab 1</string>
@@ -424,10 +439,17 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>UsdGL</class>
+   <extends>QOpenGLWidget</extends>
+   <header>usdgl.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>

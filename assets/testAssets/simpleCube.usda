@@ -1,4 +1,10 @@
 #usda 1.0
+(
+    defaultPrim = "japanese_toy"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
 
 def Xform "SimpleCube"
 {
@@ -12,9 +18,9 @@ def Xform "SimpleCube"
 
     def Camera "primaryCam"
     {
-        float focalLength = 28.804348
-        float3 xformOp:rotateXYZ = (-26.41259, 41.83484, -1.5102152)
-        double3 xformOp:translate = (7.616828698829952, 5.438160155979084, 8.724068342002917)
+        float focalLength.timeSamples = {0: 28.804348}
+        float3 xformOp:rotateXYZ.timeSamples = {0: (-26.41259, 41.83484, -1.5102152)}
+        double3 xformOp:translate.timeSamples = {0: (7.616828698829952, 5.438160155979084, 8.724068342002917)}
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
     }
 }

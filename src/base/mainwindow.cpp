@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget* parent)
     , m_camera(nullptr)
 {
     m_ui->setupUi(this);
+    m_ui->openGLWidget->setFocus();
 
     connect(m_ui->pushButton, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
     connect(m_ui->pushButton_2, &QPushButton::clicked, this, &MainWindow::slot_findUsdFilePath);

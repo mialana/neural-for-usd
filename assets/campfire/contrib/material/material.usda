@@ -1,0 +1,33 @@
+#usda 1.0
+(
+    defaultPrim = "campfire"
+)
+
+def "campfire"
+{
+    def Scope "Materials" (
+        prepend references = [
+            @./default/material_default.usda@,
+            @./rocks/material_rocks.usda@, 
+            @./logs/material_logs.usda@
+        ]
+    )
+    {
+        def Scope "MaterialClasses"
+        {
+            over "class_Default"
+            {
+                prepend rel material:binding = </campfire/Materials/mat_Default>
+            }
+            over "class_Rocks"
+            {
+                prepend rel material:binding = </campfire/Materials/mat_Rocks>
+            }
+            over "class_Logs"
+            {
+                prepend rel material:binding = </campfire/Materials/mat_Logs>
+            }
+        }
+    }
+}
+

@@ -22,9 +22,6 @@ MyEngine::MyEngine(OpenGLContext* context, Scene const* scene, int width, int he
     , m_taskControllerPrefix(SdfPath("/defaultTaskController"))
     , m_renderedCollection(HdTokens->geometry, HdReprSelector(HdReprTokens->smoothHull))
 {
-    GlfGLContextScopeHolder contextHolder(mpOpenGLContext);
-    qDebug() << mpOpenGLContext->IsInitialized();
-
     mp_drawTarget = GlfDrawTarget::New(GfVec2i(width, height), false);
     mp_drawTarget->Bind();
     mp_drawTarget->AddAttachment(HdAovTokens->color, GL_RGBA, GL_FLOAT, GL_RGBA);
@@ -105,16 +102,11 @@ MyEngine::~MyEngine()
 
 void MyEngine::Render()
 {
-    mpOpenGLContext = pxr::GlfGLContextSharedPtr()->GetSharedGLContext();
-    GlfGLContextScopeHolder contextHolder(mpOpenGLContext);
-
     mp_drawTarget->Bind();
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     HdTaskSharedPtrVector tasks = mp_taskController->GetRenderingTasks();
-    // HdTaskSharedPtrVector pickingTasks = mp_taskController->GetPickingTasks();
-    // tasks.insert(tasks.begin(), pickingTasks.begin(), pickingTasks.end());
 
     m_hdEngine.Execute(mp_renderIndex, &tasks);
 
@@ -127,33 +119,19 @@ void MyEngine::Render()
         }
     }
 
-    VtValue depthaov;
-    HgiTextureHandle depthTexture;
-    if (m_hdEngine.GetTaskContextData(HdAovTokens->depth, &aov)) {
-        if (depthaov.IsHolding<HgiTextureHandle>()) {
-            depthTexture = depthaov.Get<HgiTextureHandle>();
-        }
-    }
-
-    uint32_t framebuffer = mp_context->defaultFramebufferObject();
+    uint32_t framebuffer = 1;
     m_interop.TransferToApp(mp_hgi.get(),
                             aovTexture,
-                            depthTexture,
+                            HgiTextureHandle(),
                             HgiTokens->OpenGL,
                             VtValue(framebuffer),
                             GfVec4i(0, 0, m_width * 2, m_height * 2));
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mp_drawTarget->Unbind();
 }
 
 void MyEngine::setRenderSize(int width, int height)
 {
-    mpOpenGLContext = pxr::GlfGLContextSharedPtr()->GetSharedGLContext();
-    GlfGLContextScopeHolder contextHolder(mpOpenGLContext);
-
     m_width = width;
     m_height = height;
 
@@ -207,51 +185,11 @@ void MyEngine::prepareDefaultLighting()
 }
 
 SdfPath MyEngine::findIntersection(GfVec2f screenPos) {
-    // create a narrowed frustum on the given position
-    float normalizedXPos = screenPos[0] / m_width;
-    float normalizedYPos = screenPos[1] / m_height;
-
-    // GfVec2d size(1.0 / m_width, 1.0 / m_height);
-
-    // GfCamera gfCam;
-    // gfCam.SetFromViewAndProjectionMatrix(m_camView, m_camProj);
-    // GfFrustum frustum = gfCam.GetFrustum();
-
-    // auto nFrustum = frustum.ComputeNarrowedFrustum(
-    //     GfVec2d(2.0 * normalizedXPos - 1.0, 2.0 * (1.0 - normalizedYPos) - 1.0),
-    //     size);
-
-    // // check the intersection from the narrowed frustum
-    // HdxPickHitVector allHits;
-    // HdxPickTaskContextParams pickParams;
-    // pickParams.resolveMode = HdxPickTokens->resolveNearestToCenter;
-    // pickParams.viewMatrix = nFrustum.ComputeViewMatrix();
-    // pickParams.projectionMatrix = nFrustum.ComputeProjectionMatrix();
-    // pickParams.collection = _collection;
-    // pickParams.outHits = &allHits;
-    // const VtValue vtPickParams(pickParams);
-
-    // _engine.SetTaskContextData(HdxPickTokens->pickParams, vtPickParams);
-
-    // // render with the picking task
-    // HdTaskSharedPtrVector tasks = _taskController->GetPickingTasks();
-    // _engine.Execute(_renderIndex, &tasks);
-
-    // // get the hitting point
-    // if (allHits.size() != 1)
-    //     return SdfPath();
-
-    // const SdfPath path = allHits[0].objectId.ReplacePrefix(
-    //     _taskControllerId, SdfPath::AbsoluteRootPath());
-
     return SdfPath();
 }
 
 void MyEngine::renderToFile()
 {
-    mpOpenGLContext = pxr::GlfGLContextSharedPtr()->GetSharedGLContext();
-    GlfGLContextScopeHolder contextHolder(mpOpenGLContext);
-
     std::string destFile = std::string(PROJECT_SOURCE_DIR) + "/engineDebug.png";
     // bool result = mp_drawTarget->WriteToFile("depth", destFile);
     // qDebug() << "Success:" << result << "Destination file:" << destFile;
@@ -282,7 +220,7 @@ void MyEngine::renderToFile()
 
 GLuint MyEngine::getEngineFrameBuffer()
 {
-    return mp_drawTarget->GetFramebufferId();
+    return GLuint();
 }
 
 HdPluginRenderDelegateUniqueHandle MyEngine::CreateRenderDelegateForPlugin(TfToken pluginId)

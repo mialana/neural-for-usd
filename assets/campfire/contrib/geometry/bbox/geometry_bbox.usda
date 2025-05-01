@@ -1,0 +1,22 @@
+#usda 1.0
+(
+    defaultPrim = "Geometry"
+)
+
+def "Geometry"
+{
+    def Xform "campfire_bbox" (
+        prepend inherits = </campfire/Materials/MaterialClasses/class_Logs>
+    )
+    {
+        def Cube "cube_Bbox"
+        {
+            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+            double size = 1
+            float3 xformOp:scale = (284.55563, 99.88005, 278.3999)
+            double3 xformOp:translate = (-0.0222015380859375, 4.386987686157227, 0.0074005126953125)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+}
+

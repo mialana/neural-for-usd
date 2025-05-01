@@ -42,7 +42,6 @@ public:
 
 private:
     OpenGLContext* mp_context;
-    pxr::GlfGLContextSharedPtr mpOpenGLContext;
     Scene const* mcp_scene; // contains scene indices
 
     int m_width, m_height;

@@ -1,0 +1,75 @@
+#usda 1.0
+(
+    defaultPrim = "campfire"
+)
+
+def "campfire"
+{
+    def Scope "Geometry" (
+        variants = {
+            string varset_Geometry = "lod0"
+        }
+        prepend variantSets = "varset_Geometry"
+    )
+    {
+        variantSet "varset_Geometry" = {
+            "bbox" {
+                def "bbox" (
+                    prepend payload = @./bbox/geometry_bbox.usda@
+                )
+                {
+                }
+
+            }
+            "lod0" {
+                def "LOD0" (
+                    prepend payload = @./lod0/geometry_lod0.usda@
+                )
+                {
+                }
+
+            }
+            "lod1" {
+                def "LOD1" (
+                    prepend payload = @./lod1/geometry_lod1.usda@
+                )
+                {
+                }
+
+            }
+            "lod2" {
+                def "LOD2" (
+                    prepend payload = @./lod2/geometry_lod2.usda@
+                )
+                {
+                }
+
+            }
+        }
+    }
+
+    def "Materials"
+    {
+        def "MaterialClasses"
+        {
+            class "class_Default" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+            }
+
+            class "class_Rocks" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+            }
+
+            class "class_Logs" (
+                prepend apiSchemas = ["MaterialBindingAPI"]
+            )
+            {
+            }
+        }
+    }
+}
+

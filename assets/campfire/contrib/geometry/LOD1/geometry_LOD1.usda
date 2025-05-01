@@ -1,0 +1,184 @@
+#usda 1.0
+(
+    defaultPrim = "Geometry"
+)
+
+def "Geometry"
+{
+    def Xform "campfire_LOD1" (
+        prepend inherits = </campfire/Materials/MaterialClasses/class_Logs>
+    )
+    {
+        def Xform "campfire_xform"
+        {
+            float3 xformOp:scale = (100, 100, 100)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+
+            def Sphere "sphere0" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.255, 0.255, 0.255)
+                double3 xformOp:translate = (1.012, 0.235, -0.487)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Sphere "sphere1" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.283, 0.283, 0.283)
+                double3 xformOp:translate = (0.558, 0.235, -0.868)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Sphere "sphere2" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.337, 0.337, 0.337)
+                double3 xformOp:translate = (-0.026, 0.235, -1.041)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Sphere "sphere3" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.215, 0.185, 0.237)
+                double3 xformOp:translate = (-0.612, 0.149, -0.923)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Sphere "sphere4" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float xformOp:rotateY = 17.534
+                float3 xformOp:scale = (0.215, 0.185, 0.169)
+                double3 xformOp:translate = (-0.938, 0.149, -0.584)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Sphere "sphere5" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float xformOp:rotateY = 11.601
+                float3 xformOp:scale = (0.312, 0.269, 0.246)
+                double3 xformOp:translate = (-0.938, 0.149, 0.632)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Sphere "sphere6" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float xformOp:rotateY = 57.201
+                float3 xformOp:scale = (0.312, 0.269, 0.246)
+                double3 xformOp:translate = (-0.559, 0.149, 1.009)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Sphere "sphere7" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float xformOp:rotateY = -6.778
+                float3 xformOp:scale = (0.361, 0.269, 0.246)
+                double3 xformOp:translate = (0.068, 0.149, 1.16)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Sphere "sphere8" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float xformOp:rotateY = 18.161
+                float3 xformOp:scale = (0.361, 0.269, 0.246)
+                double3 xformOp:translate = (0.723, 0.149, 0.86)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Sphere "sphere9" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.323, 0.187, 0.344)
+                double3 xformOp:translate = (-1.117, 0.141, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Sphere "sphere10" (
+                inherits = </campfire/Materials/MaterialClasses/class_Rocks>
+            )
+            {
+                double radius = 1
+                float3 xformOp:scale = (0.266, 0.266, 0.444)
+                double3 xformOp:translate = (1.083, 0.17, 0.214)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "cube0" (
+                inherits = </campfire/Materials/MaterialClasses/class_Logs>
+            )
+            {
+                float xformOp:rotateY = 2.626
+                float3 xformOp:scale = (0.1075, 0.105, 0.437)
+                double3 xformOp:translate = (0.197, 0.144, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Cube "cube1" (
+                inherits = </campfire/Materials/MaterialClasses/class_Logs>
+            )
+            {
+                float xformOp:rotateY = -3.105
+                float3 xformOp:scale = (0.1075, 0.105, 0.362)
+                double3 xformOp:translate = (-0.186, 0.144, 0)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Cube "cube2" (
+                inherits = </campfire/Materials/MaterialClasses/class_Logs>
+            )
+            {
+                float xformOp:rotateY = -65.143
+                float3 xformOp:scale = (0.086, 0.0725, 0.3725)
+                double3 xformOp:translate = (-0.005, 0.32, 0.19)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Cube "cube3" (
+                inherits = </campfire/Materials/MaterialClasses/class_Logs>
+            )
+            {
+                float xformOp:rotateY = -89.259
+                float3 xformOp:scale = (0.054, 0.061, 0.3745)
+                double3 xformOp:translate = (-0.005, 0.313, -0.147)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+
+            def Cube "cube4" (
+                inherits = </campfire/Materials/MaterialClasses/class_Logs>
+            )
+            {
+                float xformOp:rotateY = -9.57
+                float3 xformOp:scale = (0.054, 0.061, 0.3745)
+                double3 xformOp:translate = (-0.005, 0.457, 0.06)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateY", "xformOp:scale"]
+            }
+        }
+    }
+}
+
