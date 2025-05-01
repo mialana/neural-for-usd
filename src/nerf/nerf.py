@@ -1,3 +1,7 @@
+VISUALS_DIR = "src/nerf/visuals"
+CHECKPOINTS_DIR = "src/nerf/checkpoints"
+DATA_PATH = "src/nerf/campfire.npz"
+
 import os
 import wget
 from typing import Optional, Tuple, List, Union, Callable
@@ -685,7 +689,7 @@ def nerf_forward(
     return outputs
 
 
-def find_checkpoint_indices(pattern: str = "checkpoints/checkpoint_{}/"):
+def find_checkpoint_indices(pattern: str):
     """
     Finds the last index in a sequence of filepaths where the file does not exist.
 
@@ -890,7 +894,9 @@ def train():
             ax[3].margins(0)
         
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            plt.savefig(f'visuals/fig_{timestamp}.png')
+
+            os.makedirs(VISUALS_DIR, exist_ok=True)
+            plt.savefig(os.path.join(VISUALS_DIR, f"fig_{timestamp}.png"))
 
             # plt.show()
 
@@ -975,12 +981,12 @@ def init_models():
     return model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper
 
 
-if not os.path.exists("tiny_nerf_data.npz"):
-    wget.download(
-        "http://cseweb.ucsd.edu/~viscomp/projects/LF/papers/ECCV20/nerf/tiny_nerf_data.npz"
-    )
+# if not os.path.exists("tiny_nerf_data.npz"):
+#     wget.download(
+#         "http://cseweb.ucsd.edu/~viscomp/projects/LF/papers/ECCV20/nerf/tiny_nerf_data.npz"
+#     )
 
-data = np.load("tiny_nerf_data.npz")
+data = np.load(DATA_PATH)
 n_training = 100
 testimg_idx = 101
 
@@ -1072,7 +1078,7 @@ logging.info("")
 
 def signal_handler(sig, frame):
     logging.info("You pressed Ctrl+C!")
-    os.makedirs(next_checkpoint_path)
+    os.makedirs(next_checkpoint_path, exist_ok=True)
 
     torch.save(model.state_dict(), f"{next_checkpoint_path}/nerf.pt")
     torch.save(fine_model.state_dict(), f"{next_checkpoint_path}/nerf-fine.pt")
@@ -1082,7 +1088,7 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 next_checkpoint_path, latest_checkpoint_path = find_checkpoint_indices(
-    "checkpoints/checkpoint_{}"
+    os.path.join(CHECKPOINTS_DIR, "checkpoint_{}")
 )
 
 # Run training session(s)

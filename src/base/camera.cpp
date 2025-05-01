@@ -16,6 +16,7 @@
 #include <pxr/usd/usdGeom/tokens.h>
 #include <pxr/base/gf/matrix4d.h>
 #include <pxr/base/gf/vec3d.h>
+#include <pxr/base/gf/vec2f.h>
 #include <pxr/usd/usdLux/domeLight.h>
 #include "myframerecorder.h"
 
@@ -58,9 +59,9 @@ bool Camera::createDomeLight()
 
         hdri.GetExposureAttr().Set(1.f);
         // TODO: Add as possible attributes to set
-        // hdri.GetIntensityAttr().Set(0.5f);
-        // hdri.GetEnableColorTemperatureAttr().Set(true);
-        // hdri.GetColorTemperatureAttr().Set(9000.f);
+        hdri.GetIntensityAttr().Set(0.25f);
+        hdri.GetEnableColorTemperatureAttr().Set(true);
+        hdri.GetColorTemperatureAttr().Set(4500.f);
         // hdri.GetColorAttr().Set(pxr::GfVec3f(0.5, 0.5, 0.5));
     } catch (std::exception e) {
         qDebug() << "Domelight creation error.";
@@ -86,8 +87,9 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
                                                                                 true);
 
     frameRecorder.SetColorCorrectionMode(pxr::TfToken::Find("sRGB"));
-    frameRecorder.SetComplexity(4.0);
+    frameRecorder.SetComplexity(1.0);
     frameRecorder.SetDomeLightVisibility(true);
+    frameRecorder.SetImageWidth(1000);
 
     for (int frame = 0; frame < m_numFrames; frame++) {
         QString outputImagePath = m_outputRendersDirPath + outputPrefix;
@@ -144,7 +146,7 @@ bool Camera::generateCameraPoses(int numSamples)
 
         pxr::GfMatrix4d m = pxr::GfMatrix4d().SetLookAt(pxr::GfVec3d(warpResult.x,
                                                                      warpResult.y,
-                                                                     warpResult.z),
+                                                                     warpResult.z) * 20.f,
                                                         pxr::GfVec3d(0.f),
                                                         pxr::GfVec3d(up.x, up.y, up.z));
         m = m.GetInverse();
@@ -156,9 +158,6 @@ bool Camera::generateCameraPoses(int numSamples)
     }
 
     m_usdStage->Export(CCP(m_outputStageFilePath));
-
-    // 20.955
-    // 15.2908
 
     return true;
 }
@@ -185,7 +184,13 @@ bool Camera::createUsdCamera(const char* name)
 
     const pxr::SdfPath& cameraPath = pxr::SdfPath("/Xform_MyCam/MyCam");
     m_usdCamera = pxr::UsdGeomCamera::Define(m_usdStage, cameraPath);
+
     m_usdCamera.CreateProjectionAttr().Set(pxr::UsdGeomTokens->perspective);
+    m_usdCamera.CreateHorizontalApertureAttr().Set(25.955f);
+    m_usdCamera.CreateVerticalApertureAttr().Set(25.955f);
+    m_usdCamera.CreateFocalLengthAttr().Set(70.38f);
+    m_usdCamera.CreateFocusDistanceAttr().Set(55.f);
+    m_usdCamera.CreateClippingRangeAttr().Set(pxr::GfVec2f(1.f, 100.f));
 
     createGfCamera();
 
@@ -207,7 +212,15 @@ void Camera::toJson() const
     }
 
     json["frames"] = framesArray;
-    json["camera_angle_x"] = 0.413;
+
+    float aperture = 0.f;
+    float focal = 0.f;
+    m_usdCamera.GetHorizontalApertureAttr().Get(&aperture);
+    m_usdCamera.GetFocalLengthAttr().Get(&focal);
+
+    float camera_angle_x = 2.f * atanf(aperture / (2.f * focal));
+
+    json["camera_angle_x"] = camera_angle_x;
 
     QJsonDocument document;
     document.setObject(json);

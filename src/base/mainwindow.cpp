@@ -37,7 +37,7 @@ void MainWindow::slot_findUsdFilePath()
     // Open file dialog with USD file filter and default directory
     QString sfp = QFileDialog::getOpenFileName(nullptr,
                                                "Select USD File",
-                                               PROJECT_SOURCE_DIR + QString("/assets/"),
+                                               PROJECT_SOURCE_DIR + QString("/assets/campfire"),
                                                "USD Files (*.usd *.usda *.usdc)");
 
     if (!QFile(sfp).exists()) {
@@ -47,7 +47,7 @@ void MainWindow::slot_findUsdFilePath()
 
     QString assetDir = QFileInfo(sfp).dir().absolutePath();
 
-    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelights/HDR_029_Sky_Cloudy_Ref.hdr";
+    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelights/squash_court_4k.hdr";
     QString osfp = assetDir + "/data/mystage.usda";
     QString odfp = assetDir + "/data/data.json";
     QString ordp = assetDir + "/data/internalVal";
