@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "python.terminal.activateEnvironment": true,
+  "python.terminal.activateEnvironment": false,
   "files.associations": {
     "__bit_reference": "cpp",
     "__hash_table": "cpp",
