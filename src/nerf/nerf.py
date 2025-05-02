@@ -1092,23 +1092,24 @@ next_checkpoint_path, latest_checkpoint_path = find_checkpoint_indices(
     os.path.join(CHECKPOINTS_DIR, "checkpoint_{}")
 )
 
-# Run training session(s)
-for i in range(n_restarts):
-    model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper = (
-        init_models()
-    )
+if __name__ == '__main__':
+    # Run training session(s)
+    for i in range(n_restarts):
+        model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper = (
+            init_models()
+        )
 
-    if i == 0:
-        signal.signal(signal.SIGINT, signal_handler)
+        if i == 0:
+            signal.signal(signal.SIGINT, signal_handler)
 
-    success, train_psnrs, val_psnrs = train()
-    if success and val_psnrs[-1] >= warmup_min_fitness:
-        logging.info("Training successful!")
-        break
-    else:
-        logging.info(f"Restart no.{i}")
+        success, train_psnrs, val_psnrs = train()
+        if success and val_psnrs[-1] >= warmup_min_fitness:
+            logging.info("Training successful!")
+            break
+        else:
+            logging.info(f"Restart no.{i}")
 
-logging.info("")
-logging.info(f"Done!")
+    logging.info("")
+    logging.info(f"Done!")
 
-signal.raise_signal(signal.SIGINT)  # write to file
+    signal.raise_signal(signal.SIGINT)  # write to file
