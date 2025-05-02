@@ -37,7 +37,7 @@ log.txt
 
 **.pyc**
 
-**/visuals/**
-**/checkpoints**
+**visuals**
+**checkpoints**
 
 **.npz**
