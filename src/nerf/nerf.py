@@ -73,7 +73,7 @@ lr = 5e-4  # Learning rate
 # Training
 n_iters = 10000
 batch_size = 2**14  # Number of rays per gradient step (power of 2)
-one_image_per_step = False  # One image per gradient step (disables batching)
+one_image_per_step = True # One image per gradient step (disables batching)
 chunksize = 2**14  # Modify as needed to fit in GPU memory
 center_crop = True  # Crop the center of image (one_image_per_)
 center_crop_iters = 50  # Stop cropping center after this many epochs

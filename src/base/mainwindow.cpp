@@ -37,7 +37,8 @@ void MainWindow::slot_findUsdFilePath()
     // Open file dialog with USD file filter and default directory
     QString sfp = QFileDialog::getOpenFileName(nullptr,
                                                "Select USD File",
-                                               PROJECT_SOURCE_DIR + QString("/assets/campfire"),
+                                               PROJECT_SOURCE_DIR
+                                                   + QString("/assets/"),
                                                "USD Files (*.usd *.usda *.usdc)");
 
     if (!QFile(sfp).exists()) {
@@ -50,7 +51,7 @@ void MainWindow::slot_findUsdFilePath()
     QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelights/squash_court_4k.hdr";
     QString osfp = assetDir + "/data/mystage.usda";
     QString odfp = assetDir + "/data/data.json";
-    QString ordp = assetDir + "/data/internalVal";
+    QString ordp = assetDir + "/data/smallVal";
 
     m_camera = new Camera(sfp, hfp, osfp, odfp, ordp);
 }

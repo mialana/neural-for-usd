@@ -13,11 +13,18 @@
 #include <QFileInfo>
 
 #include <pxr/usd/sdf/path.h>
+#include <pxr/usd/usd/prim.h>
 #include <pxr/usd/usdGeom/tokens.h>
+#include <pxr/base/gf/rotation.h>
 #include <pxr/base/gf/matrix4d.h>
+#include <pxr/base/gf/vec4d.h>
 #include <pxr/base/gf/vec3d.h>
 #include <pxr/base/gf/vec2f.h>
 #include <pxr/usd/usdLux/domeLight.h>
+#include <pxr/base/gf/vec2i.h>
+#include <pxr/usd/UsdRender/settingsBase.h>
+#include <pxr/usdImaging/usdAppUtils/frameRecorder.h>
+
 #include "myframerecorder.h"
 
 Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp)
@@ -39,6 +46,11 @@ Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ord
 
     createUsdCamera("MyCam");
     createDomeLight();
+
+    // pxr::UsdPrim render_prim = m_usdStage->DefinePrim(pxr::SdfPath("/Render"),
+    //                                                   pxr::TfToken::Find("RenderSettings"));
+    // pxr::UsdRenderSettingsBase settingsBase = pxr::UsdRenderSettingsBase(render_prim);
+    // settingsBase.CreateResolutionAttr().Set(pxr::GfVec2i(200, 200));
 
     qDebug() << "Camera initiation status:" << m_usdStage->Export(CCP(m_outputStageFilePath));
 
@@ -90,16 +102,25 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
     frameRecorder.SetComplexity(1.0);
     frameRecorder.SetDomeLightVisibility(true);
     frameRecorder.SetImageWidth(1000);
+    frameRecorder.SetCameraLightEnabled(true);
 
     for (int frame = 0; frame < m_numFrames; frame++) {
         QString outputImagePath = m_outputRendersDirPath + outputPrefix;
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
 
-        QFileInfo dataFileInfo(m_outputDataFilePath);
+        QFileInfo dataFileInfo("/Users/liu.amy05/Documents/Neural-for-USD/assets/japanesePlaneToy/"
+                               "data/preserveDetailsVal");
         QString dataFileDir = dataFileInfo.absolutePath();
+        QString dataImagePath = dataFileDir + "/preserveDetailsVal" + outputPrefix;
+        dataImagePath += QString::number(frame);
+        dataImagePath += ".jpg";
+        if (frame == 0) {
+            qDebug() << dataImagePath;
+            qDebug() << dataFileDir;
+        }
 
-        QString relativePath = QDir(dataFileDir).relativeFilePath(outputImagePath);
+        QString relativePath = QDir(dataFileDir).relativeFilePath(dataImagePath);
         m_cameraPoses[frame]->m_outputPath = relativePath;
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
@@ -109,6 +130,25 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
         }
     }
     return true;
+}
+
+pxr::GfMatrix4d changeMatrixFormat(const pxr::GfMatrix4d& oldMat)
+{
+    pxr::GfRotation rotater = pxr::GfRotation(pxr::GfVec3d(1, 0, 0), -90.0);
+    pxr::GfMatrix4d rotation = pxr::GfMatrix4d().SetRotateOnly(rotater);
+    pxr::GfVec4d translation = oldMat.GetRow(3);
+
+    pxr::GfMatrix4d newMat = pxr::GfMatrix4d();
+    newMat = oldMat.GetTranspose();
+    // newMat.SetColumn(3, translation);
+
+    // for (int i = 0; i < 3; i++) {
+    //     newMat.SetRow3(i, oldMat.GetRow3(i));
+    // }
+
+    newMat = rotation * newMat;
+
+    return newMat;
 }
 
 bool Camera::generateCameraPoses(int numSamples)
@@ -153,7 +193,7 @@ bool Camera::generateCameraPoses(int numSamples)
 
         setCameraTransformAtFrame(m, i);
 
-        uPtr<CameraPose> currCamPose = mkU<CameraPose>(i, QString("Not set"), m);
+        uPtr<CameraPose> currCamPose = mkU<CameraPose>(i, QString("Not set"), changeMatrixFormat(m));
         m_cameraPoses.push_back(std::move(currCamPose));
     }
 
@@ -173,6 +213,9 @@ void Camera::setCameraTransformAtFrame(pxr::GfMatrix4d transform, int frame)
 bool Camera::createGfCamera()
 {
     m_gfCamera = pxr::GfCamera(m_usdCamera.GetCamera(0));
+    m_gfCamera.SetHorizontalAperture(40.0);
+    m_gfCamera.SetVerticalAperture(40.0);
+    m_gfCamera.SetFocalLength(120.0);
 
     return true;
 }

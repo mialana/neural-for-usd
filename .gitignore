@@ -38,4 +38,6 @@ log.txt
 **.pyc**
 
 **/visuals/**
-**/checkpoints/**
+**/checkpoints**
+
+**.npz**

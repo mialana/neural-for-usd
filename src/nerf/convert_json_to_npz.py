@@ -3,6 +3,7 @@ import json
 import numpy as np
 from PIL import Image
 from math import tan
+from matplotlib import pyplot as plt
 
 # === Config ===
 json_path = "assets/campfire/data/data.json"
@@ -27,7 +28,7 @@ for frame in frames:
     print(file_path)
     img = Image.open(file_path).convert("RGB")
     img = np.array(img) / 255.0  # Normalize to [0, 1]
-    
+
     if images and img.shape != images[0].shape:
         raise ValueError("All images must have the same dimensions!")
 
@@ -35,7 +36,29 @@ for frame in frames:
     poses.append(np.array(frame["transformMatrix"], dtype=np.float32))
 
 images = np.stack(images, axis=0)  # Shape: (N, H, W, 3)
-poses = np.stack(poses, axis=0)    # Shape: (N, 4, 4)
+poses = np.stack(poses, axis=0)  # Shape: (N, 4, 4)
+
+dirs = np.stack([np.sum([0, 0, -1] * pose[:3, :3], axis=-1) for pose in poses])
+origins = poses[:, :3, -1]
+
+idx = 50
+print(origins[idx])
+
+ax = plt.figure(figsize=(12, 8)).add_subplot(projection='3d')
+_ = ax.quiver(
+  origins[..., 0].flatten(),
+  origins[..., 1].flatten(),
+  origins[..., 2].flatten(),
+  dirs[..., 0].flatten(),
+  dirs[..., 1].flatten(),
+  dirs[..., 2][0].flatten(), length=0.5, normalize=False)
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('z')
+plt.show()
+
+plt.imshow(images[idx])
+plt.show()
 
 H, W = images.shape[1:3]
 
@@ -53,7 +76,7 @@ np.savez(
     poses=poses.astype(np.float32),
     focal=focal,
     H=H,
-    W=W
+    W=W,
 )
 
 print(f"Saved to {output_npz}")
