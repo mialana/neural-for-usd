@@ -1,22 +1,19 @@
-VISUALS_DIR = "src/nerf/visuals"
-CHECKPOINTS_DIR = "src/nerf/checkpoints"
-DATA_PATH = "src/nerf/campfire.npz"
+VISUALS_DIR = "src/nerf/jpt_visuals"
+CHECKPOINTS_DIR = "src/nerf/jpt_checkpoints"
+DATA_PATH = "src/nerf/japanesePlaneToy.npz"
 
 import os
-import wget
-from typing import Optional, Tuple, List, Union, Callable
+from typing import Optional, Tuple, List, Callable
 import signal
 import sys
 from datetime import datetime
 
 import numpy as np
-from numpy.lib.npyio import NpzFile
 
 import torch
 from torch import nn
 
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 from tqdm import trange
 
