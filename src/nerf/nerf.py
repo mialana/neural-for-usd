@@ -897,6 +897,7 @@ def train():
 
             os.makedirs(VISUALS_DIR, exist_ok=True)
             plt.savefig(os.path.join(VISUALS_DIR, f"fig_{timestamp}.png"))
+            plt.close()
 
             # plt.show()
 
