@@ -1,10 +1,10 @@
-# VISUALS_DIR = "src/nerf/visuals"
-# CHECKPOINTS_DIR = "src/nerf/checkpoints"
-# DATA_PATH = "src/nerf/campfire.npz"
+VISUALS_DIR = "src/nerf/visuals"
+CHECKPOINTS_DIR = "src/nerf/checkpoints"
+DATA_PATH = "src/nerf/campfire.npz"
 
-VISUALS_DIR = "src/nerf/jpt_visuals"
-CHECKPOINTS_DIR = "src/nerf/jpt_checkpoints"
-DATA_PATH = "src/nerf/japanesePlaneToy.npz"
+# VISUALS_DIR = "src/nerf/jpt_visuals"
+# CHECKPOINTS_DIR = "src/nerf/jpt_checkpoints"
+# DATA_PATH = "src/nerf/japanesePlaneToy.npz"
 
 import os
 from typing import Optional, Tuple, List, Callable
@@ -305,7 +305,7 @@ def get_rays(
         [
             (i - width * 0.5) / focal_length,
             -(j - height * 0.5) / focal_length,
-            -torch.ones_like(i),
+            torch.ones_like(i),
         ],
         dim=-1,
     )

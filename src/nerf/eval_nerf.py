@@ -18,7 +18,7 @@ device = torch.device(
     else "mps" if torch.backends.mps.is_available() else "cpu"
 )
 
-def generate_random_pose(radius=5.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
+def generate_random_pose(radius=3.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
     """
     Generates a random camera-to-world (c2w) matrix looking at the origin.
 
@@ -54,7 +54,7 @@ def generate_random_pose(radius=5.0, theta_range=(0, 2 * math.pi), phi_range=(ma
     up = torch.cross(forward, right, dim=0)
 
     # Build rotation matrix
-    R = torch.stack([right, up, -forward], dim=1)  # [3, 3]
+    R = torch.stack([right, up, forward], dim=1)  # [3, 3]
     c2w = torch.eye(4)
     c2w[:3, :3] = R
     c2w[:3, 3] = cam_pos
@@ -147,7 +147,7 @@ def generate_novel_view(c2w: torch.tensor):
     cam_pos = c2w[:3, 3]
     right = c2w[:3, 0]
     up = c2w[:3, 1]
-    forward = -c2w[:3, 2]
+    forward = c2w[:3, 2]
 
     ax: Axes3D = fig.add_subplot(gs[1], projection='3d')
 

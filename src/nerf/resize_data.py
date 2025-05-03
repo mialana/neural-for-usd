@@ -1,8 +1,9 @@
 from PIL import Image
 import os
 
-input_dir = 'assets/japanesePlaneToy/data/internalVal'     # folder containing original images
-output_dir = 'assets/japanesePlaneToy/data/internalVal'  # folder to save resized images
+asset_name = "campfire"
+input_dir = f"assets/{asset_name}/data/internalVal"     # folder containing original images
+output_dir = f"assets/{asset_name}/data/internalVal"  # folder to save resized images
 target_size = (100, 100)       # new size (width, height)
 
 # Create output directory if it doesn't exist

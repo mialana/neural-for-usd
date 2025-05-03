@@ -134,6 +134,9 @@ pxr::GfMatrix4d changeMatrixFormat(const pxr::GfMatrix4d& oldMat)
 
     newMat = rotation * newMat;
 
+    for (int i = 0; i < 3; i++)
+        newMat[i][2] *= -1.0;
+
     return newMat;
 }
 
@@ -200,9 +203,6 @@ void Camera::setCameraTransformAtFrame(pxr::GfMatrix4d transform, int frame)
 bool Camera::createGfCamera()
 {
     m_gfCamera = pxr::GfCamera(m_usdCamera.GetCamera(0));
-    m_gfCamera.SetHorizontalAperture(40.0);
-    m_gfCamera.SetVerticalAperture(40.0);
-    m_gfCamera.SetFocalLength(120.0);
 
     return true;
 }
@@ -220,7 +220,7 @@ bool Camera::createUsdCamera(const char* name)
     m_usdCamera.CreateVerticalApertureAttr().Set(25.955f);
     m_usdCamera.CreateFocalLengthAttr().Set(70.38f);
     m_usdCamera.CreateFocusDistanceAttr().Set(55.f);
-    m_usdCamera.CreateClippingRangeAttr().Set(pxr::GfVec2f(1.f, 100.f));
+    m_usdCamera.CreateClippingRangeAttr().Set(pxr::GfVec2f(1.f, 125.f));
 
     createGfCamera();
 

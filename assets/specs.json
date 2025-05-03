@@ -1,0 +1,20 @@
+[
+    {
+        "japanesePlaneToy": {
+            "specs":
+            {
+                "domelight": "white.hdr",
+                "hemisphereRadius": 1
+            }
+        }
+    },
+    {
+        "campfire": {
+            "specs":
+            {
+                "domelight": "squash_court_4k.hdr",
+                "hemisphereRadius": 20
+            }
+        }
+    }
+]
