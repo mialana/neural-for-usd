@@ -1,6 +1,6 @@
 #pragma once
 
-#include "camerapose.h"
+#include "framemetadata.h"
 
 #include <mycpp/mydefines.h>
 
@@ -30,7 +30,7 @@ private:
     pxr::GfCamera m_gfCamera;
     pxr::UsdStageRefPtr m_usdStage;
 
-    std::vector<uPtr<CameraPose>> m_cameraPoses;
+    std::vector<uPtr<FrameMetadata>> m_cameraPoses;
 
     int m_numFrames;
 

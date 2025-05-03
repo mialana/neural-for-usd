@@ -112,7 +112,7 @@ void Camera::record()
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
 
-        m_cameraPoses[frame]->m_outputPath = outputImagePath;
+        m_cameraPoses[frame]->m_outputImagePath = outputImagePath;
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
@@ -183,7 +183,7 @@ bool Camera::generateCameraPoses(int numSamples)
 
         setCameraTransformAtFrame(m, i);
 
-        uPtr<CameraPose> currCamPose = mkU<CameraPose>(i, QString("Not set"), changeMatrixFormat(m));
+        uPtr<FrameMetadata> currCamPose = mkU<FrameMetadata>(i, QString("Not set"), changeMatrixFormat(m));
         m_cameraPoses.push_back(std::move(currCamPose));
     }
 
@@ -238,7 +238,7 @@ void Camera::toJson() const
     QJsonArray framesArray;
 
     for (int frame = 0; frame < m_numFrames; frame++) {
-        framesArray.append(m_cameraPoses[frame]->toJson());
+        framesArray.append(m_cameraPoses[frame]->toJson(m_outputDataFilePath));
         qDebug() << "Wrote pose" << frame;
     }
 

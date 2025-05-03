@@ -81,15 +81,6 @@ void MyGL::tick()
     this->update();
 }
 
-void MyGL::slot_saveEngineRenderToFile(bool signaled)
-{
-    qDebug() << "Attempting save to file...";
-
-    this->makeCurrent();
-
-    this->doneCurrent();
-}
-
 void MyGL::keyPressEvent(QKeyEvent* e)
 {
     float amount = 2.0f;
@@ -154,4 +145,18 @@ void MyGL::wheelEvent(QWheelEvent* e)
     myCam.zoom(e->angleDelta().y() * 0.02f);
     myCam.recomputeAttributes();
     update();
+}
+
+void MyGL::slot_triggerRenderPreview(bool signaled)
+{
+    qDebug() << "Attempting save to file...";
+
+    this->makeCurrent();
+
+    this->doneCurrent();
+}
+
+void MyGL::initDefaultStage()
+{
+
 }

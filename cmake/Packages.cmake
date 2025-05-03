@@ -1,5 +1,3 @@
-find_package(Qt6 REQUIRED COMPONENTS Core OpenGLWidgets)
-
 if (USD_ROOT)
 
     if (NOT BOOST_ROOT)
@@ -48,3 +46,6 @@ endif()
 # USD & TBB
 include(${USD_ROOT}/pxrConfig.cmake)
 find_package(TBB REQUIRED)
+
+# QT
+find_package(Qt6 REQUIRED COMPONENTS Core OpenGLWidgets)

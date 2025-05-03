@@ -1,5 +1,9 @@
 #pragma once
 
+#include <mycpp/mydefines.h>
+
+#include "stagemanager.h"
+
 #include "openglcontext.h"
 #include "myframerecorder.h"
 #include "mycamera.h"
@@ -19,6 +23,14 @@ class MyGL : public OpenGLContext
 {
     Q_OBJECT
 
+public:
+    explicit MyGL(QWidget* parent = nullptr);
+    ~MyGL();
+
+    void initializeGL() override;
+    void resizeGL(int w, int h) override;
+    void paintGL() override;
+
 private:
     QTimer m_timer;
     UsdStageRefPtr stage;
@@ -33,13 +45,9 @@ private:
 
     GfVec2d m_mousePosPrev;
 
-public:
-    explicit MyGL(QWidget* parent = nullptr);
-    ~MyGL();
+    uPtr<StageManager> m_stage;
 
-    void initializeGL() override;
-    void resizeGL(int w, int h) override;
-    void paintGL() override;
+    void initDefaultStage();
 
 protected:
     void keyPressEvent(QKeyEvent* e) override;
@@ -50,5 +58,5 @@ protected:
 public Q_SLOTS:
     void tick();
 
-    void slot_saveEngineRenderToFile(bool signaled = true);
+    void slot_triggerRenderPreview(bool signaled = true);
 };

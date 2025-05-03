@@ -128,8 +128,7 @@ function(_usd_target_properties TARGET_NAME)
     APPEND
     _QT_LIBRARIES
     Qt6::Core
-    Qt6::OpenGLWidgets
-    Qt6::Gui)
+    Qt6::OpenGLWidgets)
 
   list(APPEND _LINK_LIBRARIES ${args_LIBRARIES} ${TBB_LIBRARIES})
   list(

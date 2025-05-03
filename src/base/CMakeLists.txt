@@ -1,5 +1,5 @@
 file(GLOB SOURCEFILES *.cpp *.h *.ui)
-file(GLOB STATICFILES *.usd *.usd* *.txt)
+file(GLOB STATICFILES *.usd *.usd* *.txt, *.qrc)
 list(FILTER STATICFILES EXCLUDE REGEX "CMakeLists.txt")
 
 usd_executable(base

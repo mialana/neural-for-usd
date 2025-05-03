@@ -18,12 +18,13 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_ui->pushButton_usdStage, &QPushButton::clicked, this, &MainWindow::slot_findUsdStagePath);
     connect(m_ui->pushButton_domeLight, &QPushButton::clicked, this, &MainWindow::slot_findDomeLightPath);
     connect(m_ui->pushButton_renderPreview, &QPushButton::clicked, this, &MainWindow::slot_renderPreview);
+    connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, [=](int value) {
+        m_ui->label_frameNum->setText(QString("Frame %1").arg(value));
+    });
 
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
     connect(&m_timer, &QTimer::timeout, this, &MainWindow::slot_handleUpdateProgressBar);
-
-    // this->setStyleSheet("QProgressBar {\nbackground-color: #C0C6CA;\nborder: 0px;\npadding: 0px;\nheight: 100px;\n}\nQProgressBar::chunk {\nbackground: #7D94B0;\nwidth:5px\n}");
 }
 
 MainWindow::~MainWindow()
@@ -87,8 +88,25 @@ void MainWindow::slot_beginDataCollection()
     return;
 }
 
+void MainWindow::slot_handleUpdateProgressBar()
+{
+    double progress = m_camera->getCurrProgress();
+
+    m_ui->progressBar->setValue(progress * 100);
+    qDebug() << "Progress bar set to" << progress;
+}
+
 void MainWindow::defaultInit()
 {
+    QFile file(":/style/style.qss");
+    if (file.open(QFile::ReadOnly | QFile::Text)) {
+        QString styleSheet = QString::fromUtf8(file.readAll());
+        this->setStyleSheet(styleSheet);
+        qDebug() << "Style sheet successfully read.";
+    } else {
+        qDebug() << "Style sheet couldn't be read.";
+    }
+
     this->move(100, -995);
     this->setFixedSize(1024, 768);
 
@@ -96,12 +114,4 @@ void MainWindow::defaultInit()
     m_ui->lineEdit_domeLight->setText(PROJECT_SOURCE_DIR + QString("/assets/domelights/squash_court_4k.hdr"));
 
     this->slot_renderPreview();
-}
-
-void MainWindow::slot_handleUpdateProgressBar()
-{
-    double progress = m_camera->getCurrProgress();
-
-    m_ui->progressBar->setValue(progress * 100);
-    qDebug() << "Progress bar set to" << progress;
 }
