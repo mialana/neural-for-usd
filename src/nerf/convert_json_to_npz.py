@@ -6,9 +6,9 @@ from math import tan
 from matplotlib import pyplot as plt
 
 # === Config ===
-json_path = "assets/campfire/data/data.json"
-image_dir = "assets/campfire/data"
-output_npz = "src/nerf/campfire.npz"
+json_path = "assets/japanesePlaneToy/data/data.json"
+image_dir = "assets/japanesePlaneToy/data"
+output_npz = "src/nerf/japanesePlaneToy.npz"
 img_extension = ".png"  # Change to ".jpg" if needed
 horizontal_aperture = 25.955
 

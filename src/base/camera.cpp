@@ -109,19 +109,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
 
-        QFileInfo dataFileInfo("/Users/liu.amy05/Documents/Neural-for-USD/assets/japanesePlaneToy/"
-                               "data/preserveDetailsVal");
-        QString dataFileDir = dataFileInfo.absolutePath();
-        QString dataImagePath = dataFileDir + "/preserveDetailsVal" + outputPrefix;
-        dataImagePath += QString::number(frame);
-        dataImagePath += ".jpg";
-        if (frame == 0) {
-            qDebug() << dataImagePath;
-            qDebug() << dataFileDir;
-        }
-
-        QString relativePath = QDir(dataFileDir).relativeFilePath(dataImagePath);
-        m_cameraPoses[frame]->m_outputPath = relativePath;
+        m_cameraPoses[frame]->m_outputPath = outputImagePath;
 
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
@@ -132,19 +120,17 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
     return true;
 }
 
+/*
+Nerf implementation currently uses row-major, z-up, and looking down the -z axis.
+OpenUSD naturally uses column-major and y-up.
+*/
 pxr::GfMatrix4d changeMatrixFormat(const pxr::GfMatrix4d& oldMat)
 {
-    pxr::GfRotation rotater = pxr::GfRotation(pxr::GfVec3d(1, 0, 0), -90.0);
-    pxr::GfMatrix4d rotation = pxr::GfMatrix4d().SetRotateOnly(rotater);
-    pxr::GfVec4d translation = oldMat.GetRow(3);
-
     pxr::GfMatrix4d newMat = pxr::GfMatrix4d();
     newMat = oldMat.GetTranspose();
-    // newMat.SetColumn(3, translation);
 
-    // for (int i = 0; i < 3; i++) {
-    //     newMat.SetRow3(i, oldMat.GetRow3(i));
-    // }
+    pxr::GfRotation rotater = pxr::GfRotation(pxr::GfVec3d(1, 0, 0), -90.0);
+    pxr::GfMatrix4d rotation = pxr::GfMatrix4d().SetRotateOnly(rotater);
 
     newMat = rotation * newMat;
 
@@ -186,7 +172,7 @@ bool Camera::generateCameraPoses(int numSamples)
 
         pxr::GfMatrix4d m = pxr::GfMatrix4d().SetLookAt(pxr::GfVec3d(warpResult.x,
                                                                      warpResult.y,
-                                                                     warpResult.z) * 20.f,
+                                                                     warpResult.z),
                                                         pxr::GfVec3d(0.f),
                                                         pxr::GfVec3d(up.x, up.y, up.z));
         m = m.GetInverse();
@@ -204,6 +190,7 @@ bool Camera::generateCameraPoses(int numSamples)
 
 void Camera::setCameraTransformAtFrame(pxr::GfMatrix4d transform, int frame)
 {
+    // SetTransform expects a CameraToWorldTransformation
     m_gfCamera.SetTransform(transform);
     m_usdCamera.SetFromCamera(m_gfCamera, frame);
 

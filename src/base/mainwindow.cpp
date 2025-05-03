@@ -48,10 +48,10 @@ void MainWindow::slot_findUsdFilePath()
 
     QString assetDir = QFileInfo(sfp).dir().absolutePath();
 
-    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelights/squash_court_4k.hdr";
+    QString hfp = QString(PROJECT_SOURCE_DIR) + "/assets/domelights/white.hdr";
     QString osfp = assetDir + "/data/mystage.usda";
     QString odfp = assetDir + "/data/data.json";
-    QString ordp = assetDir + "/data/smallVal";
+    QString ordp = assetDir + "/data/internalVal";
 
     m_camera = new Camera(sfp, hfp, osfp, odfp, ordp);
 }
