@@ -14,15 +14,16 @@
 
 class Camera
 {
-private:
-    const QString m_stageFilePath;
-    const QString m_hdriFilePath;
-    const QString m_outputStageFilePath;
-    const QString m_outputDataFilePath;
-    QString m_outputRendersDirPath;
+public:
+    double m_currProgress;
 
+private:
+    QString m_stageFilePath;
+    QString m_domeLightPath;
+    QString m_outputStageFilePath;
+    QString m_outputDataFilePath;
+    QString m_outputRendersDirPath;
     QString m_outputPrefix;
-    int m_numFrames;
 
     pxr::UsdGeomXform m_usdCameraXform;
     pxr::UsdGeomCamera m_usdCamera;
@@ -31,6 +32,27 @@ private:
 
     std::vector<uPtr<CameraPose>> m_cameraPoses;
 
+    int m_numFrames;
+
+public:
+    /**
+     * @brief Parameters correlate to path-related members
+     * @param sfp
+     * @param hfp
+     * @param odfp
+     * @param ordp
+     */
+    Camera(QString stageFilePath, QString domeLightPath);
+
+    void record();
+
+    bool generateCameraPoses(int numSamples);
+
+    void toJson() const;
+
+    double getCurrProgress() const;
+
+private:
     bool createGfCamera();
     bool createUsdCamera(const char* name);
     bool createDomeLight();
@@ -41,20 +63,4 @@ private:
      * @param frame
      */
     void setCameraTransformAtFrame(pxr::GfMatrix4d transform, int frame);
-
-public:
-    /**
-     * @brief Parameters correlate to path-related members
-     * @param sfp
-     * @param hfp
-     * @param odfp
-     * @param ordp
-     */
-    Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp);
-
-    bool record(QString outputPrefix, QProgressBar* b, int numFrames);
-
-    bool generateCameraPoses(int numSamples);
-
-    void toJson() const;
 };

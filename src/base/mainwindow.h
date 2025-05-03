@@ -3,6 +3,7 @@
 #include "camera.h"
 
 #include <QMainWindow>
+#include <QTimer>
 
 namespace Ui
 {
@@ -18,10 +19,19 @@ public:
     ~MainWindow();
 
 public Q_SLOTS:
+    void slot_renderPreview();
+    void slot_findUsdStagePath();
+    void slot_findDomeLightPath();
+
     void slot_beginDataCollection();
-    void slot_findUsdFilePath();
 
 private:
     Ui::MainWindow* m_ui;
     Camera* m_camera;
+    QTimer m_timer;
+
+    void defaultInit();
+
+private Q_SLOTS:
+    void slot_handleUpdateProgressBar();
 };

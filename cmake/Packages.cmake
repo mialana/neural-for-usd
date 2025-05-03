@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets OpenGL OpenGLWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Core OpenGLWidgets)
 
 if (USD_ROOT)
 

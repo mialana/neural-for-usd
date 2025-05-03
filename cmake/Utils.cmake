@@ -128,8 +128,6 @@ function(_usd_target_properties TARGET_NAME)
     APPEND
     _QT_LIBRARIES
     Qt6::Core
-    Qt6::Widgets
-    Qt6::OpenGL
     Qt6::OpenGLWidgets
     Qt6::Gui)
 

@@ -11,6 +11,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QFileInfo>
+#include <QEventLoop>
 
 #include <pxr/usd/sdf/path.h>
 #include <pxr/usd/usd/prim.h>
@@ -27,14 +28,20 @@
 
 #include "myframerecorder.h"
 
-Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ordp)
-    : m_stageFilePath(sfp)
-    , m_hdriFilePath(hfp)
-    , m_outputStageFilePath(osfp)
-    , m_outputDataFilePath(odfp)
-    , m_outputRendersDirPath(ordp)
+Camera::Camera(QString stageFilePath, QString domeLightPath)
+    : m_stageFilePath(stageFilePath)
+    , m_domeLightPath(domeLightPath)
+    , m_outputPrefix("/r")
+    , m_numFrames(106)
+    , m_currProgress(0.0)
 {
-    qDebug() << "Stage Path:" << m_stageFilePath.toLocal8Bit();
+    QString assetDir = QFileInfo(m_stageFilePath).dir().absolutePath();
+    QString assetName = QFileInfo(m_stageFilePath).baseName();
+    m_outputStageFilePath = assetDir + "/data/" + assetName + "Stage.usda";
+    m_outputDataFilePath = assetDir + "/data/data.json";
+    m_outputRendersDirPath = assetDir + "/data/internalVal";
+
+    qDebug() << "Stage Path:" << m_stageFilePath.toStdString();
 
     // Create a USD stage
     m_usdStage = pxr::UsdStage::Open(CCP(m_stageFilePath));
@@ -59,7 +66,7 @@ Camera::Camera(QString sfp, QString hfp, QString osfp, QString odfp, QString ord
 
 bool Camera::createDomeLight()
 {
-    pxr::SdfAssetPath hdriFilePath = pxr::SdfAssetPath(CCP(m_hdriFilePath));
+    pxr::SdfAssetPath hdriFilePath = pxr::SdfAssetPath(CCP(m_domeLightPath));
 
     pxr::UsdLuxDomeLight hdri = pxr::UsdLuxDomeLight::Define(m_usdStage,
                                                              pxr::SdfPath("/lights/domeLight"));
@@ -83,20 +90,16 @@ bool Camera::createDomeLight()
     return true;
 }
 
-bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
+void Camera::record()
 {
-    m_outputPrefix = outputPrefix;
-    m_numFrames = numFrames;
-
     if (!QDir().mkpath(m_outputRendersDirPath)) {
-        qDebug() << "Output render path creation failure.";
-        return false;
+        qFatal() << "Output render path creation failure.";
     }
 
     generateCameraPoses(m_numFrames);
 
     pxr::MyFrameRecorder frameRecorder = pxr::MyFrameRecorder(pxr::TfToken(),
-                                                                                true);
+                                                              true);
 
     frameRecorder.SetColorCorrectionMode(pxr::TfToken::Find("sRGB"));
     frameRecorder.SetComplexity(1.0);
@@ -105,7 +108,7 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
     frameRecorder.SetCameraLightEnabled(true);
 
     for (int frame = 0; frame < m_numFrames; frame++) {
-        QString outputImagePath = m_outputRendersDirPath + outputPrefix;
+        QString outputImagePath = m_outputRendersDirPath + m_outputPrefix;
         outputImagePath += QString::number(frame);
         outputImagePath += ".png";
 
@@ -114,10 +117,10 @@ bool Camera::record(QString outputPrefix, QProgressBar* b, int numFrames)
         if (frameRecorder.Record(m_usdStage, m_usdCamera, frame, CCP(outputImagePath))) {
             qDebug() << "Recorded frame" << frame;
 
-            // b->setValue((int)(frame + 1 / m_numFrames));
+            m_currProgress = (float)frame / m_numFrames;
+            qDebug() << "Curr Progress:" << m_currProgress;
         }
     }
-    return true;
 }
 
 /*
@@ -159,8 +162,6 @@ bool Camera::generateCameraPoses(int numSamples)
 
         offset = glm::vec2(invSqrtVal / 2.f);
         sample = gridOrigin + offset;
-
-        // sample = glm::vec2(rng.nextFloat(), rng.nextFloat());
 
         glm::vec3 warpResult = sampling::squareToHemisphereUniform(sample);
 
@@ -230,7 +231,7 @@ bool Camera::createUsdCamera(const char* name)
 void Camera::toJson() const
 {
     if (!QDir(m_outputRendersDirPath).exists() || m_cameraPoses.empty()) {
-        qFatal() << "Camera data have not been recorded yet.";
+        qFatal() << "Camera data has not been recorded yet.";
     }
 
     QJsonObject json;
@@ -262,4 +263,9 @@ void Camera::toJson() const
     jsonFile.close();
 
     return;
+}
+
+double Camera::getCurrProgress() const
+{
+    return m_currProgress;
 }

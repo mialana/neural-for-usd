@@ -1,8 +1,10 @@
-#include "mycpp/mystartup.h"
+#include <mycpp/mystartup.h>
 #include "mainwindow.h"
 
 #include <QDebug>
 #include <QApplication>
+#include <QGuiApplication>
+#include <QScreen>
 
 int main(int argc, char* argv[])
 {
@@ -11,6 +13,7 @@ int main(int argc, char* argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
+
     w.show();
 
     return a.exec();

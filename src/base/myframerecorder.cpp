@@ -488,7 +488,7 @@ uint64_t MyFrameRecorder::getTextureHandle(const UsdStagePtr& stage,
                                       frustum.ComputeProjectionMatrix());
     }
 
-    qDebug() << "x:" << frustum.GetPosition()[0] << "y:" << frustum.GetPosition()[1] << "z:" << frustum.GetPosition()[2];
+    // qDebug() << "x:" << frustum.GetPosition()[0] << "y:" << frustum.GetPosition()[1] << "z:" << frustum.GetPosition()[2];
     _imageWidth = width;
     float imageHeight = height;
     const GfRect2i dataWindow(GfVec2i(0.0), _imageWidth, imageHeight);

@@ -15,7 +15,7 @@
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
-class UsdGL : public OpenGLContext
+class MyGL : public OpenGLContext
 {
     Q_OBJECT
 
@@ -34,8 +34,8 @@ private:
     GfVec2d m_mousePosPrev;
 
 public:
-    explicit UsdGL(QWidget* parent = nullptr);
-    ~UsdGL();
+    explicit MyGL(QWidget* parent = nullptr);
+    ~MyGL();
 
     void initializeGL() override;
     void resizeGL(int w, int h) override;

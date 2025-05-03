@@ -1,11 +1,11 @@
-#include "usdgl.h"
+#include "mygl.h"
 
 #include <pxr/usd/usd/stage.h>
 #include <pxr/usd/usdGeom/camera.h>
 #include <QKeyEvent>
 #include <QApplication>
 
-UsdGL::UsdGL(QWidget* parent)
+MyGL::MyGL(QWidget* parent)
     : OpenGLContext(parent)
     , m_timer()
     , frameRecorder(pxr::TfToken(), true)
@@ -13,16 +13,17 @@ UsdGL::UsdGL(QWidget* parent)
     , myCam(this->width(), this->height())
     , m_mousePosPrev()
 {
-    connect(&m_timer, &QTimer::timeout, this, &UsdGL::tick);
+    connect(&m_timer, &QTimer::timeout, this, &MyGL::tick);
     setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true);
 }
 
-UsdGL::~UsdGL()
+MyGL::~MyGL()
 {
     makeCurrent();
 }
 
-void UsdGL::initializeGL()
+void MyGL::initializeGL()
 {
     initializeOpenGLFunctions();
 
@@ -51,7 +52,7 @@ void UsdGL::initializeGL()
     m_timer.start(16);
 }
 
-void UsdGL::resizeGL(int w, int h)
+void MyGL::resizeGL(int w, int h)
 {
     // glViewport(0, 0, w, h);
     myCam = MyCamera(w, h, myCam.eye, myCam.ref, myCam.worldUp);
@@ -62,7 +63,7 @@ void UsdGL::resizeGL(int w, int h)
     qDebug() << "Device Pixel Ratio is:" << devicePixelRatio();
 }
 
-void UsdGL::paintGL()
+void MyGL::paintGL()
 {
     frameRecorder.getTextureHandle(stage,
                                    camera,
@@ -75,12 +76,12 @@ void UsdGL::paintGL()
                                    devicePixelRatio());
 }
 
-void UsdGL::tick()
+void MyGL::tick()
 {
     this->update();
 }
 
-void UsdGL::slot_saveEngineRenderToFile(bool signaled)
+void MyGL::slot_saveEngineRenderToFile(bool signaled)
 {
     qDebug() << "Attempting save to file...";
 
@@ -89,7 +90,7 @@ void UsdGL::slot_saveEngineRenderToFile(bool signaled)
     this->doneCurrent();
 }
 
-void UsdGL::keyPressEvent(QKeyEvent* e)
+void MyGL::keyPressEvent(QKeyEvent* e)
 {
     float amount = 2.0f;
     if (e->modifiers() & Qt::ShiftModifier) {
@@ -114,8 +115,9 @@ void UsdGL::keyPressEvent(QKeyEvent* e)
     update();
 }
 
-void UsdGL::mousePressEvent(QMouseEvent* e)
+void MyGL::mousePressEvent(QMouseEvent* e)
 {
+    qDebug() << "x:" << myCam.eye[0] << "y:" << myCam.eye[1] << "z:" << myCam.eye[2];
     if (e->buttons() & (Qt::LeftButton | Qt::RightButton | Qt::MiddleButton)) {
         m_mousePosPrev = GfVec2d(e->pos().x(), e->pos().y());
     }
@@ -123,7 +125,7 @@ void UsdGL::mousePressEvent(QMouseEvent* e)
     update();
 }
 
-void UsdGL::mouseMoveEvent(QMouseEvent* e)
+void MyGL::mouseMoveEvent(QMouseEvent* e)
 {
     GfVec2d pos(e->pos().x(), e->pos().y());
     if (e->buttons() & Qt::LeftButton) {
@@ -147,7 +149,7 @@ void UsdGL::mouseMoveEvent(QMouseEvent* e)
     update();
 }
 
-void UsdGL::wheelEvent(QWheelEvent* e)
+void MyGL::wheelEvent(QWheelEvent* e)
 {
     myCam.zoom(e->angleDelta().y() * 0.02f);
     myCam.recomputeAttributes();
