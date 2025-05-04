@@ -1,29 +1,46 @@
 #pragma once
 
+#include "openglcontext.h"
 #include "stagemanager.h"
-#include "freecamera.h"
+
+#include <pxr/usdImaging/usdImagingGL/engine.h>
+
+enum RenderEngineMode {
+    FIXED_CAMERA,
+    FREE_CAMERA
+};
 
 class RenderEngine {
 public:
-    RenderEngine();
+    RenderEngine(OpenGLContext* context);
     ~RenderEngine();
 
-    void render(StageManager& stage);
+    bool initDefaults();
 
-    void recordAllFrames(StageManager& stage);
+    void changeMode(RenderEngineMode mode);
 
-    void enterFreeCameraMode();
-    void enterFixedCameraMode();
-    bool isUsingFreeCamera() const;
+    void render(StageManager* manager);
 
-    void handleMouseInput(float dx, float dy, bool orbiting, bool panning);
-    void handleScrollInput(float scrollDelta);
+    void recordAllFixedFrames(StageManager* manager);
+
+    void resize();
+    void resize(bool);
+    void setComplexity(float complexity);
+    void setColorCorrectionMode(TfToken mode);
+    void setDomeLightVisibility(bool visibility);
+    void setCameraLightEnabled(bool enabled);
 
 private:
-    void renderWithCamera(StageManager& stage, const GfCamera& camera);
-    void renderFreeCameraView(StageManager& stage);
-    void renderFixedCameraFrame(StageManager& stage);
+    OpenGLContext* m_context;
 
-    bool m_useFreeCamera = false;
-    FreeCamera m_freeCamera;
+    UsdImagingGLEngine m_imagingEngine;
+
+    RenderEngineMode m_mode;
+
+    bool m_domeLightVisibility;
+    bool m_cameraLightEnabled;
+
+    UsdImagingGLRenderParams m_renderParams;
+
+    GlfSimpleMaterial m_material;
 };

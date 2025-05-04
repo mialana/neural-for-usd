@@ -3,19 +3,14 @@
 #include <mycpp/mydefines.h>
 
 #include "stagemanager.h"
+#include "renderengine.h"
 
 #include "openglcontext.h"
-#include "myframerecorder.h"
-#include "mycamera.h"
+#include "freecamera.h"
 
 #include <pxr/usd/usd/stage.h>
 
 #include <QTimer>
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_0_Core>
-
-#include <pxr/imaging/hgi/hgi.h>
-#include <pxr/imaging/hgiInterop/hgiInterop.h>
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -31,23 +26,15 @@ public:
     void resizeGL(int w, int h) override;
     void paintGL() override;
 
+    void loadStageManager(const QString& stagePath, const QString& domeLightPath);
+
 private:
     QTimer m_timer;
-    UsdStageRefPtr stage;
-    UsdGeomCamera camera;
-    MyFrameRecorder frameRecorder;
-    HgiUniquePtr _hgi;
-    HgiInterop _interop;
-    GfMatrix4d camView;
-    GfMatrix4d camProj;
-
-    MyCamera myCam;
 
     GfVec2d m_mousePosPrev;
 
-    uPtr<StageManager> m_stage;
-
-    void initDefaultStage();
+    uPtr<StageManager> m_manager;
+    uPtr<RenderEngine> m_engine;
 
 protected:
     void keyPressEvent(QKeyEvent* e) override;
@@ -58,5 +45,11 @@ protected:
 public Q_SLOTS:
     void tick();
 
-    void slot_triggerRenderPreview(bool signaled = true);
+    void slot_setStageManagerCurrentFrame(int frame);
+
+    /**
+     * @brief slot_changeRenderEngineMode
+     * @param mode: "fixed" or "free"
+     */
+    void slot_changeRenderEngineMode(QString mode);
 };

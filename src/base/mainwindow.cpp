@@ -7,20 +7,17 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , m_ui(new Ui::MainWindow)
-    , m_camera(nullptr)
     , m_timer()
 {
     m_ui->setupUi(this);
 
-    this->defaultInit();
+    this->initDefaults();
 
     // Tab 1
     connect(m_ui->pushButton_usdStage, &QPushButton::clicked, this, &MainWindow::slot_findUsdStagePath);
     connect(m_ui->pushButton_domeLight, &QPushButton::clicked, this, &MainWindow::slot_findDomeLightPath);
     connect(m_ui->pushButton_renderPreview, &QPushButton::clicked, this, &MainWindow::slot_renderPreview);
-    connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, [=](int value) {
-        m_ui->label_frameNum->setText(QString("Frame %1").arg(value));
-    });
+    connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, &MainWindow::slot_handleUpdateSlider);
 
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
@@ -30,7 +27,6 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete m_ui;
-    delete m_camera;
     close();
 }
 
@@ -69,34 +65,42 @@ void MainWindow::slot_renderPreview()
     QString stageFilePath = m_ui->lineEdit_usdStage->text();
     QString domeLightPath = m_ui->lineEdit_domeLight->text();
 
-    m_camera = new Camera(stageFilePath, domeLightPath);
+    // m_camera = new Camera(stageFilePath, domeLightPath);
 }
 
 void MainWindow::slot_beginDataCollection()
 {
     m_timer.start(16);
 
-    QThreadPool::globalInstance()->start([this]() {
-        m_camera->record();
-        QMetaObject::invokeMethod(this, [this]() {
-            m_timer.stop();
-            m_camera->toJson();
-            m_ui->progressBar->setValue(100);
-        }, Qt::QueuedConnection);
-    });
+    // QThreadPool::globalInstance()->start([this]() {
+    //     m_camera->record();
+    //     QMetaObject::invokeMethod(this, [this]() {
+    //         m_timer.stop();
+    //         m_camera->toJson();
+    //         m_ui->progressBar->setValue(100);
+    //     }, Qt::QueuedConnection);
+    // });
 
     return;
 }
 
 void MainWindow::slot_handleUpdateProgressBar()
 {
-    double progress = m_camera->getCurrProgress();
+    // double progress = m_camera->getCurrProgress();
 
-    m_ui->progressBar->setValue(progress * 100);
-    qDebug() << "Progress bar set to" << progress;
+    // m_ui->progressBar->setValue(progress * 100);
+    // qDebug() << "Progress bar set to" << progress;
 }
 
-void MainWindow::defaultInit()
+void MainWindow::slot_handleUpdateSlider(int value)
+{
+    m_ui->label_frameNum->setText(QString("Frame %1").arg(value));
+    this->m_ui->myGl->slot_setStageManagerCurrentFrame(value);
+
+    this->m_ui->myGl->slot_changeRenderEngineMode("fixed");
+}
+
+void MainWindow::initDefaults()
 {
     QFile file(":/style/style.qss");
     if (file.open(QFile::ReadOnly | QFile::Text)) {
@@ -110,8 +114,11 @@ void MainWindow::defaultInit()
     this->move(100, -995);
     this->setFixedSize(1024, 768);
 
-    m_ui->lineEdit_usdStage->setText(PROJECT_SOURCE_DIR + QString("/assets/simpleCube/simpleCube.usda"));
-    m_ui->lineEdit_domeLight->setText(PROJECT_SOURCE_DIR + QString("/assets/domelights/squash_court_4k.hdr"));
+    const QString defaultUsdStagePath = PROJECT_SOURCE_DIR + QString("/assets/campfire/campfire.usd");
+    const QString defaultLuxDomeLightPath = PROJECT_SOURCE_DIR + QString("/assets/domelights/squash_court_4k.hdr");
 
-    this->slot_renderPreview();
+    m_ui->lineEdit_usdStage->setText(defaultUsdStagePath);
+    m_ui->lineEdit_domeLight->setText(defaultLuxDomeLightPath);
+
+    m_ui->myGl->loadStageManager(defaultUsdStagePath, defaultLuxDomeLightPath);
 }

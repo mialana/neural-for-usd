@@ -1,39 +1,47 @@
 #pragma once
 
+#include <pxr/usd/usdGeom/camera.h>
 #include <pxr/base/gf/camera.h>
 #include <pxr/base/gf/vec3d.h>
 #include <pxr/base/gf/matrix4d.h>
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
-    class FreeCamera {
-public:
-    FreeCamera();
-
-    void reset();
-    void syncFromCamera(const GfCamera& cam);
-
-    // Orbit: rotates around pivot point
-    void orbit(float deltaTheta, float deltaPhi);
-
-    // Pan: translates pivot point in view plane
-    void pan(float dx, float dy);
-
-    // Zoom: adjusts distance to pivot
-    void zoom(float delta);
-
-    void setFromGfCamera(const GfCamera& camera);
-
-    GfCamera getGfCamera() const;
-
+class FreeCamera
+{
 private:
-    void updateCamera();
+    float aspectRatio;
+    float fieldOfView; // FOVY
 
-    GfCamera m_camera;
+    GfVec3d forward;
+    GfVec3d right;
 
-    GfVec3d m_pivot = GfVec3d(0, 0, 0);  // Target of camera
-    float m_radius = 1.0f;               // Distance from camera to pivot
-    float m_theta = 0.0f;                // Azimuth (horizontal orbit)
-    float m_phi = 0.0f;                  // Elevation (vertical orbit)
+    float theta;
+    float phi;
+    float radius;
+
+    GfMatrix4d createProjectionMatrix();
+public:
+    GfVec3d eye;
+    GfVec3d ref;
+    GfVec3d worldUp;
+
+    FreeCamera(float width, float height);
+    FreeCamera(float width, float height, GfVec3d eye, GfVec3d ref, GfVec3d worldUp);
+
+    GfCamera createGfCamera();
+
+    void recomputeAttributes();
+
+    void translateAlongForward(float amt);
+    void translateAlongRight(float amt);
+    void translateAlongUp(float amt);
+
+    void rotateAboutUp(float deg);
+    void rotateAboutRight(float deg);
+
+    void rotateTheta(float deg);
+    void rotatePhi(float deg);
+
+    void zoom(float amt);
 };
-

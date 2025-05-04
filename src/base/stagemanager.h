@@ -1,6 +1,7 @@
 #pragma once
 
 #include "framemetadata.h"
+#include "freecamera.h"
 
 #include <mycpp/mydefines.h>
 
@@ -16,12 +17,17 @@ PXR_NAMESPACE_USING_DIRECTIVE
 
 class StageManager {
 public:
+    uPtr<FreeCamera> m_freeCam = nullptr;
+
     StageManager();
     ~StageManager();
 
-    bool loadScene(const QString& stagePath, const QString& domeLightPath);
+    bool loadUsdStage(const QString& stagePath, const QString& domeLightPath);
     bool generateCameraFrames(int numFrames);
     void exportDataJson() const;
+    bool initFreeCam(int width, int height);
+
+    UsdPrim* getPsuedoRoot();
 
     void setCurrentFrame(int frame);
     int getCurrentFrame() const;
@@ -54,6 +60,8 @@ private:
     UsdGeomCamera m_geomCamera;
     UsdLuxDomeLight m_luxDomeLight;
 
+    uPtr<UsdPrim> m_pseudoRoot = nullptr;
+
     QString m_inputStagePath;
     QString m_inputDomeLightPath;
 
@@ -65,7 +73,7 @@ private:
     int m_numFrames = 0;
     int m_currentFrame = 0;
     double m_currProgress = 0.0;
-    float m_cameraOrbitRadius = 1.0f;
+    float m_cameraOrbitRadius = 20.f;
 
     std::vector<uPtr<FrameMetadata>> m_allFrameMeta;
 };

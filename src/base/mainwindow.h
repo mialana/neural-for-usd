@@ -1,7 +1,5 @@
 #pragma once
 
-#include "camera.h"
-
 #include <QMainWindow>
 #include <QTimer>
 
@@ -27,11 +25,12 @@ public Q_SLOTS:
 
 private:
     Ui::MainWindow* m_ui;
-    Camera* m_camera;
     QTimer m_timer;
 
-    void defaultInit();
+    void initDefaults();
 
 private Q_SLOTS:
     void slot_handleUpdateProgressBar();
+
+    void slot_handleUpdateSlider(int value);
 };

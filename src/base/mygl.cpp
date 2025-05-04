@@ -1,17 +1,14 @@
 #include "mygl.h"
 
-#include <pxr/usd/usd/stage.h>
-#include <pxr/usd/usdGeom/camera.h>
 #include <QKeyEvent>
 #include <QApplication>
 
 MyGL::MyGL(QWidget* parent)
     : OpenGLContext(parent)
     , m_timer()
-    , frameRecorder(pxr::TfToken(), true)
-    , _hgi(Hgi::CreatePlatformDefaultHgi())
-    , myCam(this->width(), this->height())
     , m_mousePosPrev()
+    , m_manager(mkU<StageManager>())
+    , m_engine(mkU<RenderEngine>(this))
 {
     connect(&m_timer, &QTimer::timeout, this, &MyGL::tick);
     setFocusPolicy(Qt::StrongFocus);
@@ -30,33 +27,20 @@ void MyGL::initializeGL()
     glClearColor(0.5, 0.5, 0.5, 1);
     printGLErrorLog();
 
-    // stage = UsdStage::Open("/Users/Dev/Projects/Neural-for-USD/assets/testAssets/simpleCube.usda");
-    // camera = UsdGeomCamera::Define(stage, SdfPath("/SimpleCube/primaryCam"));
+    if (m_engine->initDefaults()) {
+        qDebug() << "Underlying USD imaging engine configured successfully.";
+    }
 
-    // stage = UsdStage::Open("/Users/Dev/Projects/Neural-for-USD/assets/japanesePlaneToy/data/mystage.usda");
-    // camera = UsdGeomCamera::Define(stage, SdfPath("/Xform_MyCam/MyCam"));
-
-    stage = UsdStage::Open("/Users/Dev/Projects/Neural-for-USD/assets/campfire/campfire.usd");
-    camera = UsdGeomCamera::Define(stage, SdfPath("/campfire/primaryCam"));
-
-    // GfFrustum frustum = camera.GetCamera(0).GetFrustum();
-
-    // myCam = MyCamera(width(), height(), frustum.GetPosition(), frustum.ComputeLookAtPoint(), frustum.ComputeUpVector());
-
-    myCam = MyCamera(width(), height());
-
-    frameRecorder.SetColorCorrectionMode(pxr::TfToken::Find("sRGB"));
-    frameRecorder.SetComplexity(1.0);
-    frameRecorder.SetDomeLightVisibility(true);
+    m_manager->initFreeCam(this->width(), this->height());
 
     m_timer.start(16);
 }
 
 void MyGL::resizeGL(int w, int h)
 {
-    // glViewport(0, 0, w, h);
-    myCam = MyCamera(w, h, myCam.eye, myCam.ref, myCam.worldUp);
-    myCam.recomputeAttributes();
+    m_manager->initFreeCam(w, h);
+
+    m_engine->resize();
 
     qDebug() << "New width is:" << w;
     qDebug() << "New height is:" << h;
@@ -65,15 +49,7 @@ void MyGL::resizeGL(int w, int h)
 
 void MyGL::paintGL()
 {
-    frameRecorder.getTextureHandle(stage,
-                                   camera,
-                                   this->defaultFramebufferObject(),
-                                   _hgi.get(),
-                                   _interop,
-                                   myCam.createGfCamera(),
-                                   width(),
-                                   height(),
-                                   devicePixelRatio());
+    m_engine->render(m_manager.get());
 }
 
 void MyGL::tick()
@@ -90,29 +66,30 @@ void MyGL::keyPressEvent(QKeyEvent* e)
 
     switch (e->key()) {
         case (Qt::Key_Escape): QApplication::quit(); break;
-        case (Qt::Key_Right): myCam.rotateAboutUp(-amount); break;
-        case (Qt::Key_Left): myCam.rotateAboutUp(amount); break;
-        case (Qt::Key_Up): myCam.rotateAboutRight(-amount); break;
-        case (Qt::Key_Down): myCam.rotateAboutRight(amount); break;
+        case (Qt::Key_Right): m_manager->m_freeCam->rotateAboutUp(-amount); break;
+        case (Qt::Key_Left): m_manager->m_freeCam->rotateAboutUp(amount); break;
+        case (Qt::Key_Up): m_manager->m_freeCam->rotateAboutRight(-amount); break;
+        case (Qt::Key_Down): m_manager->m_freeCam->rotateAboutRight(amount); break;
 
-        case (Qt::Key_W): myCam.translateAlongForward(amount); break;
-        case (Qt::Key_S): myCam.translateAlongForward(-amount); break;
-        case (Qt::Key_D): myCam.translateAlongRight(amount); break;
-        case (Qt::Key_A): myCam.translateAlongRight(-amount); break;
-        case (Qt::Key_Q): myCam.translateAlongUp(-amount); break;
-        case (Qt::Key_E): myCam.translateAlongUp(amount); break;
+        case (Qt::Key_W): m_manager->m_freeCam->translateAlongForward(amount); break;
+        case (Qt::Key_S): m_manager->m_freeCam->translateAlongForward(-amount); break;
+        case (Qt::Key_D): m_manager->m_freeCam->translateAlongRight(amount); break;
+        case (Qt::Key_A): m_manager->m_freeCam->translateAlongRight(-amount); break;
+        case (Qt::Key_Q): m_manager->m_freeCam->translateAlongUp(-amount); break;
+        case (Qt::Key_E): m_manager->m_freeCam->translateAlongUp(amount); break;
     }
-    myCam.recomputeAttributes();
+    m_manager->m_freeCam->recomputeAttributes();
     update();
 }
 
 void MyGL::mousePressEvent(QMouseEvent* e)
 {
-    qDebug() << "x:" << myCam.eye[0] << "y:" << myCam.eye[1] << "z:" << myCam.eye[2];
+    qDebug() << "x:" << m_manager->m_freeCam->eye[0] << "y:" << m_manager->m_freeCam->eye[1]
+             << "z:" << m_manager->m_freeCam->eye[2];
     if (e->buttons() & (Qt::LeftButton | Qt::RightButton | Qt::MiddleButton)) {
         m_mousePosPrev = GfVec2d(e->pos().x(), e->pos().y());
     }
-    myCam.recomputeAttributes();
+    m_manager->m_freeCam->recomputeAttributes();
     update();
 }
 
@@ -123,40 +100,54 @@ void MyGL::mouseMoveEvent(QMouseEvent* e)
         // Rotation
         GfVec2d diff = 0.04f * (pos - m_mousePosPrev);
         m_mousePosPrev = pos;
-        myCam.rotatePhi(-diff[0]);
-        myCam.rotateTheta(-diff[1]);
+        m_manager->m_freeCam->rotatePhi(-diff[0]);
+        m_manager->m_freeCam->rotateTheta(-diff[1]);
     } else if (e->buttons() & Qt::RightButton) {
         GfVec2d diff = 0.02f * (pos - m_mousePosPrev);
         m_mousePosPrev = pos;
-        myCam.zoom(diff[1]);
+        m_manager->m_freeCam->zoom(diff[1]);
     } else if (e->buttons() & Qt::MiddleButton) {
         // Panning
         GfVec2d diff = 0.02f * (pos - m_mousePosPrev);
         m_mousePosPrev = pos;
-        myCam.translateAlongRight(-diff[0]);
-        myCam.translateAlongUp(diff[1]);
+        m_manager->m_freeCam->translateAlongRight(-diff[0]);
+        m_manager->m_freeCam->translateAlongUp(diff[1]);
     }
-    myCam.recomputeAttributes();
+    m_manager->m_freeCam->recomputeAttributes();
     update();
 }
 
 void MyGL::wheelEvent(QWheelEvent* e)
 {
-    myCam.zoom(e->angleDelta().y() * 0.02f);
-    myCam.recomputeAttributes();
+    m_manager->m_freeCam->zoom(e->angleDelta().y() * 0.02f);
+    m_manager->m_freeCam->recomputeAttributes();
     update();
 }
 
-void MyGL::slot_triggerRenderPreview(bool signaled)
+void MyGL::loadStageManager(const QString& stagePath, const QString& domeLightPath)
 {
-    qDebug() << "Attempting save to file...";
+    bool success = m_manager->loadUsdStage(stagePath, domeLightPath);
 
-    this->makeCurrent();
+    if (success) {
+        qDebug() << "Usd stage loaded successfully by stage manager";
+        m_manager->generateCameraFrames(106);
 
-    this->doneCurrent();
+        m_manager->initFreeCam(this->width(), this->height());
+    } else {
+        qFatal() << "Stage manager was unable to load Usd stage";
+    }
 }
 
-void MyGL::initDefaultStage()
+void MyGL::slot_setStageManagerCurrentFrame(int frame)
 {
+    this->m_manager->setCurrentFrame(frame);
+}
 
+void MyGL::slot_changeRenderEngineMode(QString mode)
+{
+    if (mode == "fixed") {
+        this->m_engine->changeMode(RenderEngineMode::FIXED_CAMERA);
+    } else if (mode == "free") {
+        this->m_engine->changeMode(RenderEngineMode::FREE_CAMERA);
+    }
 }
