@@ -15,18 +15,24 @@ RenderEngine::RenderEngine(OpenGLContext* context)
     , m_imagingEngine(HdDriver(), TfToken(), true)
     , m_renderParams()
     , m_material()
-{}
+    , isDirty(true)
+{
+    initDefaults();
+}
 
 RenderEngine::~RenderEngine() {}
+
+void RenderEngine::makeDirty()
+{
+    qDebug() << "Making render engine dirty...";
+    this->isDirty = true;
+}
 
 bool RenderEngine::changeMode(RenderEngineMode mode)
 {
     if (m_mode != mode) {
         m_mode = mode;
-
-        this->clearRender();
-
-        this->resize();
+        this->makeDirty();
 
         qDebug() << "Render engine mode set to:" << mode;
         return true;
@@ -34,7 +40,7 @@ bool RenderEngine::changeMode(RenderEngineMode mode)
     return false;
 }
 
-bool RenderEngine::initDefaults()
+void RenderEngine::initDefaults()
 {
     m_imagingEngine.SetEnablePresentation(true);
     m_imagingEngine.SetRendererAov(HdAovTokens->color);
@@ -54,9 +60,12 @@ bool RenderEngine::initDefaults()
     m_material.SetShininess(SHININESS_DEFAULT);
 
     m_mode = RenderEngineMode::FIXED_CAMERA;
+
     this->resize();
 
-    return true;
+    qDebug() << "Render engine configured successfully.";
+
+    return;
 }
 
 void RenderEngine::setComplexity(float complexity)
@@ -84,6 +93,9 @@ void RenderEngine::setCameraLightEnabled(bool enabled)
 
 void RenderEngine::render(StageManager* manager)
 {
+    this->resize();
+    this->clearRender();
+
     GfCamera gfCamera;
 
     if (m_mode == RenderEngineMode::FIXED_CAMERA) {
@@ -118,6 +130,10 @@ void RenderEngine::render(StageManager* manager)
     while (true) {
         m_imagingEngine.Render(*root, m_renderParams);
         if (m_imagingEngine.IsConverged()) {
+            if (isDirty) {
+                qInfo() << "All cleaned up!";
+                isDirty = false;
+            }
             break;
         } else {
             // Allow render thread to progress before invoking Render again.
@@ -132,40 +148,50 @@ void RenderEngine::render(StageManager* manager)
 
 void RenderEngine::clearRender()
 {
-    m_imagingEngine.SetRendererAov(TfToken()); // render momentarily to null aov
+    if (isDirty) {
+        qDebug() << "Clearing render engine...";
+        m_imagingEngine.SetRendererAov(TfToken());  // render momentarily to null aov
 
-    GlfDrawTargetRefPtr drawTarget = GlfDrawTarget::New(GfVec2i(m_context->width() * m_context->devicePixelRatio(), m_context->height() * m_context->devicePixelRatio()));
-    drawTarget->Bind();
-    drawTarget->AddAttachment(HdAovTokens->color, GL_RGBA, GL_FLOAT, GL_RGBA);
+        GlfDrawTargetRefPtr drawTarget = GlfDrawTarget::New(
+            GfVec2i(m_context->width() * m_context->devicePixelRatio(),
+                    m_context->height() * m_context->devicePixelRatio()));
+        drawTarget->Bind();
+        drawTarget->AddAttachment(HdAovTokens->color, GL_RGBA, GL_FLOAT, GL_RGBA);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    drawTarget->Unbind();
+        drawTarget->Unbind();
 
-    m_imagingEngine.SetRendererAov(HdAovTokens->color);
+        m_imagingEngine.SetRendererAov(HdAovTokens->color);
+    }
 }
 
 void RenderEngine::resize()
 {
-    GfRect2i dataWindow;
-    int deviceWidth = m_context->width() * m_context->devicePixelRatio();
-    int deviceHeight = m_context->height() * m_context->devicePixelRatio();
+    if (isDirty) {
+        GfRect2i dataWindow;
+        int deviceWidth = m_context->width() * m_context->devicePixelRatio();
+        int deviceHeight = m_context->height() * m_context->devicePixelRatio();
 
-    if (m_mode == RenderEngineMode::FREE_CAMERA) {
-        dataWindow = GfRect2i(GfVec2i(0), GfVec2i(deviceWidth, deviceHeight));
-    } else if (m_mode == RenderEngineMode::FIXED_CAMERA) {
-        if (deviceWidth > deviceHeight) {
-            int frameStartX = (deviceWidth - deviceHeight) / 2;
-            int frameEndX = deviceWidth - frameStartX - 1; // additional pixel should not be rendered
-            dataWindow = GfRect2i(GfVec2i(frameStartX, 0), GfVec2i(frameEndX, deviceHeight));
-        } else {
-            int frameStartY = (deviceHeight - deviceWidth) / 2;
-            int frameEndY = deviceHeight - frameStartY - 1;
+        if (m_mode == RenderEngineMode::FREE_CAMERA) {
+            dataWindow = GfRect2i(GfVec2i(0), GfVec2i(deviceWidth - 1, deviceHeight - 1));
+        } else if (m_mode == RenderEngineMode::FIXED_CAMERA) {
+            if (deviceWidth > deviceHeight) {
+                int frameStartX = (deviceWidth - deviceHeight) / 2;
+                int frameEndX = deviceWidth - frameStartX
+                                - 1;  // additional pixel should not be rendered
+                dataWindow = GfRect2i(GfVec2i(frameStartX, 0), GfVec2i(frameEndX, deviceHeight - 1));
+            } else {
+                int frameStartY = (deviceHeight - deviceWidth) / 2;
+                int frameEndY = deviceHeight - frameStartY - 1;
 
-            dataWindow = GfRect2i(GfVec2i(0, frameStartY), GfVec2i(deviceWidth, frameEndY));
+                dataWindow = GfRect2i(GfVec2i(0, frameStartY), GfVec2i(deviceWidth - 1, frameEndY));
+            }
         }
-    }
 
-    m_imagingEngine.SetFraming(CameraUtilFraming(dataWindow));
-    m_imagingEngine.SetRenderBufferSize(GfVec2i(deviceWidth, deviceHeight));
+        qInfo().Ns() << "New render engine aspect ratio: " << dataWindow.GetWidth() << ":" << dataWindow.GetHeight();
+
+        m_imagingEngine.SetFraming(CameraUtilFraming(dataWindow));
+        m_imagingEngine.SetRenderBufferSize(GfVec2i(deviceWidth, deviceHeight));
+    }
 }

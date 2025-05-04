@@ -15,7 +15,7 @@ public:
     RenderEngine(OpenGLContext* context);
     ~RenderEngine();
 
-    bool initDefaults();
+    void makeDirty();
 
     bool changeMode(RenderEngineMode mode);
 
@@ -23,16 +23,16 @@ public:
 
     void recordAllFixedFrames(StageManager* manager);
 
-    void clearRender();
-
-    void resize();
-
     void setComplexity(float complexity);
     void setColorCorrectionMode(TfToken mode);
     void setDomeLightVisibility(bool visibility);
     void setCameraLightEnabled(bool enabled);
 
 private:
+    void initDefaults();
+    void clearRender();
+    void resize();
+
     OpenGLContext* m_context;
 
     UsdImagingGLEngine m_imagingEngine;
@@ -45,4 +45,6 @@ private:
     UsdImagingGLRenderParams m_renderParams;
 
     GlfSimpleMaterial m_material;
+
+    bool isDirty;
 };

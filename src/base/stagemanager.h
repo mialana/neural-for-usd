@@ -73,7 +73,7 @@ private:
     int m_numFrames = 0;
     int m_currentFrame = 0;
     double m_currProgress = 0.0;
-    float m_cameraOrbitRadius = 20.f;
+    float m_cameraOrbitRadius = 1.f;
 
     std::vector<uPtr<FrameMetadata>> m_allFrameMeta;
 };

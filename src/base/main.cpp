@@ -6,11 +6,16 @@
 #include <QGuiApplication>
 #include <QScreen>
 
+#include <QStyleFactory>
+
 int main(int argc, char* argv[])
 {
     startup::doSimpleSetup();
 
     QApplication a(argc, argv);
+    a.setStyle(QStyleFactory::create("fusion"));
+
+    qDebug() << QStyleFactory::keys();
 
     MainWindow w;
 

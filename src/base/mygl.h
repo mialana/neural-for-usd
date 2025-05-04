@@ -28,6 +28,8 @@ public:
     void loadStageManager(const QString& stagePath, const QString& domeLightPath);
 
 private:
+    void resetEngine();
+
     QTimer m_timer;
 
     GfVec2d m_mousePosPrev;
@@ -51,4 +53,7 @@ public Q_SLOTS:
      * @param mode: "fixed" or "free"
      */
     void slot_changeRenderEngineMode(QString mode);
+
+Q_SIGNALS:
+    void engineModeChanged(QString mode);
 };

@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, &MainWindow::slot_handleUpdateSlider);
     connect(m_ui->horizontalSlider, &QSlider::sliderReleased, this, &MainWindow::slot_handleUpdateSlider);
 
+    connect(m_ui->myGl, &MyGL::engineModeChanged, this, &MainWindow::slot_handleEngineModeChanged);
+
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
     connect(&m_timer, &QTimer::timeout, this, &MainWindow::slot_handleUpdateProgressBar);
@@ -54,7 +56,7 @@ void MainWindow::slot_findDomeLightPath()
                                                          "Select Dome Light File Path",
                                                          PROJECT_SOURCE_DIR
                                                              + QString("/assets/domelights"),
-                                                         "USD Files (*.usd *.usda *.usdc)");
+                                                         "HDR Files (*.hdr *.hdri)");
 
     if (!QFile(domeLightPath).exists()) {
         return;
@@ -67,7 +69,7 @@ void MainWindow::slot_renderPreview()
     QString stageFilePath = m_ui->lineEdit_usdStage->text();
     QString domeLightPath = m_ui->lineEdit_domeLight->text();
 
-    // m_camera = new Camera(stageFilePath, domeLightPath);
+    m_ui->myGl->loadStageManager(stageFilePath, domeLightPath);
 }
 
 void MainWindow::slot_beginDataCollection()
@@ -97,11 +99,28 @@ void MainWindow::slot_handleUpdateProgressBar()
 void MainWindow::slot_handleUpdateSlider()
 {
     int position = m_ui->horizontalSlider->sliderPosition();
-
-    m_ui->label_frameNum->setText(QString("Frame %1").arg(position));
     this->m_ui->myGl->slot_setStageManagerCurrentFrame(position);
 
     this->m_ui->myGl->slot_changeRenderEngineMode("fixed");
+
+    m_ui->label_frameNum->setText(QString("Frame %1").arg(position));
+
+    QFont font = m_ui->label_frameNum->font();
+
+    font.setWeight(QFont::Bold);
+    m_ui->label_frameNum->setFont(font);
+}
+
+void MainWindow::slot_handleEngineModeChanged(QString mode)
+{
+    if (mode == "free") {
+        QFont font = m_ui->label_frameNum->font();
+
+        font.setWeight(QFont::Thin);
+        m_ui->label_frameNum->setFont(font);
+    }
+
+    m_ui->label_cameraMode->setText(QString("Camera Mode: %1").arg(mode.toUpper()));
 }
 
 void MainWindow::initDefaults()

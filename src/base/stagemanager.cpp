@@ -75,6 +75,9 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
 
     m_pseudoRoot = mkU<UsdPrim>(m_usdStage->GetPseudoRoot());
 
+    qDebug() << "New stage file path:" << stagePath;
+    qDebug() << "New domelight file path:" << domeLightPath;
+
     return configureUsdCamera() && configureLuxDomeLight();
 }
 

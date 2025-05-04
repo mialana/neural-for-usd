@@ -6,11 +6,7 @@ QProgressBar {
 }
 
 QProgressBar::chunk {
-    background-color: #0050C9;
-}
-
-QPushButton {
-    max-height: 28px;
+    background-color: palette(highlight);
 }
 
 QSlider::groove:horizontal {
@@ -23,7 +19,7 @@ QSlider::handle:horizontal {
     width: 12px;
     height: 12px;
     margin: -3px 0;
-    background-color: #0050C9;
+    background-color:palette(highlight);
     border: 1px solid #aaa;
     border-radius: 20px;  /* Circle if width=height */
     margin: -4px 0;  
@@ -33,9 +29,5 @@ QSlider::add-page:horizontal,
 QSlider::sub-page:horizontal {
     background: #ccc;
     height: 5px;
-    border-radius: 0px;
-}
-
-QDoubleSpinBox {
     border-radius: 0px;
 }

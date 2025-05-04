@@ -28,10 +28,6 @@ void MyGL::initializeGL()
 
     printGLErrorLog();
 
-    if (m_engine->initDefaults()) {
-        qDebug() << "Underlying USD imaging engine configured successfully.";
-    }
-
     m_manager->initFreeCam(this->width(), this->height());
 
     m_timer.start(16);
@@ -41,8 +37,6 @@ void MyGL::resizeGL(int w, int h)
 {
     m_manager->initFreeCam(w, h);
 
-    m_engine->resize();
-
     qDebug() << "New width is:" << w;
     qDebug() << "New height is:" << h;
     qDebug() << "Device Pixel Ratio is:" << devicePixelRatio();
@@ -50,7 +44,19 @@ void MyGL::resizeGL(int w, int h)
 
 void MyGL::paintGL()
 {
+    if (!m_engine || !m_manager) {
+        return;
+    }
     m_engine->render(m_manager.get());
+}
+
+void MyGL::resetEngine()
+{
+    m_engine = nullptr;
+
+    m_engine = mkU<RenderEngine>(this);
+
+    this->update();
 }
 
 void MyGL::tick()
@@ -133,16 +139,20 @@ void MyGL::slot_setStageManagerCurrentFrame(int frame)
 
 void MyGL::slot_changeRenderEngineMode(QString mode)
 {
+    bool changed = false;
     if (mode == "fixed") {
-        m_engine->changeMode(RenderEngineMode::FIXED_CAMERA);
+        changed = m_engine->changeMode(RenderEngineMode::FIXED_CAMERA);
     } else if (mode == "free") {
-        bool changed = m_engine->changeMode(RenderEngineMode::FREE_CAMERA);
+        changed = m_engine->changeMode(RenderEngineMode::FREE_CAMERA);
 
         if (changed) {
-            // qDebug() m_manager->getGfCameraAtFrame(m_manager->getCurrentFrame()).GetFrustum().GetPosition();
             m_manager->m_freeCam->setFromGfCamera(
                 m_manager->getGfCameraAtFrame(m_manager->getCurrentFrame()));
         }
+    }
+
+    if (changed) {
+        Q_EMIT engineModeChanged(mode);
     }
 }
 
@@ -153,8 +163,9 @@ void MyGL::loadStageManager(const QString& stagePath, const QString& domeLightPa
     if (success) {
         qDebug() << "Usd stage loaded successfully by stage manager";
         m_manager->generateCameraFrames(106);
-
         m_manager->initFreeCam(this->width(), this->height());
+
+        this->resetEngine();
     } else {
         qFatal() << "Stage manager was unable to load Usd stage";
     }
