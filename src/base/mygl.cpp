@@ -72,10 +72,10 @@ void MyGL::keyPressEvent(QKeyEvent* e)
 
     switch (e->key()) {
         case (Qt::Key_Escape): QApplication::quit(); break;
-        case (Qt::Key_Right): m_manager->m_freeCam->rotateAboutUp(amount); break;
-        case (Qt::Key_Left): m_manager->m_freeCam->rotateAboutUp(-amount); break;
-        case (Qt::Key_Up): m_manager->m_freeCam->rotateAboutRight(-amount); break;
-        case (Qt::Key_Down): m_manager->m_freeCam->rotateAboutRight(amount); break;
+        case (Qt::Key_Right): m_manager->m_freeCam->rotateAboutUp(-amount); break;
+        case (Qt::Key_Left): m_manager->m_freeCam->rotateAboutUp(amount); break;
+        case (Qt::Key_Up): m_manager->m_freeCam->rotateAboutRight(amount); break;
+        case (Qt::Key_Down): m_manager->m_freeCam->rotateAboutRight(-amount); break;
 
         case (Qt::Key_W): m_manager->m_freeCam->zoom(amount); break;
         case (Qt::Key_S): m_manager->m_freeCam->zoom(-amount); break;

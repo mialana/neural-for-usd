@@ -68,23 +68,13 @@ void FreeCamera::rotateAboutUp(float deg)
 {
     recomputeAttributes();
 
-    gfFrustum.SetPosition(GfVec3d(0.0));
+    GfVec3d newRef = ref - eye;
+    newRef = GfMatrix4d().SetRotate(GfRotation(GfVec3d(up), deg)).Transform(newRef);
+    newRef = newRef + eye;
 
-    GfMatrix4d rot = GfMatrix4d().SetRotate(GfRotation(up, deg));
+    GfMatrix4d camToWorld = GfMatrix4d().SetLookAt(eye, newRef, up).GetInverse();
 
-    gfFrustum.Transform(rot);
-
-    gfFrustum.SetPosition(eye);
-
-    qDebug() << gfFrustum.GetPosition();
-
-    // GfVec3d newRef = ref - eye;
-    // newRef = GfMatrix4d().SetRotate(GfRotation(GfVec3d(up), deg)).Transform(newRef);
-    // newRef = newRef + eye;
-
-    // GfMatrix4d camToWorld = GfMatrix4d().SetLookAt(eye, newRef, up).GetInverse();
-
-    // gfFrustum.SetPositionAndRotationFromMatrix(camToWorld);
+    gfFrustum.SetPositionAndRotationFromMatrix(camToWorld);
 }
 
 void FreeCamera::rotateAboutRight(float deg)
