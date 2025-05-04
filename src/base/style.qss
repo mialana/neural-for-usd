@@ -36,3 +36,6 @@ QSlider::sub-page:horizontal {
     border-radius: 0px;
 }
 
+QDoubleSpinBox {
+    border-radius: 0px;
+}
