@@ -96,8 +96,6 @@ void RenderEngine::render(StageManager* manager)
 
     m_imagingEngine.SetCameraState(frustum.ComputeViewMatrix(), frustum.ComputeProjectionMatrix());
 
-    // qDebug() << "x:" << frustum.GetPosition()[0] << "y:" << frustum.GetPosition()[1] << "z:" << frustum.GetPosition()[2];
-
     GlfSimpleLightVector lights;
     if (m_cameraLightEnabled) {
         const GfVec3d& cameraPos = frustum.GetPosition();
