@@ -6,7 +6,6 @@
 #include "renderengine.h"
 
 #include "openglcontext.h"
-#include "freecamera.h"
 
 #include <pxr/usd/usd/stage.h>
 

@@ -6,7 +6,7 @@ usd_executable(base
 
     CPPFILES
         ${SOURCEFILES}
-        utils/gfsampling.h
+        utils/gfaddins.h
         
     LIBRARIES
         usd

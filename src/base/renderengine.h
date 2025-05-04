@@ -17,14 +17,16 @@ public:
 
     bool initDefaults();
 
-    void changeMode(RenderEngineMode mode);
+    bool changeMode(RenderEngineMode mode);
 
     void render(StageManager* manager);
 
     void recordAllFixedFrames(StageManager* manager);
 
+    void clearRender();
+
     void resize();
-    void resize(bool);
+
     void setComplexity(float complexity);
     void setColorCorrectionMode(TfToken mode);
     void setDomeLightVisibility(bool visibility);

@@ -1,5 +1,9 @@
 #include "renderengine.h"
 
+#include <pxr/imaging/glf/drawTarget.h>
+
+#include <pxr/imaging/hd/renderBuffer.h>
+
 const GfVec4f CLEAR_COLOR = GfVec4f(0.5f);
 const GfVec4f SCENE_AMBIENT = GfVec4f(0.01f, 0.01f, 0.01f, 1.0f);
 const GfVec4f SPECULAR_DEFAULT = GfVec4f(0.1f, 0.1f, 0.1f, 1.0f);
@@ -15,14 +19,19 @@ RenderEngine::RenderEngine(OpenGLContext* context)
 
 RenderEngine::~RenderEngine() {}
 
-void RenderEngine::changeMode(RenderEngineMode mode)
+bool RenderEngine::changeMode(RenderEngineMode mode)
 {
     if (m_mode != mode) {
         m_mode = mode;
+
+        this->clearRender();
+
         this->resize();
 
         qDebug() << "Render engine mode set to:" << mode;
+        return true;
     }
+    return false;
 }
 
 bool RenderEngine::initDefaults()
@@ -30,9 +39,10 @@ bool RenderEngine::initDefaults()
     m_imagingEngine.SetEnablePresentation(true);
     m_imagingEngine.SetRendererAov(HdAovTokens->color);
     m_renderParams.clearColor = CLEAR_COLOR;
-    m_renderParams.showProxy = true;
-    m_renderParams.showRender = true;
+    m_renderParams.showProxy = false;
+    m_renderParams.showRender = false;
     m_renderParams.showGuides = false;
+    m_renderParams.bboxLineDashSize = 0.f;
 
     this->setComplexity(1.0);
     this->setColorCorrectionMode(TfToken::Find("sRGB"));
@@ -74,7 +84,6 @@ void RenderEngine::setCameraLightEnabled(bool enabled)
 
 void RenderEngine::render(StageManager* manager)
 {
-    qDebug() << "called";
     GfCamera gfCamera;
 
     if (m_mode == RenderEngineMode::FIXED_CAMERA) {
@@ -87,7 +96,7 @@ void RenderEngine::render(StageManager* manager)
 
     m_imagingEngine.SetCameraState(frustum.ComputeViewMatrix(), frustum.ComputeProjectionMatrix());
 
-    qDebug() << "x:" << frustum.GetPosition()[0] << "y:" << frustum.GetPosition()[1] << "z:" << frustum.GetPosition()[2];
+    // qDebug() << "x:" << frustum.GetPosition()[0] << "y:" << frustum.GetPosition()[1] << "z:" << frustum.GetPosition()[2];
 
     GlfSimpleLightVector lights;
     if (m_cameraLightEnabled) {
@@ -124,6 +133,15 @@ void RenderEngine::render(StageManager* manager)
     return;
 }
 
+void RenderEngine::clearRender()
+{
+    m_imagingEngine.SetRendererAov(TfToken()); // render momentarily to null aov
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    m_imagingEngine.SetRendererAov(HdAovTokens->color);
+}
+
 void RenderEngine::resize()
 {
     GfRect2i dataWindow;
@@ -135,11 +153,11 @@ void RenderEngine::resize()
     } else if (m_mode == RenderEngineMode::FIXED_CAMERA) {
         if (deviceWidth > deviceHeight) {
             int frameStartX = (deviceWidth - deviceHeight) / 2;
-            int frameEndX = deviceWidth - frameStartX;
+            int frameEndX = deviceWidth - frameStartX - 1; // additional pixel should not be rendered
             dataWindow = GfRect2i(GfVec2i(frameStartX, 0), GfVec2i(frameEndX, deviceHeight));
         } else {
             int frameStartY = (deviceHeight - deviceWidth) / 2;
-            int frameEndY = deviceHeight - frameStartY;
+            int frameEndY = deviceHeight - frameStartY - 1;
 
             dataWindow = GfRect2i(GfVec2i(0, frameStartY), GfVec2i(deviceWidth, frameEndY));
         }
@@ -147,32 +165,4 @@ void RenderEngine::resize()
 
     m_imagingEngine.SetFraming(CameraUtilFraming(dataWindow));
     m_imagingEngine.SetRenderBufferSize(GfVec2i(deviceWidth, deviceHeight));
-}
-
-void RenderEngine::resize(bool temp)
-{
-    // GfRange2f displayWindow;
-
-    // int deviceWidth = m_context->width() * m_context->devicePixelRatio();
-    // int deviceHeight = m_context->height() * m_context->devicePixelRatio();
-
-    // if (m_mode == RenderEngineMode::FREE_CAMERA) {
-    //     displayWindow = GfRange2f(GfVec2i(0), GfVec2i(deviceWidth, deviceHeight));
-    // } else if (m_mode == RenderEngineMode::FIXED_CAMERA) {
-    //     if (deviceWidth > deviceHeight) {
-    //         int frameStartX = (deviceWidth - deviceHeight) / 2;
-    //         int frameEndX = deviceWidth - frameStartX;
-    //         displayWindow = GfRange2f(GfVec2f(frameStartX, 0), GfVec2f(frameEndX, deviceHeight));
-    //     } else {
-    //         int frameStartY = (deviceHeight - deviceWidth) / 2;
-    //         int frameEndY = deviceHeight - frameStartY;
-
-    //         displayWindow = GfRange2f(GfVec2f(0, frameStartY), GfVec2f(deviceWidth, frameEndY));
-    //     }
-    // }
-
-    // GfRect2i dataWindow = GfRect2i(GfVec2i(0), GfVec2i(deviceWidth, deviceHeight));
-
-    // m_imagingEngine.SetFraming(CameraUtilFraming(displayWindow, dataWindow, m_context->devicePixelRatio()));
-    // m_imagingEngine.SetRenderBufferSize(GfVec2i(deviceWidth, deviceHeight));
 }

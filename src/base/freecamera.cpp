@@ -1,133 +1,170 @@
 #include "freecamera.h"
-#include <pxr/base/gf/rotation.h>
+
+#include "utils/gfaddins.h"
+
 #include <mycpp/myglm.h>
+
+#include <pxr/base/gf/rotation.h>
+
 #include <QDebug>
 
-FreeCamera::FreeCamera(float width, float height)
-    : FreeCamera(width, height, GfVec3d(0.0, 0.0, 25.0), GfVec3d(0.0, 0.0, 0.0), GfVec3d(0.0, 1.0, 0.0))
+FreeCamera::FreeCamera(float width, float height, float aspectRatio, float fov, GfFrustum frustum)
+    : aspectRatio(aspectRatio)
+    , fieldOfView(fov)
+    , gfFrustum(frustum)
+{
+    recomputeAttributes();
+}
+
+FreeCamera::FreeCamera(float width, float height, GfFrustum frustum)
+    : FreeCamera(width, height, width / (float)height, frustum.GetFOV(), frustum)
 {}
 
-FreeCamera::FreeCamera(float width, float height, GfVec3d eye, GfVec3d ref, GfVec3d worldUp)
-    : eye(eye)
-    , ref(ref)
-    , worldUp(worldUp)
-    , forward(GfVec3d(0.0, 0.0, -1.0))
-    , right(GfVec3d(1.0, 0.0, 0.0))
+FreeCamera::FreeCamera(float width, float height, const FreeCamera& other)
+    : FreeCamera(width, height, other.aspectRatio, other.fieldOfView, other.gfFrustum)
+{}
+
+void FreeCamera::setFromGfCamera(const GfCamera& gfCamera)
 {
-    aspectRatio = width / (float)height;
-    fieldOfView = 30;
+    gfFrustum = gfCamera.GetFrustum();
+
+    // update FOV, maintain aspect ratio
+    fieldOfView = gfCamera.GetFieldOfView(GfCamera::FOVHorizontal);
+
+    GfRange1f range = gfCamera.GetClippingRange();
+
+    gfFrustum.SetPerspective(fieldOfView, aspectRatio, range.GetMin(), range.GetMax());
 
     recomputeAttributes();
+    return;
 }
 
 GfCamera FreeCamera::createGfCamera()
 {
     GfCamera c = GfCamera();
 
-    GfMatrix4d viewMatrix = GfMatrix4d().SetLookAt(eye, ref, worldUp);
-    GfMatrix4d projMatrix = this->createProjectionMatrix();
+    GfMatrix4d viewMatrix = gfFrustum.ComputeViewMatrix();
+
+    GfMatrix4d projMatrix = gfFrustum.ComputeProjectionMatrix();
 
     c.SetFromViewAndProjectionMatrix(viewMatrix, projMatrix);
 
     return c;
 }
 
-void FreeCamera::translateAlongForward(float amt)
-{
-    GfVec3d translation = forward * amt;
-    eye += translation;
-    ref += translation;
-}
-
 void FreeCamera::translateAlongRight(float amt)
 {
-    GfVec3d translation = right * amt;
-    eye += translation;
-    ref += translation;
+    recomputeAttributes();
+    gfFrustum.SetPosition(eye + right * amt);
 }
 
 void FreeCamera::translateAlongUp(float amt)
 {
-    GfVec3d translation = worldUp * amt;
-    eye += translation;
-    ref += translation;
+    recomputeAttributes();
+    gfFrustum.SetPosition(eye + up * amt);
 }
 
 void FreeCamera::rotateAboutUp(float deg)
 {
-    GfMatrix4d rot = GfMatrix4d(1.0).SetRotate(GfRotation(worldUp, deg));
-    ref = ref - eye;
-    GfVec4d ref4d = rot * GfVec4d(ref[0], ref[1], ref[2], 1.f);
-    ref = GfVec3d(ref4d[0], ref4d[1], ref4d[2]);
-    ref = ref + eye;
     recomputeAttributes();
+
+    gfFrustum.SetPosition(GfVec3d(0.0));
+
+    GfMatrix4d rot = GfMatrix4d().SetRotate(GfRotation(up, deg));
+
+    gfFrustum.Transform(rot);
+
+    gfFrustum.SetPosition(eye);
+
+    qDebug() << gfFrustum.GetPosition();
+
+    // GfVec3d newRef = ref - eye;
+    // newRef = GfMatrix4d().SetRotate(GfRotation(GfVec3d(up), deg)).Transform(newRef);
+    // newRef = newRef + eye;
+
+    // GfMatrix4d camToWorld = GfMatrix4d().SetLookAt(eye, newRef, up).GetInverse();
+
+    // gfFrustum.SetPositionAndRotationFromMatrix(camToWorld);
 }
 
 void FreeCamera::rotateAboutRight(float deg)
 {
-    GfMatrix4d rot = GfMatrix4d(1.0).SetRotate(GfRotation(right, deg));
-    ref = ref - eye;
-    GfVec4d ref4d = rot * GfVec4d(ref[0], ref[1], ref[2], 1.f);
-    ref = GfVec3d(ref4d[0], ref4d[1], ref4d[2]);
-    ref = ref + eye;
     recomputeAttributes();
+
+    GfVec3d newRef = ref - eye;
+    newRef = GfMatrix4d().SetRotate(GfRotation(GfVec3d(right), deg)).Transform(newRef);
+    newRef = newRef + eye;
+
+    GfMatrix4d camToWorld = GfMatrix4d().SetLookAt(eye, newRef, up).GetInverse();
+
+    gfFrustum.SetPositionAndRotationFromMatrix(camToWorld);
 }
 
 void FreeCamera::rotateTheta(float deg)
 {
-    GfMatrix4d rot = GfMatrix4d().SetIdentity().SetRotateOnly(GfRotation(right, deg));
-    eye = eye - ref;
-    GfVec4d eye4d = rot * GfVec4d(eye[0], eye[1], eye[2], 1.f);
-    eye = GfVec3d(eye4d[0], eye4d[1], eye4d[2]);
-    eye = eye + ref;
     recomputeAttributes();
+
+    GfMatrix4d rot = GfMatrix4d().SetRotate(GfRotation(right, deg));
+
+    gfFrustum.Transform(rot);
 }
 
 void FreeCamera::rotatePhi(float deg)
 {
-    GfMatrix4d rot = GfMatrix4d(1.0).SetIdentity().SetRotateOnly(GfRotation(worldUp, deg));
-    eye = eye - ref;
-    GfVec4d eye4d = rot * GfVec4d(eye[0], eye[1], eye[2], 1.f);
-    eye = GfVec3d(eye4d[0], eye4d[1], eye4d[2]);
-    eye = eye + ref;
     recomputeAttributes();
+    GfMatrix4d rot = GfMatrix4d().SetRotate(GfRotation(up, deg));
+
+    gfFrustum.Transform(rot);
+}
+
+void FreeCamera::orbitAboutOrigin(float theta, float phi)
+{
+
+    recomputeAttributes();
+    GfVec3d target = GfVec3d(0.0);
+    GfVec3d newEye = GfMatrix4d().SetRotate(GfRotation(right, theta)).Transform(eye);
+    newEye = GfMatrix4d().SetRotate(GfRotation(up, phi)).Transform(newEye);
+
+    GfMatrix4d camToWorld = GfMatrix4d().SetLookAt(newEye, target, up).GetInverse();
+
+    gfFrustum.SetPositionAndRotationFromMatrix(camToWorld);
 }
 
 void FreeCamera::zoom(float amt)
 {
-    GfVec3d translation = forward * amt;
-    eye += translation;
+    recomputeAttributes();
+    gfFrustum.SetPosition(eye + forward * amt);
+}
+
+float FreeCamera::getRadius()
+{
+    recomputeAttributes();
+    return radius;
+}
+
+float FreeCamera::getTheta()
+{
+    recomputeAttributes();
+    return theta;
+}
+
+float FreeCamera::getPhi()
+{
+    recomputeAttributes();
+    return phi;
 }
 
 void FreeCamera::recomputeAttributes()
 {
-    forward = (ref - eye).GetNormalized();
-    right = GfCross(forward, worldUp).GetNormalized();
-    worldUp = GfCross(right, forward);
-}
+    gfFrustum.ComputeViewFrame(&right, &up, &forward);
 
-GfMatrix4d FreeCamera::createProjectionMatrix()
-{
-    float near = 0.01;
-    float far = 100.f;
+    eye = gfFrustum.GetPosition();
+    ref = eye + forward;
 
-    glm::mat4 p = glm::perspective(glm::radians(fieldOfView), aspectRatio, near, far);
-
-    GfMatrix4d m = GfMatrix4d(p[0][0],
-                              p[0][1],
-                              p[0][2],
-                              p[0][3],
-                              p[1][0],
-                              p[1][1],
-                              p[1][2],
-                              p[1][3],
-                              p[2][0],
-                              p[2][1],
-                              p[2][2],
-                              p[2][3],
-                              p[3][0],
-                              p[3][1],
-                              p[3][2],
-                              p[3][3]);
-    return m;
+    // Compute spherical attributes based on target ref
+    const GfVec3d targetRef = GfVec3d(0.0);
+    GfVec3d ray = eye - targetRef;
+    radius = ray.GetLength();
+    theta = std::acos(ray[1] / radius);
+    phi = std::atan2(ray[2], ray[0]);
 }

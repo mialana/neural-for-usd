@@ -17,7 +17,9 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_ui->pushButton_usdStage, &QPushButton::clicked, this, &MainWindow::slot_findUsdStagePath);
     connect(m_ui->pushButton_domeLight, &QPushButton::clicked, this, &MainWindow::slot_findDomeLightPath);
     connect(m_ui->pushButton_renderPreview, &QPushButton::clicked, this, &MainWindow::slot_renderPreview);
+
     connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, &MainWindow::slot_handleUpdateSlider);
+    connect(m_ui->horizontalSlider, &QSlider::sliderReleased, this, &MainWindow::slot_handleUpdateSlider);
 
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
@@ -92,10 +94,12 @@ void MainWindow::slot_handleUpdateProgressBar()
     // qDebug() << "Progress bar set to" << progress;
 }
 
-void MainWindow::slot_handleUpdateSlider(int value)
+void MainWindow::slot_handleUpdateSlider()
 {
-    m_ui->label_frameNum->setText(QString("Frame %1").arg(value));
-    this->m_ui->myGl->slot_setStageManagerCurrentFrame(value);
+    int position = m_ui->horizontalSlider->sliderPosition();
+
+    m_ui->label_frameNum->setText(QString("Frame %1").arg(position));
+    this->m_ui->myGl->slot_setStageManagerCurrentFrame(position);
 
     this->m_ui->myGl->slot_changeRenderEngineMode("fixed");
 }
@@ -121,4 +125,6 @@ void MainWindow::initDefaults()
     m_ui->lineEdit_domeLight->setText(defaultLuxDomeLightPath);
 
     m_ui->myGl->loadStageManager(defaultUsdStagePath, defaultLuxDomeLightPath);
+
+    this->slot_handleUpdateSlider();
 }

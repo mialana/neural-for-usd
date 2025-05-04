@@ -32,5 +32,5 @@ private:
 private Q_SLOTS:
     void slot_handleUpdateProgressBar();
 
-    void slot_handleUpdateSlider(int value);
+    void slot_handleUpdateSlider();
 };

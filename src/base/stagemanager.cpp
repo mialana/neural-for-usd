@@ -1,6 +1,6 @@
 #include "stagemanager.h"
 
-#include "utils/gfsampling.h"
+#include "utils/gfaddins.h"
 
 #include <pxr/base/gf/rotation.h>
 
@@ -81,13 +81,12 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
 bool StageManager::initFreeCam(int width, int height) {
     if (!m_freeCam) {
         qDebug() << "Free camera created from scratch.";
-        m_freeCam = mkU<FreeCamera>(width, height);
+        GfCamera currGfCamera = this->getGfCameraAtFrame(getCurrentFrame());
+        m_freeCam = mkU<FreeCamera>(width, height, currGfCamera.GetFrustum());
     } else {
         qDebug() << "Free camera created from existing parameters.";
-        m_freeCam = mkU<FreeCamera>(width, height, m_freeCam->eye, m_freeCam->ref, m_freeCam->worldUp);
+        m_freeCam = mkU<FreeCamera>(width, height, *m_freeCam.get());
     }
-
-    m_freeCam->recomputeAttributes();
     return true;
 }
 
@@ -149,15 +148,12 @@ bool StageManager::generateCameraFrames(int numFrames)
         GfVec3d pos = GfSquareToHemisphereUniform(sample) * m_cameraOrbitRadius;
         GfVec3d origin = GfVec3d(0.0);
 
-        GfVec3d look = (origin - pos);  // toward origin
-        look.Normalize();
+        GfVec3d look = (origin - pos).GetNormalized();  // toward origin
         GfVec3d up(0, 1, 0);
-        GfVec3d right = GfCross(look, up);
-        right.Normalize();
+        GfVec3d right = GfCross(look, up).GetNormalized();
 
         if (right.GetLength() < 1e-6) {
-            right = GfCross(look, GfVec3d(0, 0, 1));
-            right.Normalize();
+            right = GfCross(look, GfVec3d(0, 0, 1)).GetNormalized();
         }
 
         up = GfCross(right, look);

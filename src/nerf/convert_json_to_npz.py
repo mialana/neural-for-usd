@@ -52,7 +52,7 @@ _ = ax.quiver(
   origins[..., 2].flatten(),
   dirs[..., 0].flatten(),
   dirs[..., 1].flatten(),
-  dirs[..., 2][0].flatten(), length=0.5, normalize=False)
+  dirs[..., 2][0].flatten(), length=10, normalize=False)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('z')
