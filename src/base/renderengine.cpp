@@ -119,7 +119,6 @@ void RenderEngine::render(StageManager* manager)
     unsigned int sleepTime = 10;  // Initial wait time of 10 ms
     while (true) {
         m_imagingEngine.Render(*root, m_renderParams);
-
         if (m_imagingEngine.IsConverged()) {
             break;
         } else {
@@ -137,7 +136,13 @@ void RenderEngine::clearRender()
 {
     m_imagingEngine.SetRendererAov(TfToken()); // render momentarily to null aov
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    GlfDrawTargetRefPtr drawTarget = GlfDrawTarget::New(GfVec2i(m_context->width() * m_context->devicePixelRatio(), m_context->height() * m_context->devicePixelRatio()));
+    drawTarget->Bind();
+    drawTarget->AddAttachment(HdAovTokens->color, GL_RGBA, GL_FLOAT, GL_RGBA);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    drawTarget->Unbind();
 
     m_imagingEngine.SetRendererAov(HdAovTokens->color);
 }

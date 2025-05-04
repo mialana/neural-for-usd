@@ -50,9 +50,6 @@ void MyGL::resizeGL(int w, int h)
 
 void MyGL::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     m_engine->render(m_manager.get());
 }
 
