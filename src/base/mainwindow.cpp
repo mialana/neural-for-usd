@@ -70,6 +70,13 @@ void MainWindow::slot_renderPreview()
     QString domeLightPath = m_ui->lineEdit_domeLight->text();
 
     m_ui->myGl->loadStageManager(stageFilePath, domeLightPath);
+
+    QFileInfo info(stageFilePath);
+    QString assetName = info.baseName();
+    assetName[0] = assetName[0].toUpper();
+    m_ui->label_stageName->setText(assetName);
+
+    this->slot_handleUpdateSlider();
 }
 
 void MainWindow::slot_beginDataCollection()
@@ -143,7 +150,5 @@ void MainWindow::initDefaults()
     m_ui->lineEdit_usdStage->setText(defaultUsdStagePath);
     m_ui->lineEdit_domeLight->setText(defaultLuxDomeLightPath);
 
-    m_ui->myGl->loadStageManager(defaultUsdStagePath, defaultLuxDomeLightPath);
-
-    this->slot_handleUpdateSlider();
+    this->slot_renderPreview();
 }

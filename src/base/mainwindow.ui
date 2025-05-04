@@ -174,7 +174,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Simple Cube (Default Stage)</string>
+         <string>&lt;Stage Name&gt;</string>
         </property>
        </widget>
        <widget class="QWidget" name="verticalLayoutWidget">
@@ -417,7 +417,7 @@
          <number>1</number>
         </property>
         <property name="text">
-         <string>Frame 24</string>
+         <string>&lt;Frame i&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -433,7 +433,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Camera Mode: FIXED</string>
+         <string>&lt;Camera Mode&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
