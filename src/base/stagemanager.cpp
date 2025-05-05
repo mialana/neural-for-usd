@@ -32,6 +32,10 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
     m_outputImageDir = assetDir + "/data/internalVal";
     m_outputImagePrefix = "r";
 
+    QDir dir(m_outputImageDir);
+    if (!dir.exists())
+        dir.mkpath(".");
+
     m_usdStage = UsdStage::Open(stagePath.toStdString());
     if (!m_usdStage) {
         qWarning() << "Failed to open stage:" << stagePath;
