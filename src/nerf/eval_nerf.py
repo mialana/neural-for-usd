@@ -262,7 +262,7 @@ def generate_novel_view(c2w: torch.tensor):
     ax.quiver(*cam_pos, *up, length=1.5, color='c', label='Novel Up')
     ax.quiver(*cam_pos, *forward, length=1.5, color='y', label='Novel forward')
 
-    ax.set_title("Camera Pose (Red=X, Green=Y, Blue=Forward)")
+    ax.set_title("Camera Matrix")
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')

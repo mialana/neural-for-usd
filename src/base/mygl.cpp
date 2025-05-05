@@ -69,9 +69,9 @@ void MyGL::keyPressEvent(QKeyEvent* e)
 {
     this->slot_changeRenderEngineMode("free");
 
-    float amount = 2.0f;
+    float amount = 1.0f;
     if (e->modifiers() & Qt::ShiftModifier) {
-        amount = 10.0f;
+        amount = 5.0f;
     }
 
     switch (e->key()) {
