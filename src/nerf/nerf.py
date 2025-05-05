@@ -34,7 +34,7 @@ logging.info(device)
 ### GLOBAL PARAMETERS
 
 # Render
-near, far = 2.0, 6.0
+near, far = 1.0, 10.0
 
 # Encoders
 d_input = 3  # Number of input dimensions

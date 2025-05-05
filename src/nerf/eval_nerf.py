@@ -162,18 +162,15 @@ def generate_360_video(radius=3.0, phi_deg=60.0, num_frames=300):
         rgb_uint8 = (rgb * 255).round().to(torch.uint8).cpu().numpy()
         bgr = cv2.cvtColor(rgb_uint8, cv2.COLOR_RGB2BGR)
 
-        image_path = os.path.join(frame_dir, f"frame_{i:03d}.png")
+        writer.write(bgr)
+        click.secho(f"Frame written: {i}", fg='green')
 
-        cv2.imwrite(image_path, bgr)
-        click.secho(f"Image written to {image_path}", fg='green')
+    writer.release()
 
-    gif_path = os.path.join(VISUALS_DIR, "nerf_360.gif")
-    create_video(frame_dir, gif_path.replace(".gif", ".mp4"), fps=10)
-    # create_gif(frame_dir, gif_path, duration=0.1)
-    click.secho(f"360 render saved to {gif_path}", fg='green')
+    click.secho(f"360 render saved to {video_path}", fg='green')
 
 
-def generate_random_pose(radius=2.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
+def generate_random_pose(radius=3.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
     """
     Generates a random camera-to-world (c2w) matrix looking at the origin.
 
@@ -186,14 +183,14 @@ def generate_random_pose(radius=2.0, theta_range=(0, 2 * math.pi), phi_range=(ma
     theta = torch.rand(1).item() * (theta_range[1] - theta_range[0]) + theta_range[0]
     phi = torch.rand(1).item() * (phi_range[1] - phi_range[0]) + phi_range[0]
     
-    click.secho(f"Phi degrees: {math.degrees(theta)}", fg='yellow')
+    click.secho(f"Theta degrees: {math.degrees(theta)}", fg='yellow')
     click.secho(f"Phi degrees: {math.degrees(phi)}", fg='yellow')
 
     # Spherical to Cartesian
     cam_pos = torch.tensor([
-        radius * math.sin(phi) * math.sin(theta),
-        radius * math.cos(phi),
-        radius * math.sin(phi) * math.cos(theta)
+        radius * math.sin(phi) * math.cos(theta),  # X
+        radius * math.sin(phi) * math.sin(theta),  # Y
+        radius * math.cos(phi)                     # Z (elevation)
     ])
 
     # Camera looks at origin
@@ -281,7 +278,7 @@ def generate_novel_view(c2w: torch.tensor):
     plt.show()
     plt.close()
 
-def generate_pose_from_theta_phi(radius=2.0):
+def generate_pose_from_theta_phi(radius=3.0):
     theta = float(questionary.text("Enter θ (0–360):", validate=lambda val: 0 <= float(val) <= 360).ask())
     phi = float(questionary.text("Enter ϕ (0–90):", validate=lambda val: 0 <= float(val) <= 90).ask())
 
@@ -289,9 +286,9 @@ def generate_pose_from_theta_phi(radius=2.0):
     phi = math.radians(phi)
 
     cam_pos = torch.tensor([
-        radius * math.sin(phi) * math.sin(theta),
-        radius * math.cos(phi),
-        radius * math.sin(phi) * math.cos(theta)
+        radius * math.sin(phi) * math.cos(theta),  # X
+        radius * math.sin(phi) * math.sin(theta),  # Y
+        radius * math.cos(phi)                     # Z (elevation)
     ])
 
     forward = (torch.zeros(3) - cam_pos).detach()
@@ -311,7 +308,8 @@ def generate_pose_from_theta_phi(radius=2.0):
 
 def show_batch_random_poses(n=24, height=50, width=50):
     fig, axes = plt.subplots(4, 6, figsize=(12, 8))
-    for ax in axes.ravel():
+    for i, ax in enumerate(axes.ravel()):
+        click.secho(f"FRAME {i} STATS:", fg='blue')
         c2w = generate_random_pose()
         focal = torch.tensor(focal_np).to(dtype=torch.float32, device=device)
 

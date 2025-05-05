@@ -30,15 +30,18 @@ def main():
 
     asset_name = questionary.select(
         "Select an asset to process:",
-        choices=assets
+        choices=assets + ["Skip->"]
     ).ask()
 
     try:
-        click.secho(f"\nStep 1: resize_data.py for '{asset_name}'", fg="yellow")
-        run_script("src/nerf/resize_data.py", asset_name)
+        if asset_name != "Skip->":
+            click.secho(f"\nStep 1: resize_data.py for '{asset_name}'", fg="yellow")
+            run_script("src/nerf/resize_data.py", asset_name)
 
-        click.secho(f"\nStep 2: convert_json_to_npz.py for '{asset_name}'", fg="yellow")
-        run_script("src/nerf/convert_json_to_npz.py", asset_name)
+            click.secho(f"\nStep 2: convert_json_to_npz.py for '{asset_name}'", fg="yellow")
+            run_script("src/nerf/convert_json_to_npz.py", asset_name)
+
+            assets = ["Continue->"] + assets
 
         process_choices = ["Train NeRF", "Evaluate NeRF"]
         
@@ -47,10 +50,15 @@ def main():
             choices=process_choices
         ).ask()
 
+        saved_asset_name = asset_name
+
         asset_name = questionary.select(
             "Reselect asset?",
             choices=assets
         ).ask()
+
+        if asset_name == "Continue->":
+            asset_name = saved_asset_name
 
         if next_step == "Train NeRF":
             click.secho(f"\nStep 3: nerf.py for '{asset_name}'", fg="yellow")
