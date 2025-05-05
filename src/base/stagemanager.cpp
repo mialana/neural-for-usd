@@ -3,6 +3,8 @@
 #include "utils/gfaddins.h"
 
 #include <pxr/base/gf/rotation.h>
+#include <pxr/usd/usdGeom/xform.h>
+#include <pxr/usd/usd/primRange.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -10,9 +12,39 @@
 
 #include <pcg32.h>
 
-StageManager::StageManager() {}
+StageManager::StageManager() : QObject() {}
 
 StageManager::~StageManager() {}
+
+bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLightPath)
+{
+    m_inputStagePath = stagePath;
+    m_inputDomeLightPath = domeLightPath;
+
+    QFileInfo info(stagePath);
+    QString assetDir = info.dir().absolutePath();
+    QString assetName = info.baseName();
+
+    m_outputStagePath = assetDir + "/data/" + assetName + "Stage.usda";
+    m_outputDataJsonPath = assetDir + "/data/data.json";
+    m_outputImageDir = assetDir + "/data/internalVal";
+    m_outputImagePrefix = "r";
+
+    m_usdStage = UsdStage::Open(stagePath.toStdString());
+    if (!m_usdStage) {
+        qWarning() << "Failed to open stage:" << stagePath;
+        return false;
+    }
+
+    m_pseudoRoot = mkU<UsdPrim>(m_usdStage->GetPseudoRoot());
+
+    this->setModelScale(1.f);
+
+    qDebug() << "New stage file path:" << stagePath;
+    qDebug() << "New domelight file path:" << domeLightPath;
+
+    return configureUsdCamera() && configureLuxDomeLight();
+}
 
 void StageManager::reset()
 {
@@ -53,32 +85,36 @@ int StageManager::getNumFrames() const
     return m_numFrames;
 }
 
-bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLightPath)
+void StageManager::setModelScale(float scale)
 {
-    m_inputStagePath = stagePath;
-    m_inputDomeLightPath = domeLightPath;
-
-    QFileInfo info(stagePath);
-    QString assetDir = info.dir().absolutePath();
-    QString assetName = info.baseName();
-
-    m_outputStagePath = assetDir + "/data/" + assetName + "Stage.usda";
-    m_outputDataJsonPath = assetDir + "/data/data.json";
-    m_outputImageDir = assetDir + "/data/internalVal";
-    m_outputImagePrefix = "r";
-
-    m_usdStage = UsdStage::Open(stagePath.toStdString());
     if (!m_usdStage) {
-        qWarning() << "Failed to open stage:" << stagePath;
-        return false;
+        qWarning() << "Cannot set model scale during invalid stage";
+        return;
     }
 
-    m_pseudoRoot = mkU<UsdPrim>(m_usdStage->GetPseudoRoot());
+    m_modelScale = scale;
 
-    qDebug() << "New stage file path:" << stagePath;
-    qDebug() << "New domelight file path:" << domeLightPath;
+    UsdPrimRange children = UsdPrimRange::Stage(m_usdStage);
+    for (const UsdPrim& child: children)
+    {
+        if (child.IsA<UsdGeomXform>())
+        {
+            UsdGeomXform xform = UsdGeomXform::Define(m_usdStage, child.GetPath());
 
-    return configureUsdCamera() && configureLuxDomeLight();
+            UsdGeomXformOp scaleOp = xform.GetScaleOp();
+            if (!scaleOp) {
+                scaleOp = xform.AddScaleOp();
+            }
+            scaleOp.Set(GfVec3f(scale));
+
+            GfVec3f s;
+            xform.GetScaleOp().Get(&s);
+
+            qDebug().Ns().Nq() << xform.GetPath().GetAsString() << " (new scale): " << s;
+        }
+    }
+
+    m_usdStage->Export(m_outputStagePath.toStdString());
 }
 
 bool StageManager::initFreeCam(int width, int height) {
@@ -148,7 +184,7 @@ bool StageManager::generateCameraFrames(int numFrames)
         GfVec2d sample = GfVec2d(x * invSqrt, y * invSqrt);
         sample += GfVec2d(invSqrt / 2.0, invSqrt / 2.0);  // center-in-cell jitter
 
-        GfVec3d pos = GfSquareToHemisphereUniform(sample) * m_cameraOrbitRadius;
+        GfVec3d pos = GfSquareToHemisphereUniform(sample) * m_modelScale;
         GfVec3d origin = GfVec3d(0.0);
 
         GfVec3d look = (origin - pos).GetNormalized();  // toward origin

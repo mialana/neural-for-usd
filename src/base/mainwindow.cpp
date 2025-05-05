@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(m_ui->myGl, &MyGL::engineModeChanged, this, &MainWindow::slot_handleEngineModeChanged);
 
+    connect(m_ui->doubleSpinBox, &QDoubleSpinBox::valueChanged, m_ui->myGl->m_manager.get(), &StageManager::setModelScale);
+
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
     connect(&m_timer, &QTimer::timeout, this, &MainWindow::slot_handleUpdateProgressBar);
@@ -77,6 +79,10 @@ void MainWindow::slot_renderPreview()
     m_ui->label_stageName->setText(assetName);
 
     this->slot_handleUpdateSlider();
+
+    m_ui->doubleSpinBox->setUpdatesEnabled(false);
+    m_ui->doubleSpinBox->setValue(1.00);
+    m_ui->doubleSpinBox->setUpdatesEnabled(true);
 }
 
 void MainWindow::slot_beginDataCollection()
@@ -144,11 +150,12 @@ void MainWindow::initDefaults()
     this->move(100, -995);
     this->setFixedSize(1024, 768);
 
-    const QString defaultUsdStagePath = PROJECT_SOURCE_DIR + QString("/assets/campfire/campfire.usd");
+    const QString defaultUsdStagePath = PROJECT_SOURCE_DIR + QString("/assets/simpleCube/simpleCube.usda");
     const QString defaultLuxDomeLightPath = PROJECT_SOURCE_DIR + QString("/assets/domelights/squash_court_4k.hdr");
 
     m_ui->lineEdit_usdStage->setText(defaultUsdStagePath);
     m_ui->lineEdit_domeLight->setText(defaultLuxDomeLightPath);
 
     this->slot_renderPreview();
+    this->slot_handleEngineModeChanged("fixed");
 }

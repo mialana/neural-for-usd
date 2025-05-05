@@ -18,6 +18,8 @@ class MyGL : public OpenGLContext
     Q_OBJECT
 
 public:
+    uPtr<StageManager> m_manager;
+
     explicit MyGL(QWidget* parent = nullptr);
     ~MyGL();
 
@@ -31,10 +33,8 @@ private:
     void resetEngine();
 
     QTimer m_timer;
-
     GfVec2d m_mousePosPrev;
 
-    uPtr<StageManager> m_manager;
     uPtr<RenderEngine> m_engine;
 
 protected:

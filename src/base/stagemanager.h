@@ -15,7 +15,10 @@
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
-class StageManager {
+class StageManager : public QObject
+{
+    Q_OBJECT
+
 public:
     uPtr<FreeCamera> m_freeCam = nullptr;
 
@@ -36,8 +39,8 @@ public:
     void setDomeLightIntensity(float intensity);
     float getDomeLightIntensity() const;
 
-    void setCameraOrbitRadius(float radius);
-    float getCameraOrbitRadius() const;
+    void setModelScale(float scale);
+    float getModelScale() const;
 
     const UsdStageRefPtr& getUsdStage() const;
     const UsdGeomCamera& getGeomCamera() const;
@@ -73,7 +76,7 @@ private:
     int m_numFrames = 0;
     int m_currentFrame = 0;
     double m_currProgress = 0.0;
-    float m_cameraOrbitRadius = 1.f;
+    float m_modelScale = 1.f;
 
     std::vector<uPtr<FrameMetadata>> m_allFrameMeta;
 };
