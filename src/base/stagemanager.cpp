@@ -18,6 +18,8 @@ StageManager::~StageManager() {}
 
 bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLightPath)
 {
+    reset();
+
     m_inputStagePath = stagePath;
     m_inputDomeLightPath = domeLightPath;
 
@@ -38,10 +40,8 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
 
     m_pseudoRoot = mkU<UsdPrim>(m_usdStage->GetPseudoRoot());
 
-    this->setModelScale(1.f);
-
-    qDebug() << "New stage file path:" << stagePath;
-    qDebug() << "New domelight file path:" << domeLightPath;
+    qInfo().Nq() << "New stage file path:" << stagePath;
+    qInfo().Nq() << "New domelight file path:" << domeLightPath;
 
     return configureUsdCamera() && configureLuxDomeLight();
 }
@@ -50,9 +50,10 @@ void StageManager::reset()
 {
     m_allFrameMeta.clear();
     m_usdStage = nullptr;
-    m_currProgress = 0.0;
-    m_currentFrame = 0;
+    m_pseudoRoot = nullptr;
+
     m_numFrames = 0;
+    m_modelScale = 1.f;
 }
 
 UsdPrim* StageManager::getPsuedoRoot()
@@ -71,6 +72,8 @@ void StageManager::setCurrentFrame(int frame)
         qFatal() << "Invalid frame requested";
     }
     m_currentFrame = frame;
+
+    Q_EMIT frameChanged(m_currentFrame);
 
     return;
 }
@@ -119,11 +122,9 @@ void StageManager::setModelScale(float scale)
 
 bool StageManager::initFreeCam(int width, int height) {
     if (!m_freeCam) {
-        qDebug() << "Free camera created from scratch.";
         GfCamera currGfCamera = this->getGfCameraAtFrame(getCurrentFrame());
         m_freeCam = mkU<FreeCamera>(width, height, currGfCamera.GetFrustum());
     } else {
-        qDebug() << "Free camera created from existing parameters.";
         m_freeCam = mkU<FreeCamera>(width, height, *m_freeCam.get());
     }
     return true;
@@ -209,13 +210,16 @@ bool StageManager::generateCameraFrames(int numFrames)
     }
 
     m_usdStage->Export(m_outputStagePath.toStdString());
+
+    this->setCurrentFrame(27);
+
     return true;
 }
 
 QString StageManager::getOutputImagePath(int frame)
 {
     return m_outputImageDir + "/" + m_outputImagePrefix
-           + QString("r%1.png").arg(frame, 3, 10, QChar('0'));
+           + QString("%1.png").arg(frame, 3, 10, QChar('0'));
 }
 
 QMap<QString, QString> StageManager::getOutputPathMap() const
@@ -223,6 +227,12 @@ QMap<QString, QString> StageManager::getOutputPathMap() const
     return {{"Output Stage", m_outputStagePath},
             {"Output Data Json", m_outputDataJsonPath},
             {"Output Image Directory", m_outputImageDir}};
+}
+
+double StageManager::getProgress() const
+{
+    double progress = (double)m_currentFrame / (double)m_numFrames;
+    return progress;
 }
 
 GfCamera StageManager::getGfCameraAtFrame(int frame) const

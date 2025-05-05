@@ -1,8 +1,8 @@
 #include "renderengine.h"
 
 #include <pxr/imaging/glf/drawTarget.h>
-
-#include <pxr/imaging/hd/renderBuffer.h>
+#include "pxr/imaging/hdx/types.h"
+#include "pxr/imaging/hdSt/textureUtils.h"
 
 const GfVec4f CLEAR_COLOR = GfVec4f(0.5f);
 const GfVec4f SCENE_AMBIENT = GfVec4f(0.01f, 0.01f, 0.01f, 1.0f);
@@ -21,6 +21,11 @@ RenderEngine::RenderEngine(OpenGLContext* context)
 }
 
 RenderEngine::~RenderEngine() {}
+
+bool RenderEngine::getIsDirty()
+{
+    return isDirty;
+}
 
 void RenderEngine::makeDirty()
 {
@@ -53,7 +58,7 @@ void RenderEngine::initDefaults()
     this->setComplexity(1.0);
     this->setColorCorrectionMode(TfToken::Find("sRGB"));
     this->setDomeLightVisibility(true);
-    this->setCameraLightEnabled(false);
+    this->setCameraLightEnabled(true);
 
     m_material.SetAmbient(AMBIENT_DEFAULT);
     m_material.SetSpecular(SPECULAR_DEFAULT);
@@ -91,10 +96,12 @@ void RenderEngine::setCameraLightEnabled(bool enabled)
     m_cameraLightEnabled = enabled;
 }
 
-void RenderEngine::render(StageManager* manager)
+void RenderEngine::render(StageManager* manager, bool shouldRecord)
 {
-    this->resize();
-    this->clearRender();
+    if (!shouldRecord) {
+        this->resize();
+        this->clearRender();
+    }
 
     GfCamera gfCamera;
 
@@ -130,8 +137,10 @@ void RenderEngine::render(StageManager* manager)
     while (true) {
         m_imagingEngine.Render(*root, m_renderParams);
         if (m_imagingEngine.IsConverged()) {
-            if (isDirty) {
-                qInfo() << "All cleaned up!";
+            if (shouldRecord) {
+                this->record(manager);
+            } else if (isDirty) {
+                qInfo() << "ALL CLEAN!";
                 isDirty = false;
             }
             break;
@@ -144,6 +153,44 @@ void RenderEngine::render(StageManager* manager)
     };
 
     return;
+}
+
+void RenderEngine::record(StageManager* manager)
+{
+    if (!isDirty) {
+        qDebug() << "Not dirty";
+        return;
+    }
+
+    HgiTextureHandle textureHandle = m_imagingEngine.GetAovTexture(HdAovTokens->color);
+
+    HioImage::StorageSpec storage;
+    storage.flipped = true;
+
+    size_t size = 0;
+    HdStTextureUtils::AlignedBuffer<uint8_t> mappedColorTextureBuffer;
+
+    storage.width = textureHandle->GetDescriptor().dimensions[0];
+    storage.height = textureHandle->GetDescriptor().dimensions[1];
+    storage.format = HdxGetHioFormat(textureHandle->GetDescriptor().format);
+
+    mappedColorTextureBuffer = HdStTextureUtils::HgiTextureReadback(m_imagingEngine.GetHgi(),
+                                                                    textureHandle,
+                                                                    &size);
+    storage.data = mappedColorTextureBuffer.get();
+
+    int frame = manager->getCurrentFrame();
+    QString filename = manager->getOutputImagePath(frame);
+
+    const HioImageSharedPtr image = HioImage::OpenForWriting(filename.toStdString());
+    const bool writeSuccess = image && image->Write(storage);
+
+    if (!writeSuccess) {
+        qWarning() << "Write was not success";
+    } else {
+        qDebug() << "Success! Written to" << filename;
+        isDirty = false;
+    }
 }
 
 void RenderEngine::clearRender()
@@ -189,7 +236,8 @@ void RenderEngine::resize()
             }
         }
 
-        qInfo().Ns() << "New render engine aspect ratio: " << dataWindow.GetWidth() << ":" << dataWindow.GetHeight();
+        qInfo().Ns() << "New render engine aspect ratio: " << dataWindow.GetWidth() << ":"
+                     << dataWindow.GetHeight();
 
         m_imagingEngine.SetFraming(CameraUtilFraming(dataWindow));
         m_imagingEngine.SetRenderBufferSize(GfVec2i(deviceWidth, deviceHeight));

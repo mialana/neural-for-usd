@@ -9,6 +9,7 @@ MyGL::MyGL(QWidget* parent)
     , m_mousePosPrev()
     , m_manager(mkU<StageManager>())
     , m_engine(mkU<RenderEngine>(this))
+    , isRecording(false)
 {
     connect(&m_timer, &QTimer::timeout, this, &MyGL::tick);
     setFocusPolicy(Qt::StrongFocus);
@@ -24,7 +25,7 @@ void MyGL::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    glClearColor(0.5, 0.5, 0.5, 1);
+    glClearColor(0.25, 0.25, 0.25, 1);
 
     printGLErrorLog();
 
@@ -37,9 +38,9 @@ void MyGL::resizeGL(int w, int h)
 {
     m_manager->initFreeCam(w, h);
 
-    qDebug() << "New width is:" << w;
-    qDebug() << "New height is:" << h;
-    qDebug() << "Device Pixel Ratio is:" << devicePixelRatio();
+    qInfo() << "Window stats: Width" << w
+             << "| Height" << h
+             << "| Device Pixel Ratio" << devicePixelRatio();
 }
 
 void MyGL::paintGL()
@@ -47,7 +48,7 @@ void MyGL::paintGL()
     if (!m_engine || !m_manager) {
         return;
     }
-    m_engine->render(m_manager.get());
+    m_engine->render(m_manager.get(), isRecording);
 }
 
 void MyGL::resetEngine()
@@ -161,7 +162,7 @@ void MyGL::loadStageManager(const QString& stagePath, const QString& domeLightPa
     bool success = m_manager->loadUsdStage(stagePath, domeLightPath);
 
     if (success) {
-        qDebug() << "Usd stage loaded successfully by stage manager";
+        qDebug() << "Usd stage loaded successfully by stage manager.";
         m_manager->generateCameraFrames(106);
         m_manager->initFreeCam(this->width(), this->height());
 
@@ -169,4 +170,26 @@ void MyGL::loadStageManager(const QString& stagePath, const QString& domeLightPa
     } else {
         qFatal() << "Stage manager was unable to load Usd stage";
     }
+}
+
+void MyGL::handleEngineRecordProcess()
+{
+    this->slot_changeRenderEngineMode("fixed");
+
+    int numFrames = m_manager->getNumFrames();
+
+    int currFrameToRecord = 0;
+    this->isRecording = true;
+
+    while (currFrameToRecord < numFrames) {
+        if (!m_engine->getIsDirty()) {
+            m_manager->setCurrentFrame(currFrameToRecord);
+            m_engine->makeDirty();
+
+            currFrameToRecord += 1;
+        }
+    }
+    this->isRecording = false;
+
+    qInfo() << "RECORDING COMPLETE!";
 }

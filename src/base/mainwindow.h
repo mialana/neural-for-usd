@@ -32,7 +32,7 @@ private:
 private Q_SLOTS:
     void slot_handleUpdateProgressBar();
 
-    void slot_handleUpdateSlider();
+    void slot_handleUpdateSlider(int frame);
 
     void slot_handleEngineModeChanged(QString mode);
 };

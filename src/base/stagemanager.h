@@ -19,6 +19,9 @@ class StageManager : public QObject
 {
     Q_OBJECT
 
+Q_SIGNALS:
+    void frameChanged(int frame);
+
 public:
     uPtr<FreeCamera> m_freeCam = nullptr;
 
@@ -75,7 +78,6 @@ private:
 
     int m_numFrames = 0;
     int m_currentFrame = 0;
-    double m_currProgress = 0.0;
     float m_modelScale = 1.f;
 
     std::vector<uPtr<FrameMetadata>> m_allFrameMeta;

@@ -15,13 +15,14 @@ public:
     RenderEngine(OpenGLContext* context);
     ~RenderEngine();
 
+    bool getIsDirty();
     void makeDirty();
 
     bool changeMode(RenderEngineMode mode);
 
-    void render(StageManager* manager);
+    void render(StageManager* manager, bool shouldRecord);
 
-    void recordAllFixedFrames(StageManager* manager);
+    void record(StageManager* manager);
 
     void setComplexity(float complexity);
     void setColorCorrectionMode(TfToken mode);

@@ -28,12 +28,14 @@ public:
     void paintGL() override;
 
     void loadStageManager(const QString& stagePath, const QString& domeLightPath);
+    void handleEngineRecordProcess();
 
 private:
     void resetEngine();
 
     QTimer m_timer;
     GfVec2d m_mousePosPrev;
+    bool isRecording;
 
     uPtr<RenderEngine> m_engine;
 

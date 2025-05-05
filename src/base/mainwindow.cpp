@@ -11,23 +11,24 @@ MainWindow::MainWindow(QWidget* parent)
 {
     m_ui->setupUi(this);
 
-    this->initDefaults();
-
     // Tab 1
     connect(m_ui->pushButton_usdStage, &QPushButton::clicked, this, &MainWindow::slot_findUsdStagePath);
     connect(m_ui->pushButton_domeLight, &QPushButton::clicked, this, &MainWindow::slot_findDomeLightPath);
     connect(m_ui->pushButton_renderPreview, &QPushButton::clicked, this, &MainWindow::slot_renderPreview);
 
+    /* Frame Slider */
+    connect(m_ui->horizontalSlider, &QSlider::valueChanged, this, &MainWindow::slot_handleUpdateSlider);
     connect(m_ui->horizontalSlider, &QSlider::sliderMoved, this, &MainWindow::slot_handleUpdateSlider);
-    connect(m_ui->horizontalSlider, &QSlider::sliderReleased, this, &MainWindow::slot_handleUpdateSlider);
+    connect(m_ui->myGl->m_manager.get(), &StageManager::frameChanged, this, &MainWindow::slot_handleUpdateSlider);
 
     connect(m_ui->myGl, &MyGL::engineModeChanged, this, &MainWindow::slot_handleEngineModeChanged);
-
     connect(m_ui->doubleSpinBox, &QDoubleSpinBox::valueChanged, m_ui->myGl->m_manager.get(), &StageManager::setModelScale);
 
     // Tab 2
     connect(m_ui->pushButton_dataCollect, &QPushButton::clicked, this, &MainWindow::slot_beginDataCollection);
     connect(&m_timer, &QTimer::timeout, this, &MainWindow::slot_handleUpdateProgressBar);
+
+    this->initDefaults();
 }
 
 MainWindow::~MainWindow()
@@ -77,46 +78,44 @@ void MainWindow::slot_renderPreview()
     QString assetName = info.baseName();
     assetName[0] = assetName[0].toUpper();
     m_ui->label_stageName->setText(assetName);
-
-    this->slot_handleUpdateSlider();
-
-    m_ui->doubleSpinBox->setUpdatesEnabled(false);
     m_ui->doubleSpinBox->setValue(1.00);
-    m_ui->doubleSpinBox->setUpdatesEnabled(true);
 }
 
 void MainWindow::slot_beginDataCollection()
 {
     m_timer.start(16);
 
-    // QThreadPool::globalInstance()->start([this]() {
-    //     m_camera->record();
-    //     QMetaObject::invokeMethod(this, [this]() {
-    //         m_timer.stop();
-    //         m_camera->toJson();
-    //         m_ui->progressBar->setValue(100);
-    //     }, Qt::QueuedConnection);
-    // });
+    QThreadPool::globalInstance()->start([this]() {
+        m_ui->myGl->handleEngineRecordProcess();
+        QMetaObject::invokeMethod(this, [this]() {
+            m_timer.stop();
+            m_ui->myGl->m_manager->exportDataJson();
+            m_ui->progressBar->setValue(100);
+        }, Qt::QueuedConnection);
+    });
 
     return;
 }
 
 void MainWindow::slot_handleUpdateProgressBar()
 {
-    // double progress = m_camera->getCurrProgress();
+    double progress = m_ui->myGl->m_manager->getProgress();
 
-    // m_ui->progressBar->setValue(progress * 100);
-    // qDebug() << "Progress bar set to" << progress;
+    m_ui->progressBar->setValue(progress * 100);
 }
 
-void MainWindow::slot_handleUpdateSlider()
+void MainWindow::slot_handleUpdateSlider(int frame)
 {
-    int position = m_ui->horizontalSlider->sliderPosition();
-    this->m_ui->myGl->slot_setStageManagerCurrentFrame(position);
+    if (m_ui->myGl->m_manager->getCurrentFrame() != frame) {
+        this->m_ui->myGl->slot_setStageManagerCurrentFrame(frame);
+    }
+    if (this->m_ui->horizontalSlider->value() != frame) {
+        this->m_ui->horizontalSlider->setSliderPosition(frame);
+    }
 
     this->m_ui->myGl->slot_changeRenderEngineMode("fixed");
 
-    m_ui->label_frameNum->setText(QString("Frame %1").arg(position));
+    m_ui->label_frameNum->setText(QString("Frame %1").arg(frame));
 
     QFont font = m_ui->label_frameNum->font();
 
@@ -151,7 +150,7 @@ void MainWindow::initDefaults()
     this->setFixedSize(1024, 768);
 
     const QString defaultUsdStagePath = PROJECT_SOURCE_DIR + QString("/assets/simpleCube/simpleCube.usda");
-    const QString defaultLuxDomeLightPath = PROJECT_SOURCE_DIR + QString("/assets/domelights/squash_court_4k.hdr");
+    const QString defaultLuxDomeLightPath = PROJECT_SOURCE_DIR + QString("/assets/domelights/rogland_clear_night_4k.hdr");
 
     m_ui->lineEdit_usdStage->setText(defaultUsdStagePath);
     m_ui->lineEdit_domeLight->setText(defaultLuxDomeLightPath);
