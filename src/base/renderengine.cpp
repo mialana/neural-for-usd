@@ -58,7 +58,7 @@ void RenderEngine::initDefaults()
     this->setComplexity(1.0);
     this->setColorCorrectionMode(TfToken::Find("sRGB"));
     this->setDomeLightVisibility(true);
-    this->setCameraLightEnabled(true);
+    this->setCameraLightEnabled(false);
 
     m_material.SetAmbient(AMBIENT_DEFAULT);
     m_material.SetSpecular(SPECULAR_DEFAULT);
@@ -98,10 +98,8 @@ void RenderEngine::setCameraLightEnabled(bool enabled)
 
 void RenderEngine::render(StageManager* manager, bool shouldRecord)
 {
-    if (!shouldRecord) {
-        this->resize();
-        this->clearRender();
-    }
+    this->clearRender();
+    this->resize();
 
     GfCamera gfCamera;
 

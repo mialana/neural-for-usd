@@ -5,11 +5,11 @@ from PIL import Image
 from math import tan
 from matplotlib import pyplot as plt
 
-asset_name = "campfire"
+asset_name = "simpleCube"
 # === Config ===
 json_path = f"assets/{asset_name}/data/data.json"
 image_dir = f"assets/{asset_name}/data"
-output_npz = f"src/nerf/{asset_name}.npz"
+output_npz = f"assets/{asset_name}/data/{asset_name}.npz"
 img_extension = ".png"  # Change to ".jpg" if needed
 horizontal_aperture = 25.955
 
@@ -39,7 +39,7 @@ for frame in frames:
 images = np.stack(images, axis=0)  # Shape: (N, H, W, 3)
 poses = np.stack(poses, axis=0)  # Shape: (N, 4, 4)
 
-dirs = np.stack([np.sum([0, 0, 1] * pose[:3, :3], axis=-1) for pose in poses])
+dirs = np.stack([np.sum([0, 0, -1] * pose[:3, :3], axis=-1) for pose in poses])
 origins = poses[:, :3, -1]
 
 idx = 50
@@ -52,7 +52,7 @@ _ = ax.quiver(
   origins[..., 2].flatten(),
   dirs[..., 0].flatten(),
   dirs[..., 1].flatten(),
-  dirs[..., 2][0].flatten(), length=10, normalize=False)
+  dirs[..., 2][0].flatten(), length=1.0, normalize=False)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('z')

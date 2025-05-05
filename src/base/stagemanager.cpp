@@ -276,8 +276,5 @@ GfMatrix4d StageManager::s_usdToNerfMatrix(const GfMatrix4d& cameraToWorld)
 
     newMat = rotation * newMat;
 
-    for (int i = 0; i < 3; i++)
-        newMat[i][2] *= -1.0;
-
     return newMat;
 }

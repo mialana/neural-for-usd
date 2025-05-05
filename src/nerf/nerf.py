@@ -1,10 +1,8 @@
-# VISUALS_DIR = "src/nerf/visuals"
-# CHECKPOINTS_DIR = "src/nerf/checkpoints"
-# DATA_PATH = "src/nerf/campfire.npz"
+asset_name = "japanesePlaneToy"
 
-VISUALS_DIR = "src/nerf/jpt_visuals"
-CHECKPOINTS_DIR = "src/nerf/jpt_checkpoints"
-DATA_PATH = "src/nerf/japanesePlaneToy.npz"
+VISUALS_DIR = f"assets/{asset_name}/data/visuals"
+CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
+DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
 
 import os
 from typing import Optional, Tuple, List, Callable
@@ -78,11 +76,13 @@ one_image_per_step = True # One image per gradient step (disables batching)
 chunksize = 2**14  # Modify as needed to fit in GPU memory
 center_crop = True  # Crop the center of image (one_image_per_)
 center_crop_iters = 50  # Stop cropping center after this many epochs
-display_rate = 25  # Display test output every X epochs
+eval_rate = 25  # Display test output every X epochs
+display_rate = 50
+use_warmup_stopper = False
 
 # Early Stopping
 warmup_iters = 100  # Number of iterations during warmup phase
-warmup_min_fitness = 10.0  # Min val PSNR to continue training at warmup_iters
+warmup_min_fitness = 5.0  # Min val PSNR to continue training at warmup_iters
 n_restarts = 10  # Number of times to restart if training stalls
 
 # We bundle the kwargs for various functions to pass all at once.
@@ -305,7 +305,7 @@ def get_rays(
         [
             (i - width * 0.5) / focal_length,
             -(j - height * 0.5) / focal_length,
-            torch.ones_like(i),
+            -torch.ones_like(i),
         ],
         dim=-1,
     )
@@ -831,7 +831,7 @@ def train():
         logging.info(f"PSNR: {psnr.item()}")
 
         # Evaluate testimg at given display rate.
-        if i % display_rate == 0:
+        if i % eval_rate == 0:
             model.eval()
             fine_model.eval()
 
@@ -896,9 +896,10 @@ def train():
         
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-            os.makedirs(VISUALS_DIR, exist_ok=True)
-            plt.savefig(os.path.join(VISUALS_DIR, f"fig_{timestamp}.png"))
-            plt.close()
+            if i % display_rate == 0:
+                os.makedirs(VISUALS_DIR, exist_ok=True)
+                plt.savefig(os.path.join(VISUALS_DIR, f"fig_{timestamp}.png"))
+                plt.close()
 
             # plt.show()
 
@@ -909,8 +910,8 @@ def train():
                     f"Val PSNR {val_psnr} below warmup_min_fitness {warmup_min_fitness}. Stopping..."
                 )
                 return False, train_psnrs, val_psnrs
-        elif i < warmup_iters:
-            if warmup_stopper is not None and warmup_stopper(i, psnr):
+        elif i < warmup_iters and i % 5 == 0:
+            if use_warmup_stopper and warmup_stopper is not None and warmup_stopper(i, psnr):
                 logging.info(
                     f"Train PSNR flatlined at {psnr} for {warmup_stopper.patience} iters. Stopping..."
                 )
@@ -954,7 +955,7 @@ def init_models():
         fine_model = MLP(
             encoder.d_output,
             n_layers=n_layers,
-            d_filter=d_filter,
+            d_filter=d_filter_fine,
             skip=skip,
             d_viewdirs=d_viewdirs,
         )
