@@ -46,7 +46,7 @@ def main():
     origins = poses[:, :3, -1]
 
     idx = 50
-    print(origins[idx])
+    print(f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})")
 
     ax = plt.figure(figsize=(12, 8)).add_subplot(projection='3d')
     _ = ax.quiver(

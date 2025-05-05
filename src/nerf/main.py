@@ -1,0 +1,66 @@
+import os
+import subprocess
+import sys
+import click
+import questionary
+
+ASSETS_DIR = "assets"
+IGNORE = {"domelights"}
+
+def list_assets():
+    return sorted([
+        d for d in os.listdir(ASSETS_DIR)
+        if os.path.isdir(os.path.join(ASSETS_DIR, d)) and d not in IGNORE
+    ])
+
+def run_script(script_path, asset_name):
+    result = subprocess.run(
+        [sys.executable, script_path, "--asset-name", asset_name],
+        check=True
+    )
+    return result.returncode == 0
+
+@click.command()
+def main():
+    click.echo("Scanning for available assets...")
+    assets = list_assets()
+    if not assets:
+        click.secho("No valid assets found.", fg="red")
+        return
+
+    asset_name = questionary.select(
+        "Select an asset to process:",
+        choices=assets
+    ).ask()
+
+    try:
+        click.secho(f"\nStep 1: resize_data.py for '{asset_name}'", fg="yellow")
+        run_script("src/nerf/resize_data.py", asset_name)
+
+        click.secho(f"\nStep 2: convert_json_to_npz.py for '{asset_name}'", fg="yellow")
+        run_script("src/nerf/convert_json_to_npz.py", asset_name)
+
+        process_choices = ["Train NeRF", "Evaluate NeRF"]
+        
+        next_step = questionary.select(
+            "Which process next?",
+            choices=process_choices
+        ).ask()
+
+        asset_name = questionary.select(
+            "Reselect asset?",
+            choices=assets
+        ).ask()
+
+        if next_step == "Train NeRF":
+            click.secho(f"\nStep 3: nerf.py for '{asset_name}'", fg="yellow")
+            run_script("src/nerf/nerf.py", asset_name)
+        elif next_step == "Evaluate NeRF":
+            click.secho(f"\nStep 3: eval_nerf.py for '{asset_name}'", fg="yellow")
+            run_script("src/nerf/eval_nerf.py", asset_name)
+
+    except subprocess.CalledProcessError as e:
+        click.secho(f"Error: Script failed with exit code {e.returncode}", fg="red")
+
+if __name__ == "__main__":
+    main()
