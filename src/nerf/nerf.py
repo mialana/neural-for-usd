@@ -73,6 +73,7 @@ center_crop_iters = 50  # Stop cropping center after this many epochs
 eval_rate = 25  # Display test output every X epochs
 display_rate = 50
 use_warmup_stopper = False
+show_figures = False
 
 # Early Stopping
 warmup_iters = 100  # Number of iterations during warmup phase
@@ -90,6 +91,7 @@ kwargs_sample_hierarchical = {"perturb": perturb}
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--asset-name", type=str, default="simpleCube")
+    parser.add_argument("--show-figures", action='store_true', default=False)
     return parser.parse_args()
 
 class PositionalEncoder(nn.Module):
@@ -869,6 +871,11 @@ def train():
             if i % display_rate == 0:
                 os.makedirs(VISUALS_DIR, exist_ok=True)
                 plt.savefig(os.path.join(VISUALS_DIR, f"fig_{timestamp}.png"))
+
+                if show_figures:
+                    plt.show(block=False)
+                    plt.pause(15)
+
                 plt.close()
 
             # plt.show()
@@ -976,6 +983,9 @@ def signal_handler(sig, frame):
 def main():
     args = parse_args()
     asset_name = args.asset_name
+
+    global show_figures
+    show_figures = args.show_figures
 
     global VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
     

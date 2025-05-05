@@ -6,6 +6,7 @@ import questionary
 
 ASSETS_DIR = "assets"
 IGNORE = {"domelights"}
+SKIP_QUESTIONS = False
 
 def list_assets():
     return sorted([
@@ -13,9 +14,21 @@ def list_assets():
         if os.path.isdir(os.path.join(ASSETS_DIR, d)) and d not in IGNORE
     ])
 
-def run_script(script_path, asset_name):
+def run_script(script_path, asset_name, **kwargs):
+    # Flatten kwargs into CLI args
+    cmd = [sys.executable, script_path, "--asset-name", asset_name]
+    for key, value in kwargs.items():
+        flag = f"--{key.replace('_', '-')}"
+        if isinstance(value, bool):
+            if value:  # only include flag if True
+                cmd.append(flag)
+        elif value is not None:
+            cmd.extend([flag, str(value)])
+
+    click.secho(" ".join(cmd), fg="cyan")
+
     result = subprocess.run(
-        [sys.executable, script_path, "--asset-name", asset_name],
+        cmd,
         check=True
     )
     return result.returncode == 0
@@ -62,7 +75,9 @@ def main():
 
         if next_step == "Train NeRF":
             click.secho(f"\nStep 3: nerf.py for '{asset_name}'", fg="yellow")
-            run_script("src/nerf/nerf.py", asset_name)
+
+            show_figures = questionary.confirm("Show figures generated during training?").skip_if(SKIP_QUESTIONS, default=False).ask()
+            run_script("src/nerf/nerf.py", asset_name, show_figures=show_figures)
         elif next_step == "Evaluate NeRF":
             click.secho(f"\nStep 3: eval_nerf.py for '{asset_name}'", fg="yellow")
             run_script("src/nerf/eval_nerf.py", asset_name)
