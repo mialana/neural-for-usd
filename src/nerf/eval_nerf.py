@@ -1,6 +1,3 @@
-NOVEL_POSITION = [-0.5, 1.0, 1.5]
-TEST_IDX = 25
-
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,15 +5,16 @@ import math
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.mplot3d import Axes3D
 
+import argparse
+
 from nerf import (
-    init_models, get_rays, nerf_forward, near, far, kwargs_sample_hierarchical, kwargs_sample_stratified, n_samples_hierarchical, chunksize, VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
+    init_models, get_rays, nerf_forward, near, far, kwargs_sample_hierarchical, kwargs_sample_stratified, n_samples_hierarchical, chunksize, device
 )
 
-device = torch.device(
-    "cuda"
-    if torch.cuda.is_available()
-    else "mps" if torch.backends.mps.is_available() else "cpu"
-)
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--asset-name", type=str, default="simpleCube")
+    return parser.parse_args()
 
 def generate_random_pose(radius=3.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
     """
@@ -171,9 +169,24 @@ def generate_novel_view(c2w: torch.tensor):
     plt.show()
     plt.close()
 
-if __name__ == '__main__':
+def main():
+    args = parse_args()
+    asset_name = args.asset_name
+
+    global VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
+
+    VISUALS_DIR = f"assets/{asset_name}/data/visuals"
+    CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
+    DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
+
+    global images_np, poses_np, focal_np
+    global model, fine_model, encode, encode_viewdirs
+
+    NOVEL_POSITION = [-0.5, 1.0, 1.5]
+    TEST_IDX = 25
+
     # Init model
-    model, fine_model, encode, encode_viewdirs, _, _ = init_models()
+    model, fine_model, encode, encode_viewdirs, _, _ = init_models(CHECKPOINTS_DIR)
 
     data = np.load(DATA_PATH)
 
@@ -187,3 +200,6 @@ if __name__ == '__main__':
     while True:
         c2w = generate_random_pose()
         generate_novel_view(c2w)
+
+if __name__ == '__main__':
+    main()

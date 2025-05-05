@@ -1,9 +1,3 @@
-asset_name = "japanesePlaneToy"
-
-VISUALS_DIR = f"assets/{asset_name}/data/visuals"
-CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
-DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
-
 import os
 from typing import Optional, Tuple, List, Callable
 import signal
@@ -21,6 +15,8 @@ from tqdm import trange
 
 import logging
 
+import argparse
+
 logging.basicConfig(format="%(message)s", level=logging.DEBUG)
 
 debug = False
@@ -35,12 +31,10 @@ device = torch.device(
 
 logging.info(device)
 
-# For repeatability
-seed = 3407
-torch.manual_seed(seed)
-np.random.seed(seed)
-
 ### GLOBAL PARAMETERS
+
+# Render
+near, far = 2.0, 6.0
 
 # Encoders
 d_input = 3  # Number of input dimensions
@@ -93,6 +87,10 @@ kwargs_sample_stratified = {
 }
 kwargs_sample_hierarchical = {"perturb": perturb}
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--asset-name", type=str, default="simpleCube")
+    return parser.parse_args()
 
 class PositionalEncoder(nn.Module):
     r"""
@@ -714,34 +712,6 @@ def find_checkpoint_indices(pattern: str):
         else:
             i += 1
 
-
-class NeRF:
-    def __init__(self, checkpoint):
-        self.reinit()
-
-    def reinit(self):
-        self.model = None
-        self.fine_model = None
-
-    def save(self):
-        pass
-
-    def load(self):
-        pass
-
-    def train(self):
-        pass
-
-    def visualize(self):
-        pass
-
-    def render_view(self):
-        pass
-
-    def render_video(self):
-        pass
-
-
 def train():
     r"""
     Launch training session for NeRF.
@@ -796,7 +766,7 @@ def train():
                 i_batch = 0
         target_img = target_img.reshape([-1, 3])
 
-        # Run one iteration of TinyNeRF and get the rendered RGB image.
+        # Run one iteration of NeRF and get the rendered RGB image.
         outputs = nerf_forward(
             rays_o,
             rays_d,
@@ -920,7 +890,7 @@ def train():
     return True, train_psnrs, val_psnrs
 
 
-def init_models():
+def init_models(checkpoints_dir):
     r"""
     Initialize models, encoders, and optimizer for NeRF training.
     """
@@ -965,6 +935,10 @@ def init_models():
     # Optimizer
     optimizer = torch.optim.Adam(model_params, lr=lr)  # lr: learning rate
 
+    _, latest_checkpoint_path = find_checkpoint_indices(
+        os.path.join(checkpoints_dir, "checkpoint_{}")
+    )
+
     if latest_checkpoint_path is not None:
         model.load_state_dict(
             torch.load(f"{latest_checkpoint_path}/nerf.pt", weights_only=True)
@@ -984,102 +958,11 @@ def init_models():
     return model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper
 
 
-# if not os.path.exists("tiny_nerf_data.npz"):
-#     wget.download(
-#         "http://cseweb.ucsd.edu/~viscomp/projects/LF/papers/ECCV20/nerf/tiny_nerf_data.npz"
-#     )
-
-data = np.load(DATA_PATH)
-n_training = 100
-testimg_idx = 101
-
-near, far = 2.0, 6.0
-
-# Gather as torch tensors
-images = torch.from_numpy(data["images"][:n_training]).to(device)
-poses = torch.from_numpy(data["poses"]).to(device)
-focal = torch.from_numpy(data["focal"]).to(dtype=torch.float32).to(device)
-testimg = torch.from_numpy(data["images"][testimg_idx]).to(device)
-testpose = torch.from_numpy(data["poses"][testimg_idx]).to(device)
-
-# Grab rays from sample image
-height, width = images.shape[1:3]
-with torch.no_grad():
-    ray_origin, ray_direction = get_rays(height, width, focal, testpose)
-
-logging.debug("Ray Origin")
-logging.debug(ray_origin.shape)
-logging.debug(ray_origin[height // 2, width // 2, :])
-logging.debug("")
-
-logging.debug("Ray Direction")
-logging.debug(ray_direction.shape)
-logging.debug(ray_direction[height // 2, width // 2, :])
-logging.debug("")
-
-# Draw stratified samples from example
-rays_o = ray_origin.view([-1, 3])
-rays_d = ray_direction.view([-1, 3])
-perturb = True
-inverse_depth = False
-with torch.no_grad():
-    pts, z_vals = sample_stratified(
-        rays_o,
-        rays_d,
-        near,
-        far,
-        n_samples,
-        perturb=perturb,
-        inverse_depth=inverse_depth,
-    )
-
-logging.debug("Input Points")
-logging.debug(pts.shape)
-
-
-logging.debug("")
-logging.debug("Distances Along Ray")
-logging.debug(z_vals.shape)
-
-y_vals = torch.zeros_like(z_vals)
-
-_, z_vals_unperturbed = sample_stratified(
-    rays_o, rays_d, near, far, n_samples, perturb=False, inverse_depth=inverse_depth
-)
-
-# Create encoders for points and view directions
-encoder = PositionalEncoder(3, 10)
-viewdirs_encoder = PositionalEncoder(3, 4)
-
-# Grab flattened points and view directions
-pts_flattened = pts.reshape(-1, 3)
-viewdirs = rays_d / torch.norm(rays_d, dim=-1, keepdim=True)
-flattened_viewdirs = viewdirs[:, None, ...].expand(pts.shape).reshape((-1, 3))
-
-# Encode inputs
-encoded_points = encoder(pts_flattened)
-encoded_viewdirs = viewdirs_encoder(flattened_viewdirs)
-
-logging.info("Encoded Points")
-logging.info(encoded_points.shape)
-logging.info(
-    (torch.min(encoded_points), torch.max(encoded_points), torch.mean(encoded_points))
-)
-logging.info("")
-
-logging.info(encoded_viewdirs.shape)
-logging.info("Encoded Viewdirs")
-logging.info(
-    (
-        torch.min(encoded_viewdirs),
-        torch.max(encoded_viewdirs),
-        torch.mean(encoded_viewdirs),
-    )
-)
-logging.info("")
-
-
 def signal_handler(sig, frame):
+    next_checkpoint_path, _ = find_checkpoint_indices(
+        os.path.join(CHECKPOINTS_DIR, "checkpoint_{}")
+    )
+
     logging.info("You pressed Ctrl+C!")
     os.makedirs(next_checkpoint_path, exist_ok=True)
 
@@ -1090,16 +973,119 @@ def signal_handler(sig, frame):
     logging.info(f"Saved to {next_checkpoint_path}")
     sys.exit(0)
 
-next_checkpoint_path, latest_checkpoint_path = find_checkpoint_indices(
-    os.path.join(CHECKPOINTS_DIR, "checkpoint_{}")
-)
+def main():
+    args = parse_args()
+    asset_name = args.asset_name
 
-if __name__ == '__main__':
+    global VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
+    
+    VISUALS_DIR = f"assets/{asset_name}/data/visuals"
+    CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
+    DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
+
+    global images, focal, poses, n_training, near, far, testimg, testpose
+
+    # For repeatability
+    seed = 3407
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+
+    # if not os.path.exists("tiny_nerf_data.npz"):
+    #     wget.download(
+    #         "http://cseweb.ucsd.edu/~viscomp/projects/LF/papers/ECCV20/nerf/tiny_nerf_data.npz"
+    #     )
+
+    data = np.load(DATA_PATH)
+    n_training = 100
+    testimg_idx = 101
+
+    # Gather as torch tensors
+    images = torch.from_numpy(data["images"][:n_training]).to(device)
+    poses = torch.from_numpy(data["poses"]).to(device)
+    focal = torch.from_numpy(data["focal"]).to(dtype=torch.float32).to(device)
+    testimg = torch.from_numpy(data["images"][testimg_idx]).to(device)
+    testpose = torch.from_numpy(data["poses"][testimg_idx]).to(device)
+
+    # Grab rays from sample image
+    height, width = images.shape[1:3]
+    with torch.no_grad():
+        ray_origin, ray_direction = get_rays(height, width, focal, testpose)
+
+    logging.debug("Ray Origin")
+    logging.debug(ray_origin.shape)
+    logging.debug(ray_origin[height // 2, width // 2, :])
+    logging.debug("")
+
+    logging.debug("Ray Direction")
+    logging.debug(ray_direction.shape)
+    logging.debug(ray_direction[height // 2, width // 2, :])
+    logging.debug("")
+
+    # Draw stratified samples from example
+    rays_o = ray_origin.view([-1, 3])
+    rays_d = ray_direction.view([-1, 3])
+    perturb = True
+    inverse_depth = False
+    with torch.no_grad():
+        pts, z_vals = sample_stratified(
+            rays_o,
+            rays_d,
+            near,
+            far,
+            n_samples,
+            perturb=perturb,
+            inverse_depth=inverse_depth,
+        )
+
+    logging.debug("Input Points")
+    logging.debug(pts.shape)
+
+
+    logging.debug("")
+    logging.debug("Distances Along Ray")
+    logging.debug(z_vals.shape)
+
+    y_vals = torch.zeros_like(z_vals)
+
+    _, z_vals_unperturbed = sample_stratified(
+        rays_o, rays_d, near, far, n_samples, perturb=False, inverse_depth=inverse_depth
+    )
+
+    # Create encoders for points and view directions
+    encoder = PositionalEncoder(3, 10)
+    viewdirs_encoder = PositionalEncoder(3, 4)
+
+    # Grab flattened points and view directions
+    pts_flattened = pts.reshape(-1, 3)
+    viewdirs = rays_d / torch.norm(rays_d, dim=-1, keepdim=True)
+    flattened_viewdirs = viewdirs[:, None, ...].expand(pts.shape).reshape((-1, 3))
+
+    # Encode inputs
+    encoded_points = encoder(pts_flattened)
+    encoded_viewdirs = viewdirs_encoder(flattened_viewdirs)
+
+    logging.info("Encoded Points")
+    logging.info(encoded_points.shape)
+    logging.info(
+        (torch.min(encoded_points), torch.max(encoded_points), torch.mean(encoded_points))
+    )
+    logging.info("")
+
+    logging.info(encoded_viewdirs.shape)
+    logging.info("Encoded Viewdirs")
+    logging.info(
+        (
+            torch.min(encoded_viewdirs),
+            torch.max(encoded_viewdirs),
+            torch.mean(encoded_viewdirs),
+        )
+    )
+    logging.info("")
+
     # Run training session(s)
     for i in range(n_restarts):
-        model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper = (
-            init_models()
-        )
+        global model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper 
+        model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper  = init_models(CHECKPOINTS_DIR)
 
         if i == 0:
             signal.signal(signal.SIGINT, signal_handler)
@@ -1115,3 +1101,6 @@ if __name__ == '__main__':
     logging.info(f"Done!")
 
     signal.raise_signal(signal.SIGINT)  # write to file
+
+if __name__ == "__main__":
+    main()
