@@ -384,6 +384,7 @@ def main():
             show_batch_random_poses()
 
         else:
+            click.secho(f"Thanks for evaluating Neural-for-USD!", fg='green')
             break
 
 

@@ -3,6 +3,7 @@ from PIL import Image
 import os
 from send2trash import send2trash
 import argparse
+import click
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -24,10 +25,6 @@ def main():
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, filename)
 
-            if len(filename) <= 7:
-                send2trash(input_path)
-                continue
-
             try:
                 with Image.open(input_path) as img:
                     width, height = img.size
@@ -40,6 +37,8 @@ def main():
                     print(f"Resized {filename}")
             except Exception as e:
                 print(f"Failed to process {filename}: {e}")
+
+    click.secho(f"All training images of {asset_name} resized successfully!", fg='green')
 
 if __name__ == "__main__":
     main()

@@ -6,6 +6,7 @@ from PIL import Image
 from math import tan
 from matplotlib import pyplot as plt
 import argparse
+import click
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -45,8 +46,8 @@ def main():
     dirs = np.stack([np.sum([0, 0, -1] * pose[:3, :3], axis=-1) for pose in poses])
     origins = poses[:, :3, -1]
 
-    idx = 50
-    print(f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})")
+    idx = 101
+    click.secho(f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})", fg='yellow')
 
     ax = plt.figure(figsize=(12, 8)).add_subplot(projection='3d')
     _ = ax.quiver(
@@ -59,19 +60,21 @@ def main():
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('z')
+
+    ax.set_title("Sampled View Directions")
     plt.show()
     plt.close()
 
+    plt.title("Test Image Preview")
     plt.imshow(images[idx])
     plt.show()
     plt.close()
-
 
     H, W = images.shape[1:3]
     focal = horizontal_aperture / (2 * tan(camera_angle_x * 0.5))
 
     np.savez(output_npz, images=images.astype(np.float32), poses=poses.astype(np.float32), focal=focal, H=H, W=W)
-    print(f"Saved to {output_npz}")
+    click.secho(f"JSON to NPZ data transfer of {asset_name} successful. Saved to {output_npz}", fg='green')
 
 if __name__ == "__main__":
     main()
