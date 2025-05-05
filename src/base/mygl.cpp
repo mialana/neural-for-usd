@@ -181,15 +181,18 @@ void MyGL::handleEngineRecordProcess()
     int currFrameToRecord = 0;
     this->isRecording = true;
 
-    while (currFrameToRecord < numFrames) {
+    while (currFrameToRecord <= numFrames) {
         if (!m_engine->getIsDirty()) {
+            if (currFrameToRecord == numFrames) {
+                this->isRecording = false;
+                break;
+            }
             m_manager->setCurrentFrame(currFrameToRecord);
             m_engine->makeDirty();
 
             currFrameToRecord += 1;
         }
     }
-    this->isRecording = false;
 
     qInfo() << "RECORDING COMPLETE!";
 }
