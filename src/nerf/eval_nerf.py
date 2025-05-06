@@ -114,7 +114,7 @@ def replicate_view(test_idx: int):
     plt.show()
     plt.close()
 
-def generate_360_video(radius=3.0, phi_deg=60.0, num_frames=300):
+def generate_360_video(radius=4.5, phi_deg=60.0, num_frames=300):
     phi = math.radians(phi_deg)
     frame_dir = os.path.join(VISUALS_DIR, "360_frames")
     os.makedirs(frame_dir, exist_ok=True)
@@ -170,7 +170,7 @@ def generate_360_video(radius=3.0, phi_deg=60.0, num_frames=300):
     click.secho(f"360 render saved to {video_path}", fg='green')
 
 
-def generate_random_pose(radius=3.0, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
+def generate_random_pose(radius=4.5, theta_range=(0, 2 * math.pi), phi_range=(math.pi/6, math.pi/3)):
     """
     Generates a random camera-to-world (c2w) matrix looking at the origin.
 
@@ -278,7 +278,7 @@ def generate_novel_view(c2w: torch.tensor):
     plt.show()
     plt.close()
 
-def generate_pose_from_theta_phi(radius=3.0):
+def generate_pose_from_theta_phi(radius=4.5):
     theta = float(questionary.text("Enter θ (0–360):", validate=lambda val: 0 <= float(val) <= 360).ask())
     phi = float(questionary.text("Enter ϕ (0–90):", validate=lambda val: 0 <= float(val) <= 90).ask())
 

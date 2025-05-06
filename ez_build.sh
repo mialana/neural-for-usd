@@ -2,12 +2,10 @@
 
 cmake_install_prefix="/Users/Dev/Projects/Neural-for-USD"
 
-find src/usdSimple -iname '*.h' -o -iname '*.cpp' - | xargs clang-format -i
-
-if [ -e build ]; then
-  trash build
-  mkdir build
-fi
+# if [ -e build ]; then
+#   trash build
+#   mkdir build
+# fi
 
 cd build
 cmake \
@@ -15,4 +13,4 @@ cmake \
   -DCMAKE_INSTALL_PREFIX=${cmake_install_prefix} \
   ..
 
-cmake --build . -j8 -- viewer
+cmake --build . -j8 -- clean base

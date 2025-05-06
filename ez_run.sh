@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
 
-build/src/viewer/viewer
-
-make high
+build/src/base/base
