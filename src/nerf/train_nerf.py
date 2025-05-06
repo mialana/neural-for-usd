@@ -182,68 +182,6 @@ def crop_center(img: torch.Tensor, frac: float = 0.5) -> torch.Tensor:
     w_offset = round(img.shape[1] * (frac / 2))
     return img[h_offset:-h_offset, w_offset:-w_offset]
 
-
-def get_rays(
-    height: int, width: int, focal_length: float, c2w: torch.Tensor
-) -> Tuple[torch.Tensor, torch.Tensor]:
-    r"""
-    Find origin and direction of rays through every pixel and camera origin.
-    """
-
-    # Apply pinhole camera model to gather directions at each pixel
-    # i is a [width, height] grid with x-values of pixel at coordinate
-    # j is a [width, height] grid with x-values of pixel at coordinate
-    i, j = torch.meshgrid(
-        torch.arange(width, dtype=torch.float32).to(c2w),
-        torch.arange(height, dtype=torch.float32).to(c2w),
-        indexing="ij",
-    )
-    click.secho("i Shape: ", fg='magenta')
-    click.secho(i.shape, fg='magenta')
-    click.secho("j Shape: ", fg='magenta')
-    click.secho(f"{j.shape}\n", fg='magenta')
-
-    # swaps the last two dimensions (should be just 2, to get i and j shaped [height, width].
-    i, j = i.transpose(-1, -2), j.transpose(-1, -2)
-    click.secho("i Shape Transposed: ", fg='magenta')
-    click.secho(i.shape, fg='magenta')
-    click.secho("j Shape Transposed: ", fg='magenta')
-    click.secho(f"{j.shape}\n", fg='magenta')
-
-    # Map to [(-1, -1), (1, 1)] and then NDC (scaled by focal length):
-    #   x: (i - width/2) / focal
-    #   y: -(j - height/2) / focal
-    #   z: -1 (-1 is camera's forward)
-    directions = torch.stack(
-        [
-            (i - width * 0.5) / focal_length,
-            -(j - height * 0.5) / focal_length,
-            -torch.ones_like(i),
-        ],
-        dim=-1,
-    )
-
-    # Convert to world coords
-    # Apply camera pose to directions
-    rays_d = torch.sum(directions[..., None, :] * c2w[:3, :3], dim=-1)
-    click.secho("Ray Directions:", fg='magenta')
-    click.secho("Shape: ", fg='magenta')
-    click.secho(rays_d.shape, fg='magenta')
-    click.secho("Sample: ", fg='magenta')
-    click.secho(f"{rays_d[height // 2, width // 2, :]}\n", fg='magenta')
-
-    # Origin is same for all directions (the optical center)
-    rays_o = c2w[:3, -1].expand(rays_d.shape)
-
-    click.secho("Ray Origins:", fg='magenta')
-    click.secho("Shape: ", fg='magenta')
-    click.secho(rays_o.shape, fg='magenta')
-    click.secho("Sample: ", fg='magenta')
-    click.secho(f"{rays_o[height // 2, width // 2, :]}\n", fg='magenta')
-
-    return rays_o, rays_d
-
-
 def sample_stratified(
     rays_o: torch.Tensor,
     rays_d: torch.Tensor,

@@ -15,8 +15,9 @@ import click
 
 import argparse
 
+from nerf import get_rays, init_models, nerf_forward
 from nerf import (
-    init_models, get_rays, nerf_forward, near, far, kwargs_sample_hierarchical, kwargs_sample_stratified, n_samples_hierarchical, chunksize, device
+    device, near, far, chunksize, kwargs_sample_hierarchical, kwargs_sample_stratified, n_samples_hierarchical
 )
 
 def parse_args():

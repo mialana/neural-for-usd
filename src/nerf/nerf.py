@@ -19,7 +19,7 @@ import click
 
 import argparse
 
-from train_nerf import (sample_stratified, sample_hierarchical, prepare_chunks, prepare_viewdirs_chunks, raw2outputs, get_rays, crop_center, plot_samples)
+from train_nerf import (sample_stratified, sample_hierarchical, prepare_chunks, prepare_viewdirs_chunks, raw2outputs, crop_center, plot_samples)
 from train_nerf import (PositionalEncoder, MLP, EarlyStopping)
 
 device = torch.device(
@@ -100,6 +100,12 @@ def parse_args():
     parser.add_argument("--show-figures", action='store_true', default=False)
     return parser.parse_args()
 
+def signal_handler(sig, frame):
+    global interrupted
+
+    click.secho("Interrupt received. Finishing current step and exiting gracefully...", fg='red')
+    interrupted = True
+
 def find_checkpoint_indices(pattern: str):
     """
     Finds the last index in a sequence of filepaths where the file does not exist.
@@ -123,6 +129,199 @@ def find_checkpoint_indices(pattern: str):
             return next_filepath, latest_filepath
         else:
             i += 1
+
+def _debug_rays():
+    # Grab rays from sample image
+    height, width = images.shape[1:3]
+    with torch.no_grad():
+        ray_origin, ray_direction = get_rays(height, width, focal, testpose)
+
+    click.secho("Ray Origin", fg='magenta')
+    click.secho(ray_origin.shape, fg='magenta')
+    click.secho(f"{ray_origin[height // 2, width // 2, :]}\n", fg='magenta')
+
+    click.secho("Ray Direction", fg='magenta')
+    click.secho(ray_direction.shape, fg='magenta')
+    click.secho(f"{ray_direction[height // 2, width // 2, :]}\n", fg='magenta')
+
+    # Draw stratified samples from example
+    rays_o = ray_origin.view([-1, 3])
+    rays_d = ray_direction.view([-1, 3])
+    perturb = True
+    inverse_depth = False
+    with torch.no_grad():
+        pts, z_vals = sample_stratified(
+            rays_o,
+            rays_d,
+            near,
+            far,
+            n_samples,
+            perturb=perturb,
+            inverse_depth=inverse_depth,
+        )
+
+    click.secho("Input Points", fg='magenta')
+    click.secho(f"{pts.shape}\n", fg='magenta')
+
+    click.secho("Distances Along Ray", fg='magenta')
+    click.secho(f"{z_vals.shape}\n", fg='magenta')
+
+    # Create encoders for points and view directions
+    encoder = PositionalEncoder(3, 10)
+    viewdirs_encoder = PositionalEncoder(3, 4)
+
+    # Grab flattened points and view directions
+    pts_flattened = pts.reshape(-1, 3)
+    viewdirs = rays_d / torch.norm(rays_d, dim=-1, keepdim=True)
+    flattened_viewdirs = viewdirs[:, None, ...].expand(pts.shape).reshape((-1, 3))
+
+    # Encode inputs
+    encoded_points = encoder(pts_flattened)
+    encoded_viewdirs = viewdirs_encoder(flattened_viewdirs)
+
+    click.secho("Encoded Points", fg='magenta')
+    click.secho(encoded_points.shape, fg='magenta')
+    click.secho(
+        f"{(torch.min(encoded_points), torch.max(encoded_points), torch.mean(encoded_points))}\n", fg='magenta'
+    )
+
+    click.secho(encoded_viewdirs.shape, fg='magenta')
+    click.secho("Encoded Viewdirs")
+    click.secho(f"{(
+            torch.min(encoded_viewdirs),
+            torch.max(encoded_viewdirs),
+            torch.mean(encoded_viewdirs),
+        )}\n", fg='magenta'
+    )
+
+def get_rays(
+    height: int, width: int, focal_length: float, c2w: torch.Tensor
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    r"""
+    Find origin and direction of rays through every pixel and camera origin.
+    """
+
+    # Apply pinhole camera model to gather directions at each pixel
+    # i is a [width, height] grid with x-values of pixel at coordinate
+    # j is a [width, height] grid with x-values of pixel at coordinate
+    i, j = torch.meshgrid(
+        torch.arange(width, dtype=torch.float32).to(c2w),
+        torch.arange(height, dtype=torch.float32).to(c2w),
+        indexing="ij",
+    )
+    
+    click.secho("i Shape: ", fg='magenta')
+    click.secho(i.shape, fg='magenta')
+    click.secho("j Shape: ", fg='magenta')
+    click.secho(f"{j.shape}\n", fg='magenta')
+
+    # swaps the last two dimensions (should be just 2, to get i and j shaped [height, width].
+    i, j = i.transpose(-1, -2), j.transpose(-1, -2)
+
+    click.secho("i Shape Transposed: ", fg='magenta')
+    click.secho(i.shape, fg='magenta')
+    click.secho("j Shape Transposed: ", fg='magenta')
+    click.secho(f"{j.shape}\n", fg='magenta')
+
+    # Map to [(-1, -1), (1, 1)] and then NDC (scaled by focal length):
+    #   x: (i - width/2) / focal
+    #   y: -(j - height/2) / focal
+    #   z: -1 (-1 is camera's forward)
+    directions = torch.stack(
+        [
+            (i - width * 0.5) / focal_length,
+            -(j - height * 0.5) / focal_length,
+            -torch.ones_like(i),
+        ],
+        dim=-1,
+    )
+
+    # Convert to world coords
+    # Apply camera pose to directions
+    rays_d = torch.sum(directions[..., None, :] * c2w[:3, :3], dim=-1)
+    click.secho("Ray Directions:", fg='magenta')
+    click.secho("Shape: ", fg='magenta')
+    click.secho(rays_d.shape, fg='magenta')
+    click.secho("Sample: ", fg='magenta')
+    click.secho(f"{rays_d[height // 2, width // 2, :]}\n", fg='magenta')
+
+    # Origin is same for all directions (the optical center)
+    rays_o = c2w[:3, -1].expand(rays_d.shape)
+
+    click.secho("Ray Origins:", fg='magenta')
+    click.secho("Shape: ", fg='magenta')
+    click.secho(rays_o.shape, fg='magenta')
+    click.secho("Sample: ", fg='magenta')
+    click.secho(f"{rays_o[height // 2, width // 2, :]}\n", fg='magenta')
+
+    return rays_o, rays_d
+
+def init_models(checkpoints_dir):
+    r"""
+    Initialize models, encoders, and optimizer for NeRF training.
+    """
+    # Encoders
+    encoder = PositionalEncoder(d_input, n_freqs, log_space=log_space)
+    encode = lambda x: encoder(x)
+
+    # View direction encoders
+    encode_viewdirs = None
+    d_viewdirs = None
+
+    if use_viewdirs:
+        encoder_viewdirs = PositionalEncoder(
+            d_input, n_freqs_views, log_space=log_space
+        )
+        encode_viewdirs = lambda x: encoder_viewdirs(x)
+        d_viewdirs = encoder_viewdirs.d_output
+
+    # Models
+    model = MLP(
+        encoder.d_output,
+        n_layers=n_layers,
+        d_filter=d_filter,
+        skip=skip,
+        d_viewdirs=d_viewdirs,
+    )
+    model.to(device)
+    model_params = list(model.parameters())  # all weights and bias
+
+    fine_model = None
+    if use_fine_model:
+        fine_model = MLP(
+            encoder.d_output,
+            n_layers=n_layers,
+            d_filter=d_filter_fine,
+            skip=skip,
+            d_viewdirs=d_viewdirs,
+        )
+        fine_model.to(device)
+        model_params = model_params + list(fine_model.parameters())
+
+    # Optimizer
+    optimizer = torch.optim.Adam(model_params, lr=lr)  # lr: learning rate
+
+    _, latest_checkpoint_path = find_checkpoint_indices(
+        os.path.join(checkpoints_dir, "checkpoint_{}")
+    )
+
+    if latest_checkpoint_path is not None:
+        model.load_state_dict(
+            torch.load(f"{latest_checkpoint_path}/nerf.pt", weights_only=True)
+        )
+        fine_model.load_state_dict(
+            torch.load(f"{latest_checkpoint_path}/nerf-fine.pt", weights_only=True)
+        )
+        optimizer.load_state_dict(
+            torch.load(f"{latest_checkpoint_path}/optimizer.pt", weights_only=True)
+        )
+
+        click.secho(f"Loaded data from {latest_checkpoint_path}", fg='green')
+
+    # Early Stopping
+    warmup_stopper = EarlyStopping(patience=50)
+
+    return model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper
 
 def nerf_forward(
     rays_o: torch.Tensor,
@@ -418,74 +617,6 @@ def train():
 
     return True, train_psnrs, val_psnrs
 
-
-def init_models(checkpoints_dir):
-    r"""
-    Initialize models, encoders, and optimizer for NeRF training.
-    """
-    # Encoders
-    encoder = PositionalEncoder(d_input, n_freqs, log_space=log_space)
-    encode = lambda x: encoder(x)
-
-    # View direction encoders
-    encode_viewdirs = None
-    d_viewdirs = None
-
-    if use_viewdirs:
-        encoder_viewdirs = PositionalEncoder(
-            d_input, n_freqs_views, log_space=log_space
-        )
-        encode_viewdirs = lambda x: encoder_viewdirs(x)
-        d_viewdirs = encoder_viewdirs.d_output
-
-    # Models
-    model = MLP(
-        encoder.d_output,
-        n_layers=n_layers,
-        d_filter=d_filter,
-        skip=skip,
-        d_viewdirs=d_viewdirs,
-    )
-    model.to(device)
-    model_params = list(model.parameters())  # all weights and bias
-
-    fine_model = None
-    if use_fine_model:
-        fine_model = MLP(
-            encoder.d_output,
-            n_layers=n_layers,
-            d_filter=d_filter_fine,
-            skip=skip,
-            d_viewdirs=d_viewdirs,
-        )
-        fine_model.to(device)
-        model_params = model_params + list(fine_model.parameters())
-
-    # Optimizer
-    optimizer = torch.optim.Adam(model_params, lr=lr)  # lr: learning rate
-
-    _, latest_checkpoint_path = find_checkpoint_indices(
-        os.path.join(checkpoints_dir, "checkpoint_{}")
-    )
-
-    if latest_checkpoint_path is not None:
-        model.load_state_dict(
-            torch.load(f"{latest_checkpoint_path}/nerf.pt", weights_only=True)
-        )
-        fine_model.load_state_dict(
-            torch.load(f"{latest_checkpoint_path}/nerf-fine.pt", weights_only=True)
-        )
-        optimizer.load_state_dict(
-            torch.load(f"{latest_checkpoint_path}/optimizer.pt", weights_only=True)
-        )
-
-        click.secho(f"Loaded data from {latest_checkpoint_path}", fg='green')
-
-    # Early Stopping
-    warmup_stopper = EarlyStopping(patience=50)
-
-    return model, fine_model, encode, encode_viewdirs, optimizer, warmup_stopper
-
 def shutdown_nerf():
     global model, fine_model, optimizer
 
@@ -511,12 +642,6 @@ def shutdown_nerf():
         print(f"Failed to save one or more models: {e}")
 
     click.secho("NeRF shut down successfully. Thanks!", fg='blue')
-
-def signal_handler(sig, frame):
-    global interrupted
-
-    click.secho("Interrupt received. Finishing current step and exiting gracefully...", fg='red')
-    interrupted = True
 
 def main():
     global show_figures, VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
@@ -552,69 +677,6 @@ def main():
     focal = torch.from_numpy(data["focal"]).to(dtype=torch.float32).to(device)
     testimg = torch.from_numpy(data["images"][testimg_idx]).to(device)
     testpose = torch.from_numpy(data["poses"][testimg_idx]).to(device)
-
-    # Grab rays from sample image
-    height, width = images.shape[1:3]
-    with torch.no_grad():
-        ray_origin, ray_direction = get_rays(height, width, focal, testpose)
-
-    # click.secho("Ray Origin", fg='magenta')
-    # click.secho(ray_origin.shape, fg='magenta')
-    # click.secho(f"{ray_origin[height // 2, width // 2, :]}\n", fg='magenta')
-
-    # click.secho("Ray Direction", fg='magenta')
-    # click.secho(ray_direction.shape, fg='magenta')
-    # click.secho(f"{ray_direction[height // 2, width // 2, :]}\n", fg='magenta')
-
-    # Draw stratified samples from example
-    rays_o = ray_origin.view([-1, 3])
-    rays_d = ray_direction.view([-1, 3])
-    perturb = True
-    inverse_depth = False
-    with torch.no_grad():
-        pts, z_vals = sample_stratified(
-            rays_o,
-            rays_d,
-            near,
-            far,
-            n_samples,
-            perturb=perturb,
-            inverse_depth=inverse_depth,
-        )
-
-    click.secho("Input Points", fg='magenta')
-    click.secho(f"{pts.shape}\n", fg='magenta')
-
-    click.secho("Distances Along Ray", fg='magenta')
-    click.secho(f"{z_vals.shape}\n", fg='magenta')
-
-    # Create encoders for points and view directions
-    encoder = PositionalEncoder(3, 10)
-    viewdirs_encoder = PositionalEncoder(3, 4)
-
-    # Grab flattened points and view directions
-    pts_flattened = pts.reshape(-1, 3)
-    viewdirs = rays_d / torch.norm(rays_d, dim=-1, keepdim=True)
-    flattened_viewdirs = viewdirs[:, None, ...].expand(pts.shape).reshape((-1, 3))
-
-    # Encode inputs
-    encoded_points = encoder(pts_flattened)
-    encoded_viewdirs = viewdirs_encoder(flattened_viewdirs)
-
-    click.secho("Encoded Points", fg='magenta')
-    click.secho(encoded_points.shape, fg='magenta')
-    click.secho(
-        f"{(torch.min(encoded_points), torch.max(encoded_points), torch.mean(encoded_points))}\n", fg='magenta'
-    )
-
-    click.secho(encoded_viewdirs.shape, fg='magenta')
-    click.secho("Encoded Viewdirs")
-    click.secho(f"{(
-            torch.min(encoded_viewdirs),
-            torch.max(encoded_viewdirs),
-            torch.mean(encoded_viewdirs),
-        )}\n", fg='magenta'
-    )
 
     # Run training session(s)
     for i in range(n_restarts):
