@@ -192,6 +192,7 @@ def generate_random_pose(
 
     Returns: torch.FloatTensor of shape (4, 4)
     """
+    print(radius)
     theta = torch.rand(1).item() * (theta_range[1] - theta_range[0]) + theta_range[0]
     phi = torch.rand(1).item() * (phi_range[1] - phi_range[0]) + phi_range[0]
 
@@ -333,11 +334,17 @@ def generate_pose_from_theta_phi(radius=4.5):
 
 def show_batch_random_poses(state, radius=4.5, height=50, width=50):
     _, axes = plt.subplots(4, 6, figsize=(12, 8))
+    c2w = None
     for i, ax in enumerate(axes.ravel()):
         click.secho(f"FRAME {i} STATS:", fg="blue")
-        c2w = generate_random_pose(radius=radius)
+        if i % 2 == 0:
+            c2w = generate_random_pose(radius=radius)
 
-        rays_o, rays_d = get_rays(height, width, state.focal, c2w)
+        if i % 2 == 0:
+            rays_o, rays_d = get_rays(height * 2, width * 2, state.focal, c2w)
+        else:
+            rays_o, rays_d = get_rays(height, width, state.focal, c2w)
+
         rays_o = rays_o.reshape([-1, 3])
         rays_d = rays_d.reshape([-1, 3])
 
@@ -356,23 +363,20 @@ def show_batch_random_poses(state, radius=4.5, height=50, width=50):
             curr_chunksize=chunksize,
         )
         rgb: torch.Tensor = outputs["rgb_map"]
-        rgb = rgb.reshape(height, width, 3)
-        if i % 4 == 0:
-            rgb_np = rgb.detach().cpu().numpy()
-            rgb_np = scikit_rescale(
-                rgb_np,
-                scale=0.5,
-                channel_axis=-1,  # important for color images
-            )
-        elif i % 4 == 1:
-            rgb = rgb.permute(2, 0, 1)
-            rgb_np = to_PIL(rgb)
-            rgb_np.resize((width, height), PILImage.LANCZOS)
-        else:
-            rgb_np = rgb.reshape(height, width, 3).detach().cpu().numpy()
 
-        ax.imshow(rgb_np)
-        ax.axis("off")
+        if i % 2 == 0:
+            image = rgb.reshape(height * 2, width * 2, 3)
+            image = image.permute(2, 0, 1)
+            image = to_PIL(image)
+            image.resize((width, height), PILImage.LANCZOS)
+            ax.imshow(image)
+            ax.axis("off")
+        else:
+            rgb_np = rgb.reshape(height, width, 3)
+            rgb_np = rgb_np.detach().cpu().numpy()
+
+            ax.imshow(rgb_np)
+            ax.axis("off")
 
     plt.tight_layout()
     plt.show()
@@ -381,12 +385,13 @@ def show_batch_random_poses(state, radius=4.5, height=50, width=50):
 def main():
     def ask_for_radius():
         radius = questionary.text(
-            "Enter radius (0-5):",
-            validate=lambda val: 0 <= float(val) <= 5,
+            f"Enter radius (0-{far}):",
+            validate=lambda val: (0 <= float(val) <= far if val != '' else False),
             default="4.5",
         ).ask()
         if radius is None:
             raise KeyboardInterrupt
+        return float(radius)
 
     state = NeRFState()
     args = parse_args()
@@ -435,12 +440,12 @@ def main():
 
             elif choice.startswith("4"):
                 radius_choice = ask_for_radius()
-                c2w = generate_pose_from_theta_phi(radius_choice)
+                c2w = generate_pose_from_theta_phi(radius=radius_choice)
                 generate_novel_view(state, c2w)
 
             elif choice.startswith("5"):
                 radius_choice = ask_for_radius()
-                show_batch_random_poses(state)
+                show_batch_random_poses(state, radius=radius_choice)
 
             else:
                 break
