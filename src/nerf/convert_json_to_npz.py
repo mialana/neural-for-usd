@@ -8,14 +8,16 @@ from matplotlib import pyplot as plt
 import argparse
 import click
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--asset-name", type=str, default="simpleCube")
     return parser.parse_args()
 
+
 def main():
     horizontal_aperture = 25.955
-    
+
     args = parse_args()
     asset_name = args.asset_name
 
@@ -47,19 +49,26 @@ def main():
     origins = poses[:, :3, -1]
 
     idx = 101
-    click.secho(f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})", fg='yellow')
+    click.secho(
+        f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) \
+            | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})",
+        fg="yellow",
+    )
 
-    ax = plt.figure(figsize=(12, 8)).add_subplot(projection='3d')
+    ax = plt.figure(figsize=(12, 8)).add_subplot(projection="3d")
     _ = ax.quiver(
-    origins[..., 0].flatten(),
-    origins[..., 1].flatten(),
-    origins[..., 2].flatten(),
-    dirs[..., 0].flatten(),
-    dirs[..., 1].flatten(),
-    dirs[..., 2][0].flatten(), length=1.0, normalize=False)
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('z')
+        origins[..., 0].flatten(),
+        origins[..., 1].flatten(),
+        origins[..., 2].flatten(),
+        dirs[..., 0].flatten(),
+        dirs[..., 1].flatten(),
+        dirs[..., 2][0].flatten(),
+        length=1.0,
+        normalize=False,
+    )
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("z")
 
     ax.set_title("Sampled View Directions")
     plt.show()
@@ -73,8 +82,19 @@ def main():
     H, W = images.shape[1:3]
     focal = horizontal_aperture / (2 * tan(camera_angle_x * 0.5))
 
-    np.savez(output_npz, images=images.astype(np.float32), poses=poses.astype(np.float32), focal=focal, H=H, W=W)
-    click.secho(f"JSON to NPZ data transfer of {asset_name} successful. Saved to {output_npz}", fg='green')
+    np.savez(
+        output_npz,
+        images=images.astype(np.float32),
+        poses=poses.astype(np.float32),
+        focal=focal,
+        H=H,
+        W=W,
+    )
+    click.secho(
+        f"JSON to NPZ data transfer of {asset_name} successful. Saved to {output_npz}",
+        fg="green",
+    )
+
 
 if __name__ == "__main__":
     main()

@@ -5,8 +5,12 @@ import math
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.mplot3d import Axes3D
 
+from typing import Callable
+import PIL.Image as PILImage
+
 import cv2
-import imageio
+from skimage.transform import rescale as scikit_rescale
+from torchvision.transforms import ToPILImage
 import os
 import re
 
@@ -15,13 +19,15 @@ import click
 
 import argparse
 
-from nerf import init_models, device, near, far, chunksize
-from nerf import (
+from train_nerf import NeRFState, init_models, device, near, far, chunksize, n_training
+from train_nerf import (
     kwargs_sample_hierarchical,
     kwargs_sample_stratified,
     n_samples_hierarchical,
 )
-from train_nerf import get_rays, nerf_forward
+from nerf import get_rays, nerf_forward
+
+to_PIL: Callable[[torch.Tensor], PILImage.Image] = ToPILImage()
 
 
 def parse_args():
@@ -64,32 +70,13 @@ def create_video(image_folder, video_path, fps=16):
     print(f"Saved video to {video_path}")
 
 
-def create_gif(image_folder, gif_path, duration=0.5):
-    def sort_key(filename):
-        match = re.search(r"(\d+)", filename)
-        return int(match.group()) if match else 0
-
-    filenames = sorted(
-        [
-            os.path.join(image_folder, f)
-            for f in os.listdir(image_folder)
-            if f.endswith(".png") or f.endswith(".jpg")
-        ],
-        key=sort_key,
-    )
-
-    images = [imageio.v2.imread(f) for f in filenames]
-    imageio.mimsave(gif_path, images, duration=duration)
-
-
-def replicate_view(test_idx: int):
-    test_img = torch.from_numpy(images_np[test_idx]).to(device)
-    test_pose = torch.from_numpy(poses_np[test_idx]).to(device)
-    focal = torch.tensor(focal_np).to(dtype=torch.float32, device=device)
+def replicate_view(state, test_idx: int):
+    test_img = state.images[test_idx]
+    test_pose = state.poses[test_idx]
 
     # Generate rays
     height, width = test_img.shape[:2]
-    rays_o, rays_d = get_rays(height, width, focal, test_pose)
+    rays_o, rays_d = get_rays(height, width, state.focal, test_pose)
     rays_o = rays_o.reshape([-1, 3])
     rays_d = rays_d.reshape([-1, 3])
 
@@ -99,13 +86,13 @@ def replicate_view(test_idx: int):
         rays_d,
         near,
         far,
-        encode,
-        model,
+        state.encode,
+        state.model,
         curr_kwargs_sample_stratified=kwargs_sample_stratified,
         curr_n_samples_hierarchical=n_samples_hierarchical,
         curr_kwargs_sample_hierarchical=kwargs_sample_hierarchical,
-        curr_fine_model=fine_model,
-        viewdirs_encoding_fn=encode_viewdirs,
+        curr_fine_model=state.fine_model,
+        viewdirs_encoding_fn=state.encode_viewdirs,
         curr_chunksize=chunksize,
     )
 
@@ -128,12 +115,12 @@ def replicate_view(test_idx: int):
     plt.close()
 
 
-def generate_360_video(radius=4.5, phi_deg=60.0, num_frames=300):
+def generate_360_video(state, radius=4.5, phi_deg=60.0, num_frames=300):
     phi = math.radians(phi_deg)
-    frame_dir = os.path.join(VISUALS_DIR, "360_frames")
+    frame_dir = os.path.join(state.VISUALS_DIR, "360_frames")
     os.makedirs(frame_dir, exist_ok=True)
 
-    video_path = os.path.join(VISUALS_DIR, "nerf_360.mp4")
+    video_path = os.path.join(state.VISUALS_DIR, "nerf_360.mp4")
     writer = cv2.VideoWriter(
         video_path, cv2.VideoWriter_fourcc(*"mp4v"), 15, (100, 100)
     )
@@ -161,7 +148,7 @@ def generate_360_video(radius=4.5, phi_deg=60.0, num_frames=300):
         c2w[:3, :3] = R
         c2w[:3, 3] = cam_pos
 
-        rays_o, rays_d = get_rays(100, 100, torch.tensor(focal_np), c2w.to(device))
+        rays_o, rays_d = get_rays(100, 100, state.focal, c2w.to(device))
         rays_o = rays_o.reshape(-1, 3)
         rays_d = rays_d.reshape(-1, 3)
 
@@ -170,13 +157,13 @@ def generate_360_video(radius=4.5, phi_deg=60.0, num_frames=300):
             rays_d,
             near,
             far,
-            encode,
-            model,
+            state.encode,
+            state.model,
             curr_kwargs_sample_stratified=kwargs_sample_stratified,
             curr_n_samples_hierarchical=n_samples_hierarchical,
             curr_kwargs_sample_hierarchical=kwargs_sample_hierarchical,
-            curr_fine_model=fine_model,
-            viewdirs_encoding_fn=encode_viewdirs,
+            curr_fine_model=state.fine_model,
+            viewdirs_encoding_fn=state.encode_viewdirs,
             curr_chunksize=chunksize,
         )
         rgb = outputs["rgb_map"].detach().reshape(100, 100, 3)
@@ -241,11 +228,9 @@ def generate_random_pose(
     return c2w.to(device)
 
 
-def generate_novel_view(c2w: torch.tensor):
-    focal = torch.tensor(focal_np).to(dtype=torch.float32, device=device)
-
+def generate_novel_view(state, c2w: torch.tensor):
     height, width = 100, 100
-    rays_o, rays_d = get_rays(height, width, focal, c2w)
+    rays_o, rays_d = get_rays(height, width, state.focal, c2w)
     rays_o = rays_o.reshape([-1, 3])
     rays_d = rays_d.reshape([-1, 3])
 
@@ -255,13 +240,13 @@ def generate_novel_view(c2w: torch.tensor):
         rays_d,
         near,
         far,
-        encode,
-        model,
+        state.encode,
+        state.model,
         curr_kwargs_sample_stratified=kwargs_sample_stratified,
         curr_n_samples_hierarchical=n_samples_hierarchical,
         curr_kwargs_sample_hierarchical=kwargs_sample_hierarchical,
-        curr_fine_model=fine_model,
-        viewdirs_encoding_fn=encode_viewdirs,
+        curr_fine_model=state.fine_model,
+        viewdirs_encoding_fn=state.encode_viewdirs,
         curr_chunksize=chunksize,
     )
 
@@ -346,14 +331,13 @@ def generate_pose_from_theta_phi(radius=4.5):
     return c2w.to(device)
 
 
-def show_batch_random_poses(height=50, width=50):
+def show_batch_random_poses(state, radius=4.5, height=50, width=50):
     _, axes = plt.subplots(4, 6, figsize=(12, 8))
     for i, ax in enumerate(axes.ravel()):
         click.secho(f"FRAME {i} STATS:", fg="blue")
-        c2w = generate_random_pose()
-        focal = torch.tensor(focal_np).to(dtype=torch.float32, device=device)
+        c2w = generate_random_pose(radius=radius)
 
-        rays_o, rays_d = get_rays(height, width, focal, c2w)
+        rays_o, rays_d = get_rays(height, width, state.focal, c2w)
         rays_o = rays_o.reshape([-1, 3])
         rays_d = rays_d.reshape([-1, 3])
 
@@ -362,18 +346,32 @@ def show_batch_random_poses(height=50, width=50):
             rays_d,
             near,
             far,
-            encode,
-            model,
+            state.encode,
+            state.model,
             curr_kwargs_sample_stratified=kwargs_sample_stratified,
             curr_n_samples_hierarchical=n_samples_hierarchical,
             curr_kwargs_sample_hierarchical=kwargs_sample_hierarchical,
-            curr_fine_model=fine_model,
-            viewdirs_encoding_fn=encode_viewdirs,
+            curr_fine_model=state.fine_model,
+            viewdirs_encoding_fn=state.encode_viewdirs,
             curr_chunksize=chunksize,
         )
-        rgb = outputs["rgb_map"]
-        image = rgb.reshape(height, width, 3).detach().cpu().numpy()
-        ax.imshow(image)
+        rgb: torch.Tensor = outputs["rgb_map"]
+        rgb = rgb.reshape(height, width, 3)
+        if i % 4 == 0:
+            rgb_np = rgb.detach().cpu().numpy()
+            rgb_np = scikit_rescale(
+                rgb_np,
+                scale=0.5,
+                channel_axis=-1,  # important for color images
+            )
+        elif i % 4 == 1:
+            rgb = rgb.permute(2, 0, 1)
+            rgb_np = to_PIL(rgb)
+            rgb_np.resize((width, height), PILImage.LANCZOS)
+        else:
+            rgb_np = rgb.reshape(height, width, 3).detach().cpu().numpy()
+
+        ax.imshow(rgb_np)
         ax.axis("off")
 
     plt.tight_layout()
@@ -381,23 +379,29 @@ def show_batch_random_poses(height=50, width=50):
 
 
 def main():
+    def ask_for_radius():
+        radius = questionary.text(
+            "Enter radius (0-5):",
+            validate=lambda val: 0 <= float(val) <= 5,
+            default="4.5",
+        ).ask()
+        if radius is None:
+            raise KeyboardInterrupt
+
+    state = NeRFState()
     args = parse_args()
     asset_name = args.asset_name
 
-    global VISUALS_DIR, CHECKPOINTS_DIR, DATA_PATH
-    VISUALS_DIR = f"assets/{asset_name}/data/visuals"
-    CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
-    DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
+    state.VISUALS_DIR = f"assets/{asset_name}/data/visuals"
+    state.CHECKPOINTS_DIR = f"assets/{asset_name}/data/checkpoints"
+    state.DATA_PATH = f"assets/{asset_name}/data/{asset_name}.npz"
 
-    global images_np, poses_np, focal_np
-    global model, fine_model, encode, encode_viewdirs
+    init_models(state)
+    data = np.load(state.DATA_PATH)
 
-    model, fine_model, encode, encode_viewdirs, _, _ = init_models(CHECKPOINTS_DIR)
-    data = np.load(DATA_PATH)
-
-    images_np = data["images"]
-    poses_np = data["poses"]
-    focal_np = data["focal"].astype(np.float32)
+    state.images = torch.from_numpy(data["images"][:n_training]).to(device)
+    state.poses = torch.from_numpy(data["poses"]).to(device)
+    state.focal = torch.from_numpy(data["focal"]).to(dtype=torch.float32).to(device)
 
     while True:
         choice = questionary.select(
@@ -412,27 +416,39 @@ def main():
             ],
         ).ask()
 
-        if choice.startswith("1"):
-            idx = int(input(f"Select test index (0 to {len(images_np) - 1}): "))
-            replicate_view(idx)
-
-        elif choice.startswith("2"):
-            generate_360_video()
-
-        elif choice.startswith("3"):
-            c2w = generate_random_pose()
-            generate_novel_view(c2w)
-
-        elif choice.startswith("4"):
-            c2w = generate_pose_from_theta_phi()
-            generate_novel_view(c2w)
-
-        elif choice.startswith("5"):
-            show_batch_random_poses()
-
-        else:
-            click.secho("Done evaluating. Exiting...", fg="green")
+        if choice is None:
             break
+
+        try:
+            if choice.startswith("1"):
+                idx = int(input(f"Select test index (0 to {len(state.images) - 1}): "))
+                replicate_view(state, idx)
+
+            elif choice.startswith("2"):
+                radius_choice = ask_for_radius()
+                generate_360_video(state, radius=radius_choice)
+
+            elif choice.startswith("3"):
+                radius_choice = ask_for_radius()
+                c2w = generate_random_pose(radius=radius_choice)
+                generate_novel_view(state, c2w)
+
+            elif choice.startswith("4"):
+                radius_choice = ask_for_radius()
+                c2w = generate_pose_from_theta_phi(radius_choice)
+                generate_novel_view(state, c2w)
+
+            elif choice.startswith("5"):
+                radius_choice = ask_for_radius()
+                show_batch_random_poses(state)
+
+            else:
+                break
+
+        except KeyboardInterrupt:
+            break
+
+        click.secho("Done evaluating. Exiting...", fg="green")
 
 
 if __name__ == "__main__":

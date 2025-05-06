@@ -95,7 +95,7 @@ def main():
                 if show_figures is None:
                     break
 
-                run_script("src/nerf/nerf.py", asset_choice, show_figures=show_figures)
+                run_script("src/nerf/train_nerf.py", asset_choice, show_figures=show_figures)
 
             elif process_choice == "Evaluate NeRF":
                 click.secho(f"\nEvaluating NeRF model for '{asset_choice}'", fg="yellow")

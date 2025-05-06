@@ -1,14 +1,20 @@
 # resize_data.py
 from PIL import Image
 import os
-from send2trash import send2trash
 import argparse
 import click
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--asset-name", type=str, default="simpleCube", help="Name of the asset in assets/")
+    parser.add_argument(
+        "--asset-name",
+        type=str,
+        default="simpleCube",
+        help="Name of the asset in assets/",
+    )
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
@@ -21,7 +27,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     for filename in sorted(os.listdir(input_dir)):
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff')):
+        if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".tiff")):
             input_path = os.path.join(input_dir, filename)
             output_path = os.path.join(output_dir, filename)
 
@@ -38,7 +44,10 @@ def main():
             except Exception as e:
                 print(f"Failed to process {filename}: {e}")
 
-    click.secho(f"All training images of {asset_name} resized successfully!", fg='green')
+    click.secho(
+        f"All training images of {asset_name} resized successfully!", fg="green"
+    )
+
 
 if __name__ == "__main__":
     main()
