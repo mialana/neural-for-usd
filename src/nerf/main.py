@@ -4,15 +4,22 @@ import sys
 import click
 import questionary
 
+import signal
+
 ASSETS_DIR = "assets"
 IGNORE = {"domelights"}
 SKIP_QUESTIONS = False
 
+
 def list_assets():
-    return sorted([
-        d for d in os.listdir(ASSETS_DIR)
-        if os.path.isdir(os.path.join(ASSETS_DIR, d)) and d not in IGNORE
-    ])
+    return sorted(
+        [
+            d
+            for d in os.listdir(ASSETS_DIR)
+            if os.path.isdir(os.path.join(ASSETS_DIR, d)) and d not in IGNORE
+        ]
+    )
+
 
 def run_script(script_path, asset_name, **kwargs):
     # Flatten kwargs into CLI args
@@ -27,11 +34,24 @@ def run_script(script_path, asset_name, **kwargs):
 
     click.secho(" ".join(cmd), fg="cyan")
 
-    result = subprocess.run(
+    # Start the subprocess in its own process group
+    process = subprocess.Popen(
         cmd,
-        check=True
+        preexec_fn=os.setsid  # create new session for the child
     )
-    return result.returncode == 0
+
+    try:
+        # Wait for the subprocess to finish
+        process.wait()
+    except KeyboardInterrupt:
+        click.secho("[main.py] CTRL+C detected. Sending SIGINT to subprocess...", fg="red")
+        os.killpg(process.pid, signal.SIGINT)
+        process.wait()  # Optionally wait again until subprocess exits
+
+        raise KeyboardInterrupt
+
+    return process.returncode == 0
+
 
 @click.command()
 def main():
@@ -41,49 +61,62 @@ def main():
         click.secho("No valid assets found.", fg="red")
         return
 
-    asset_name = questionary.select(
-        "Select an asset to process:",
-        choices=assets + ["Skip->"]
-    ).ask()
+    default_asset = "japanesePlaneToy"
 
-    try:
-        if asset_name != "Skip->":
-            click.secho(f"\nStep 1: resize_data.py for '{asset_name}'", fg="yellow")
-            run_script("src/nerf/resize_data.py", asset_name)
+    while True:
+        try:
+            process_choices = ["Train NeRF", "Evaluate NeRF", "Process NeRF Input Data"]
 
-            click.secho(f"\nStep 2: convert_json_to_npz.py for '{asset_name}'", fg="yellow")
-            run_script("src/nerf/convert_json_to_npz.py", asset_name)
+            process_choice = questionary.select(
+                "Choose a desired process:", choices=process_choices + ["EXIT->"]
+            ).ask()
 
-            assets = ["Continue->"] + assets
+            if process_choice == "EXIT->" or process_choice is None:
+                break
 
-        process_choices = ["Train NeRF", "Evaluate NeRF"]
-        
-        next_step = questionary.select(
-            "Which process next?",
-            choices=process_choices
-        ).ask()
+            asset_choice = questionary.select(
+                "Select an asset to process:", choices=[f"{default_asset} (CURRENT DEFAULT ASSET)"] + assets
+            ).ask()
 
-        saved_asset_name = asset_name
+            if asset_choice == f"{default_asset} (CURRENT DEFAULT ASSET)":
+                asset_choice = default_asset
+            if asset_choice is None:
+                break
 
-        asset_name = questionary.select(
-            "Reselect asset?",
-            choices=assets
-        ).ask()
+            if process_choice == "Train NeRF":
+                click.secho(f"\nTraining NeRF model for '{asset_choice}'", fg="yellow")
 
-        if asset_name == "Continue->":
-            asset_name = saved_asset_name
+                show_figures = (
+                    questionary.confirm("Show figures generated during training?", default=False)
+                    .skip_if(SKIP_QUESTIONS, default=False)
+                    .ask()
+                )
 
-        if next_step == "Train NeRF":
-            click.secho(f"\nStep 3: nerf.py for '{asset_name}'", fg="yellow")
+                if show_figures is None:
+                    break
 
-            show_figures = questionary.confirm("Show figures generated during training?").skip_if(SKIP_QUESTIONS, default=False).ask()
-            run_script("src/nerf/nerf.py", asset_name, show_figures=show_figures)
-        elif next_step == "Evaluate NeRF":
-            click.secho(f"\nStep 3: eval_nerf.py for '{asset_name}'", fg="yellow")
-            run_script("src/nerf/eval_nerf.py", asset_name)
+                run_script("src/nerf/nerf.py", asset_choice, show_figures=show_figures)
 
-    except subprocess.CalledProcessError as e:
-        click.secho(f"Error: Script failed with exit code {e.returncode}", fg="red")
+            elif process_choice == "Evaluate NeRF":
+                click.secho(f"\nEvaluating NeRF model for '{asset_choice}'", fg="yellow")
+                run_script("src/nerf/eval_nerf.py", asset_choice)
+
+            elif process_choice == "Process NeRF Input Data":
+                click.secho("\nProcessing input data to fit NeRF model for '{asset_choice}'", fg="yellow")
+                click.secho("Step 1: Resize to 100px by 100px.", fg="cyan")
+                run_script("src/nerf/resize_data.py", asset_choice)
+
+                click.secho("Step 2: Convert data from JSON to NPZ format.", fg="cyan")
+                run_script("src/nerf/convert_json_to_npz.py", asset_choice)
+
+            default_asset = asset_choice
+            click.secho("Process finished. Select new process or exit.", fg="green")
+
+        except KeyboardInterrupt:
+            break
+
+    click.secho("Thanks for using Neural-for-USD!", fg="green")
+
 
 if __name__ == "__main__":
     main()

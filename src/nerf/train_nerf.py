@@ -7,7 +7,6 @@ from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
 
-import click
 
 class PositionalEncoder(nn.Module):
     r"""
@@ -64,8 +63,7 @@ class MLP(nn.Module):
 
         # Create model layers
         self.layers = nn.ModuleList(
-            [nn.Linear(self.d_input, d_filter)]
-            + [
+            [nn.Linear(self.d_input, d_filter)] + [
                 (
                     nn.Linear(d_filter + self.d_input, d_filter)
                     if i in skip
@@ -182,6 +180,7 @@ def crop_center(img: torch.Tensor, frac: float = 0.5) -> torch.Tensor:
     w_offset = round(img.shape[1] * (frac / 2))
     return img[h_offset:-h_offset, w_offset:-w_offset]
 
+
 def sample_stratified(
     rays_o: torch.Tensor,
     rays_d: torch.Tensor,
@@ -271,7 +270,7 @@ def _sample_pdf(
     return samples  # [n_rays, n_samples]
 
 
-def sample_hierarchical(
+def _sample_hierarchical(
     rays_o: torch.Tensor,
     rays_d: torch.Tensor,
     z_vals: torch.Tensor,
@@ -298,7 +297,7 @@ def sample_hierarchical(
     return pts, z_vals_combined, new_z_samples
 
 
-def cumprod_exclusive(tensor: torch.Tensor) -> torch.Tensor:
+def _cumprod_exclusive(tensor: torch.Tensor) -> torch.Tensor:
     r"""
     (Courtesy of https://github.com/krrish94/nerf-pytorch)
 
@@ -324,7 +323,7 @@ def cumprod_exclusive(tensor: torch.Tensor) -> torch.Tensor:
     return cumprod
 
 
-def raw2outputs(
+def _raw2outputs(
     raw: torch.Tensor,
     z_vals: torch.Tensor,
     rays_d: torch.Tensor,
@@ -364,7 +363,7 @@ def raw2outputs(
     # cumprod_exclusive(1. - alpha) gives the transmittance from the start of the ray
     # up to (but not including) sample i.
     # Multiplying by alpha[i] yields the fraction of light that gets stopped at sample i.
-    weights = alpha * cumprod_exclusive(1.0 - alpha + 1e-10)
+    weights = alpha * _cumprod_exclusive(1.0 - alpha + 1e-10)
 
     # Compute weighted RGB map.
     # sigmoid squeezes into [0, 1] range
@@ -382,7 +381,7 @@ def raw2outputs(
     # Disparity map is inverse depth (i.e. 1 / depth)
     # In many 3D tasks, we often use disparity (inverse depth) because it helps highlight
     # near vs. far geometry.
-    disp_map = 1.0 / torch.max(
+    _ = 1.0 / torch.max(
         1e-10 * torch.ones_like(depth_map), depth_map / torch.sum(weights, -1)
     )
 
@@ -400,32 +399,32 @@ def raw2outputs(
     return rgb_map, depth_map, acc_map, weights
 
 
-def get_chunks(inputs: torch.Tensor, chunksize: int = 2**15) -> List[torch.Tensor]:
+def _get_chunks(inputs: torch.Tensor, curr_chunksize: int = 2**15) -> List[torch.Tensor]:
     r"""
     Divide an input into chunks.
     """
-    return [inputs[i : i + chunksize] for i in range(0, inputs.shape[0], chunksize)]
+    return [inputs[i: i + curr_chunksize] for i in range(0, inputs.shape[0], curr_chunksize)]
 
 
-def prepare_chunks(
+def _prepare_chunks(
     points: torch.Tensor,
     encoding_function: Callable[[torch.Tensor], torch.Tensor],
-    chunksize: int = 2**15,
+    curr_chunksize: int = 2**15,
 ) -> List[torch.Tensor]:
     r"""
     Encode and chunkify points to prepare for NeRF model.
     """
     points = points.reshape((-1, 3))
     points = encoding_function(points)
-    points = get_chunks(points, chunksize=chunksize)
+    points = _get_chunks(points, curr_chunksize=curr_chunksize)
     return points
 
 
-def prepare_viewdirs_chunks(
+def _prepare_viewdirs_chunks(
     points: torch.Tensor,
     rays_d: torch.Tensor,
     encoding_function: Callable[[torch.Tensor], torch.Tensor],
-    chunksize: int = 2**15,
+    curr_chunksize: int = 2**15,
 ) -> List[torch.Tensor]:
     r"""
     Encode and chunkify viewdirs to prepare for NeRF model.
@@ -434,8 +433,156 @@ def prepare_viewdirs_chunks(
     viewdirs = rays_d / torch.norm(rays_d, dim=-1, keepdim=True)
     viewdirs = viewdirs[:, None, ...].expand(points.shape).reshape((-1, 3))
     viewdirs = encoding_function(viewdirs)
-    viewdirs = get_chunks(viewdirs, chunksize=chunksize)
+    viewdirs = _get_chunks(viewdirs, curr_chunksize=curr_chunksize)
     return viewdirs
 
-if __name__ == '__main__':
+
+def get_rays(
+    height: int, width: int, focal_length: float, c2w: torch.Tensor
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    r"""
+    Find origin and direction of rays through every pixel and camera origin.
+    """
+
+    # Apply pinhole camera model to gather directions at each pixel
+    # i is a [width, height] grid with x-values of pixel at coordinate
+    # j is a [width, height] grid with x-values of pixel at coordinate
+    i, j = torch.meshgrid(
+        torch.arange(width, dtype=torch.float32).to(c2w),
+        torch.arange(height, dtype=torch.float32).to(c2w),
+        indexing="ij",
+    )
+
+    # swaps the last two dimensions (should be just 2, to get i and j shaped [height, width].
+    i, j = i.transpose(-1, -2), j.transpose(-1, -2)
+
+    # Map to [(-1, -1), (1, 1)] and then NDC (scaled by focal length):
+    #   x: (i - width/2) / focal
+    #   y: -(j - height/2) / focal
+    #   z: -1 (-1 is camera's forward)
+    directions = torch.stack(
+        [
+            (i - width * 0.5) / focal_length,
+            -(j - height * 0.5) / focal_length,
+            -torch.ones_like(i),
+        ],
+        dim=-1,
+    )
+
+    # Convert to world coords
+    # Apply camera pose to directions
+    rays_d = torch.sum(directions[..., None, :] * c2w[:3, :3], dim=-1)
+
+    # Origin is same for all directions (the optical center)
+    rays_o = c2w[:3, -1].expand(rays_d.shape)
+
+    return rays_o, rays_d
+
+
+def nerf_forward(
+    rays_o: torch.Tensor,
+    rays_d: torch.Tensor,
+    curr_near: float,
+    curr_far: float,
+    encoding_fn: Callable[[torch.Tensor], torch.Tensor],
+    coarse_model: nn.Module,
+    curr_kwargs_sample_stratified: dict = None,
+    curr_n_samples_hierarchical: int = 0,
+    curr_kwargs_sample_hierarchical: dict = None,
+    curr_fine_model=None,
+    viewdirs_encoding_fn: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
+    curr_chunksize: int = 2**15,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, dict]:
+    r"""
+    Compute forward pass through model(s).
+    """
+
+    # Set no kwargs if none are given.
+    if curr_kwargs_sample_stratified is None:
+        curr_kwargs_sample_stratified = {}
+    if curr_kwargs_sample_hierarchical is None:
+        curr_kwargs_sample_hierarchical = {}
+
+    # Sample query points along each ray.
+    query_points, z_vals = sample_stratified(
+        rays_o, rays_d, curr_near, curr_far, **curr_kwargs_sample_stratified
+    )
+
+    # Prepare batches.
+    batches = _prepare_chunks(query_points, encoding_fn, curr_chunksize=curr_chunksize)
+    if viewdirs_encoding_fn is not None:
+        batches_viewdirs = _prepare_viewdirs_chunks(
+            query_points, rays_d, viewdirs_encoding_fn, curr_chunksize=curr_chunksize
+        )
+    else:
+        batches_viewdirs = [None] * len(batches)
+
+    # Coarse model pass.
+    # Split the encoded points into "chunks", run the model on all chunks, and
+    # concatenate the results (to avoid out-of-memory issues).
+    predictions = []
+    for batch, batch_viewdirs in zip(batches, batches_viewdirs):
+        predictions.append(coarse_model(batch, viewdirs=batch_viewdirs))
+    raw = torch.cat(predictions, dim=0)
+    raw = raw.reshape(list(query_points.shape[:2]) + [raw.shape[-1]])
+
+    # Perform differentiable volume rendering to re-synthesize the RGB image.
+    rgb_map, depth_map, acc_map, weights = _raw2outputs(raw, z_vals, rays_d)
+    # rgb_map, depth_map, acc_map, weights = render_volume_density(raw, rays_o, z_vals)
+    outputs = {"z_vals_stratified": z_vals}
+
+    # Fine model pass.
+    if curr_n_samples_hierarchical > 0:
+        # Save previous outputs to return.
+        rgb_map_0, depth_map_0, acc_map_0 = rgb_map, depth_map, acc_map
+
+        # Apply hierarchical sampling for fine query points.
+        query_points, z_vals_combined, z_hierarch = _sample_hierarchical(
+            rays_o,
+            rays_d,
+            z_vals,
+            weights,
+            curr_n_samples_hierarchical,
+            **curr_kwargs_sample_hierarchical,
+        )
+
+        # Prepare inputs as before.
+        batches = _prepare_chunks(query_points, encoding_fn, curr_chunksize=curr_chunksize)
+        if viewdirs_encoding_fn is not None:
+            batches_viewdirs = _prepare_viewdirs_chunks(
+                query_points, rays_d, viewdirs_encoding_fn, curr_chunksize=curr_chunksize
+            )
+        else:
+            batches_viewdirs = [None] * len(batches)
+
+        # Forward pass new samples through fine model.
+        curr_fine_model = (
+            curr_fine_model if curr_fine_model is not None else coarse_model
+        )
+        predictions = []
+        for batch, batch_viewdirs in zip(batches, batches_viewdirs):
+            predictions.append(curr_fine_model(batch, viewdirs=batch_viewdirs))
+        raw = torch.cat(predictions, dim=0)
+        raw = raw.reshape(list(query_points.shape[:2]) + [raw.shape[-1]])
+
+        # Perform differentiable volume rendering to re-synthesize the RGB image.
+        rgb_map, depth_map, acc_map, weights = _raw2outputs(
+            raw, z_vals_combined, rays_d
+        )
+
+        # Store outputs.
+        outputs["z_vals_hierarchical"] = z_hierarch
+        outputs["rgb_map_0"] = rgb_map_0
+        outputs["depth_map_0"] = depth_map_0
+        outputs["acc_map_0"] = acc_map_0
+
+    # Store outputs.
+    outputs["rgb_map"] = rgb_map
+    outputs["depth_map"] = depth_map
+    outputs["acc_map"] = acc_map
+    outputs["weights"] = weights
+    return outputs
+
+
+if __name__ == "__main__":
     pass
