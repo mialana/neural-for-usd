@@ -50,8 +50,11 @@ def main():
 
     idx = 101
     click.secho(
-        f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f}) \
-            | DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})",
+        f"Test image: ORIGIN ({origins[idx][0]:.3f}, {origins[idx][1]:.3f}, {origins[idx][2]:.3f})",
+        fg="yellow",
+    )
+    click.secho(
+        f"DIRECTION ({dirs[idx][0]:.3f}, {dirs[idx][1]:.3f}, {dirs[idx][2]:.3f})",
         fg="yellow",
     )
 

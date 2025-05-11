@@ -1,3 +1,1 @@
-![jpt](src/assets/japanesePlaneToy/thumbnail.png)
-
-# Neural Scene Representation in OpenUSD (Universal Scene Description)
+# Neural Radiance Fields (NeRF) in Universal Scene Description (OpenUSD)

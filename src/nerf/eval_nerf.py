@@ -9,7 +9,6 @@ from typing import Callable
 import PIL.Image as PILImage
 
 import cv2
-from skimage.transform import rescale as scikit_rescale
 from torchvision.transforms import ToPILImage
 import os
 import re
@@ -19,7 +18,7 @@ import click
 
 import argparse
 
-from train_nerf import NeRFState, init_models, device, near, far, chunksize, n_training
+from train_nerf import NeRFState, init_models, device, near, far, chunksize
 from train_nerf import (
     kwargs_sample_hierarchical,
     kwargs_sample_stratified,
@@ -28,6 +27,8 @@ from train_nerf import (
 from nerf import get_rays, nerf_forward
 
 to_PIL: Callable[[torch.Tensor], PILImage.Image] = ToPILImage()
+
+DEFAULT_RADIUS = 3.5
 
 
 def parse_args():
@@ -115,38 +116,16 @@ def replicate_view(state, test_idx: int):
     plt.close()
 
 
-def generate_360_video(state, radius=4.5, phi_deg=60.0, num_frames=300):
-    phi = math.radians(phi_deg)
-    frame_dir = os.path.join(state.VISUALS_DIR, "360_frames")
-    os.makedirs(frame_dir, exist_ok=True)
-
+def generate_360_video(state, radius=DEFAULT_RADIUS, phi=60.0, num_frames=300):
     video_path = os.path.join(state.VISUALS_DIR, "nerf_360.mp4")
     writer = cv2.VideoWriter(
         video_path, cv2.VideoWriter_fourcc(*"mp4v"), 15, (100, 100)
     )
 
     for i in range(num_frames):
-        theta = 2 * math.pi * i / num_frames
+        theta = 360.0 * i / num_frames
 
-        cam_pos = torch.tensor(
-            [
-                radius * math.sin(phi) * math.cos(theta),  # X
-                radius * math.sin(phi) * math.sin(theta),  # Y
-                radius * math.cos(phi),  # Z (elevation)
-            ]
-        )
-
-        forward = (torch.zeros(3) - cam_pos).detach()
-        forward /= torch.norm(forward)
-        up = torch.tensor([0, 0, 1], dtype=torch.float32)
-        right = torch.cross(up, forward, dim=0)
-        right = right / torch.norm(right)
-        up = torch.cross(forward, right, dim=0)
-
-        R = torch.stack([right, up, -forward], dim=1)
-        c2w = torch.eye(4)
-        c2w[:3, :3] = R
-        c2w[:3, 3] = cam_pos
+        c2w = generate_pose_from_theta_phi(radius=radius, theta=theta, phi=phi)
 
         rays_o, rays_d = get_rays(100, 100, state.focal, c2w.to(device))
         rays_o = rays_o.reshape(-1, 3)
@@ -181,7 +160,7 @@ def generate_360_video(state, radius=4.5, phi_deg=60.0, num_frames=300):
 
 
 def generate_random_pose(
-    radius=4.5, theta_range=(0, 2 * math.pi), phi_range=(math.pi / 6, math.pi / 3)
+    radius=DEFAULT_RADIUS, theta_range=(0, 2 * math.pi), phi_range=(math.pi / 6, math.pi / 3)
 ):
     """
     Generates a random camera-to-world (c2w) matrix looking at the origin.
@@ -192,39 +171,10 @@ def generate_random_pose(
 
     Returns: torch.FloatTensor of shape (4, 4)
     """
-    print(radius)
     theta = torch.rand(1).item() * (theta_range[1] - theta_range[0]) + theta_range[0]
     phi = torch.rand(1).item() * (phi_range[1] - phi_range[0]) + phi_range[0]
 
-    click.secho(f"Theta degrees: {math.degrees(theta)}", fg="yellow")
-    click.secho(f"Phi degrees: {math.degrees(phi)}", fg="yellow")
-
-    # Spherical to Cartesian
-    cam_pos = torch.tensor(
-        [
-            radius * math.sin(phi) * math.cos(theta),  # X
-            radius * math.sin(phi) * math.sin(theta),  # Y
-            radius * math.cos(phi),  # Z (elevation)
-        ]
-    )
-
-    # Camera looks at origin
-    target = torch.tensor([0.0, 0.0, 0.0], dtype=torch.float32)
-    forward = target - cam_pos
-    forward = forward / torch.norm(forward)
-    up = torch.tensor([0, 0, 1], dtype=torch.float32)
-    up = up / torch.norm(up)
-
-    right = torch.cross(up, forward, dim=0)
-    right = right / torch.norm(right)
-
-    up = torch.cross(forward, right, dim=0)
-
-    # Build rotation matrix
-    R = torch.stack([right, up, -forward], dim=1)  # [3, 3]
-    c2w = torch.eye(4)
-    c2w[:3, :3] = R
-    c2w[:3, 3] = cam_pos
+    c2w = generate_pose_from_theta_phi(radius=radius, theta=math.degrees(theta), phi=math.degrees(phi))
 
     return c2w.to(device)
 
@@ -293,17 +243,9 @@ def generate_novel_view(state, c2w: torch.tensor):
     plt.close()
 
 
-def generate_pose_from_theta_phi(radius=4.5):
-    theta = float(
-        questionary.text(
-            "Enter θ (0–360):", validate=lambda val: 0 <= float(val) <= 360
-        ).ask()
-    )
-    phi = float(
-        questionary.text(
-            "Enter ϕ (0–90):", validate=lambda val: 0 <= float(val) <= 90
-        ).ask()
-    )
+def generate_pose_from_theta_phi(radius=DEFAULT_RADIUS, theta=0, phi=0):
+    click.secho(f"Theta degrees: {theta}", fg="yellow")
+    click.secho(f"Phi degrees: {phi}", fg="yellow")
 
     theta = math.radians(theta)
     phi = math.radians(phi)
@@ -332,18 +274,14 @@ def generate_pose_from_theta_phi(radius=4.5):
     return c2w.to(device)
 
 
-def show_batch_random_poses(state, radius=4.5, height=50, width=50):
+def show_batch_random_poses(state, radius=DEFAULT_RADIUS, height=50, width=50):
     _, axes = plt.subplots(4, 6, figsize=(12, 8))
     c2w = None
     for i, ax in enumerate(axes.ravel()):
         click.secho(f"FRAME {i} STATS:", fg="blue")
-        if i % 2 == 0:
-            c2w = generate_random_pose(radius=radius)
+        c2w = generate_random_pose(radius=radius)
 
-        if i % 2 == 0:
-            rays_o, rays_d = get_rays(height * 2, width * 2, state.focal, c2w)
-        else:
-            rays_o, rays_d = get_rays(height, width, state.focal, c2w)
+        rays_o, rays_d = get_rays(height * 2, width * 2, state.focal, c2w)
 
         rays_o = rays_o.reshape([-1, 3])
         rays_d = rays_d.reshape([-1, 3])
@@ -364,35 +302,47 @@ def show_batch_random_poses(state, radius=4.5, height=50, width=50):
         )
         rgb: torch.Tensor = outputs["rgb_map"]
 
-        if i % 2 == 0:
-            image = rgb.reshape(height * 2, width * 2, 3)
-            image = image.permute(2, 0, 1)
-            image = to_PIL(image)
-            image.resize((width, height), PILImage.LANCZOS)
-            ax.imshow(image)
-            ax.axis("off")
-        else:
-            rgb_np = rgb.reshape(height, width, 3)
-            rgb_np = rgb_np.detach().cpu().numpy()
-
-            ax.imshow(rgb_np)
-            ax.axis("off")
+        image = rgb.reshape(height * 2, width * 2, 3)
+        image = image.permute(2, 0, 1)
+        image = to_PIL(image)
+        image.resize((width, height), PILImage.LANCZOS)
+        ax.imshow(image)
+        ax.axis("off")
 
     plt.tight_layout()
     plt.show()
 
 
-def main():
-    def ask_for_radius():
-        radius = questionary.text(
-            f"Enter radius (0-{far}):",
-            validate=lambda val: (0 <= float(val) <= far if val != '' else False),
-            default="4.5",
-        ).ask()
-        if radius is None:
-            raise KeyboardInterrupt
-        return float(radius)
+def ask_for_radius():
+    radius = questionary.text(
+        f"Enter radius (0-{far}):",
+        validate=lambda val: (0 <= float(val) <= far if val != '' else False),
+        default=f"{DEFAULT_RADIUS}",
+    ).ask()
+    if radius is None:
+        raise KeyboardInterrupt
 
+    return float(radius)
+
+
+def ask_for_theta_phi():
+    theta = float(
+        questionary.text(
+            "Enter θ (0–360):", validate=lambda val: (0 <= float(val) <= 360 if val != '' else False),
+        ).ask()
+    )
+    phi = float(
+        questionary.text(
+            "Enter ϕ (0–90):", validate=lambda val: (0 <= float(val) <= 90 if val != '' else False),
+        ).ask()
+    )
+    if theta is None or phi is None:
+        raise KeyboardInterrupt
+
+    return float(theta), float(phi)
+
+
+def main():
     state = NeRFState()
     args = parse_args()
     asset_name = args.asset_name
@@ -404,7 +354,7 @@ def main():
     init_models(state)
     data = np.load(state.DATA_PATH)
 
-    state.images = torch.from_numpy(data["images"][:n_training]).to(device)
+    state.images = torch.from_numpy(data["images"]).to(device)
     state.poses = torch.from_numpy(data["poses"]).to(device)
     state.focal = torch.from_numpy(data["focal"]).to(dtype=torch.float32).to(device)
 
@@ -426,7 +376,12 @@ def main():
 
         try:
             if choice.startswith("1"):
-                idx = int(input(f"Select test index (0 to {len(state.images) - 1}): "))
+                while True:
+                    try:
+                        idx = int(input(f"Select test index (0 to {len(data['images']) - 1}): "))
+                        break
+                    except ValueError:
+                        continue
                 replicate_view(state, idx)
 
             elif choice.startswith("2"):
@@ -440,7 +395,9 @@ def main():
 
             elif choice.startswith("4"):
                 radius_choice = ask_for_radius()
-                c2w = generate_pose_from_theta_phi(radius=radius_choice)
+                theta_choice, phi_choice = ask_for_theta_phi()
+
+                c2w = generate_pose_from_theta_phi(radius=radius_choice, theta=theta_choice, phi=phi_choice)
                 generate_novel_view(state, c2w)
 
             elif choice.startswith("5"):
