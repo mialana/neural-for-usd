@@ -36,7 +36,8 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
     if (!dir.exists())
         dir.mkpath(".");
 
-    m_usdStage = UsdStage::Open(stagePath.toStdString());
+    SdfLayerRefPtr stageLayer = SdfLayer::OpenAsAnonymous(stagePath.toStdString());
+    m_usdStage = UsdStage::Open(stageLayer);
     if (!m_usdStage) {
         qWarning() << "Failed to open stage:" << stagePath;
         return false;
@@ -99,8 +100,6 @@ void StageManager::setModelScale(float scale)
         return;
     }
 
-    m_modelScale = scale;
-
     UsdPrimRange children = UsdPrimRange::Stage(m_usdStage);
     for (const UsdPrim& child: children)
     {
@@ -108,18 +107,22 @@ void StageManager::setModelScale(float scale)
         {
             UsdGeomXform xform = UsdGeomXform::Define(m_usdStage, child.GetPath());
 
-            UsdGeomXformOp scaleOp = xform.GetScaleOp();
+            UsdGeomXformOp scaleOp = xform.GetScaleOp(TfToken("nerf"));
             if (!scaleOp) {
-                scaleOp = xform.AddScaleOp();
+                scaleOp = xform.AddXformOp(UsdGeomXformOp::TypeScale, UsdGeomXformOp::PrecisionFloat, TfToken("nerf"));
             }
+
+            GfVec3f scaleVec3f = GfVec3f(scale);
             scaleOp.Set(GfVec3f(scale));
 
             GfVec3f s;
-            xform.GetScaleOp().Get(&s);
+            xform.GetScaleOp(TfToken("nerf")).Get(&s);
 
             qDebug().Ns().Nq() << xform.GetPath().GetAsString() << " (new scale): " << s;
         }
     }
+
+    m_modelScale = scale;
 
     m_usdStage->Export(m_outputStagePath.toStdString());
 }
