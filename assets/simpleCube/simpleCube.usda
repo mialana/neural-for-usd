@@ -8,6 +8,9 @@
 
 def Xform "SimpleCube"
 {
+    float3 xformOp:scale = (0.3, 0.3, 0.3)
+    uniform token[] xformOpOrder = ["xformOp:scale"]
+
     def Cube "cubeShape"
     {
         double size = 3

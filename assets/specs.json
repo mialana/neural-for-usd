@@ -43,5 +43,32 @@
                 "scale": 0.3
             }
         }
+    },
+    {
+        "tentaclePlant": {
+            "specs":
+            {
+                "domelight": "HDR_029_Sky_Cloudy_Ref.hdr",
+                "scale": 0.95
+            }
+        }
+    },
+    {
+        "jelloShelf": {
+            "specs":
+            {
+                "domelight": "HDR_029_Sky_Cloudy_Ref.hdr",
+                "scale": 1.0
+            }
+        }
+    },
+    {
+        "recordCollection": {
+            "specs":
+            {
+                "domelight": "HDR_029_Sky_Cloudy_Ref.hdr",
+                "scale": 0.9
+            }
+        }
     }
 ]
