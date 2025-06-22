@@ -32,9 +32,9 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab_1">
+      <widget class="QWidget" name="engine">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Engine</string>
        </attribute>
        <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
@@ -437,140 +437,6 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
-       <widget class="QLineEdit" name="lineEdit_3">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>170</y>
-          <width>113</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="placeholderText">
-         <string>theta</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_4">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>80</y>
-          <width>113</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Begin training</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_4">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>200</y>
-          <width>113</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="placeholderText">
-         <string>phi</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_5">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>230</y>
-          <width>113</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="placeholderText">
-         <string>radius</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_6">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>260</y>
-          <width>100</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Display view</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>250</x>
-          <y>170</y>
-          <width>250</width>
-          <height>200</height>
-         </rect>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::Box</enum>
-        </property>
-        <property name="text">
-         <string>Image will appear here</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-        <property name="margin">
-         <number>1</number>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_5">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>120</y>
-          <width>139</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Render 360 Video</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="geometry">
-         <rect>
-          <x>590</x>
-          <y>31</y>
-          <width>71</width>
-          <height>32</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Locate</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="lineEdit_2">
-        <property name="geometry">
-         <rect>
-          <x>62</x>
-          <y>35</y>
-          <width>521</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>/Users/Dev/Projects/Neural-for-USD/assets/japanesePlaneToy/data/data.json</string>
-        </property>
-        <property name="placeholderText">
-         <string>Data file path</string>
         </property>
        </widget>
       </widget>

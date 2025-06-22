@@ -2,12 +2,13 @@
 
 cmake_install_prefix="/Users/Dev/Projects/Neural-for-USD"
 
-# if [ -e build ]; then
-#   trash build
-#   mkdir build
-# fi
+if [ -e build ]; then
+  trash build
+fi
 
+mkdir build
 cd build
+
 cmake \
   -DUSD_ROOT="/opt/usd" \
   -DCMAKE_INSTALL_PREFIX=${cmake_install_prefix} \
