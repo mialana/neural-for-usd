@@ -21,6 +21,7 @@ Replace the `-DUSD_ROOT` CMake flag with the path to your USD build.
 Run `./ez_build.sh`, followed by `./ez_run.sh` (or alternatively just locate the executable within your build).
 
 ### NeRF Python program with PyTorch and NumPy:
+#### Build Instructions
 
 Activate your choice of Python virtual environment (or not) and install python dependencies.
 
