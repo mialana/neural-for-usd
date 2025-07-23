@@ -36,8 +36,7 @@ bool StageManager::loadUsdStage(const QString& stagePath, const QString& domeLig
     if (!dir.exists())
         dir.mkpath(".");
 
-    SdfLayerRefPtr stageLayer = SdfLayer::OpenAsAnonymous(stagePath.toStdString());
-    m_usdStage = UsdStage::Open(stageLayer);
+    m_usdStage = UsdStage::Open(stagePath.toStdString());
     if (!m_usdStage) {
         qWarning() << "Failed to open stage:" << stagePath;
         return false;

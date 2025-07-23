@@ -9,9 +9,9 @@
 
 def Xform "japanese_toy"
 {
-    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, -1.6292068494294654e-7, 1, 0), (0, -1, -1.6292068494294654e-7, 0), (0, 0, 0, 1) )
     float xformOp:rotateX = -90
-    double3 xformOp:translate = (0.0, -0.1, 0.0)
+    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, -1.6292068494294654e-7, 1, 0), (0, -1, -1.6292068494294654e-7, 0), (0, 0, 0, 1) )
+    double3 xformOp:translate = (0, -0.1, 0)
     uniform token[] xformOpOrder = ["xformOp:transform", "xformOp:rotateX", "xformOp:translate"]
 
     def Mesh "japanese_toy" (
