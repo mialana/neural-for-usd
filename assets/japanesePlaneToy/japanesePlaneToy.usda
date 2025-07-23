@@ -7,63 +7,6 @@
     upAxis = "Z"
 )
 
-def Xform "_60_cam"
-{
-    matrix4d xformOp:transform = ( (-8.638860702514648, -2.616973638534546, 0, 0), (0.4431917369365692, -1.463014841079712, 8.972023010253906, 0), (-2.6059391498565674, 8.602434158325195, 1.5314741134643555, 0), (-5.160243034362793, 17.03441619873047, 4.338683128356934, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-
-    def Camera "Camera_001"
-    {
-        float2 clippingRange = (0.1, 1000)
-        float focalLength = 50
-        float horizontalAperture = 36
-        float horizontalApertureOffset = 0
-        token projection = "perspective"
-        float verticalAperture = 20.25
-        float verticalApertureOffset = 0
-    }
-}
-
-def Xform "Signature_Cam"
-{
-    matrix4d xformOp:transform = ( (0.5684255361557007, 0.8227347135543823, 6.755324761797965e-7, 0), (-0.2876036465167999, 0.19870394468307495, 0.9369102716445923, 0), (0.7708284854888916, -0.5325639247894287, 0.3495699167251587, 0), (1.3370728492736816, -0.8662174940109253, 0.6616774797439575, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-
-    def Camera "Camera_003"
-    {
-        float2 clippingRange = (0.1, 1000)
-        float focalLength = 50
-        float horizontalAperture = 36
-        float horizontalApertureOffset = 0
-        token projection = "perspective"
-        float verticalAperture = 20.25
-        float verticalApertureOffset = 0
-    }
-}
-
-def Xform "cam_target"
-{
-    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 1.3060804605484009, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-}
-
-def Xform "Camera"
-{
-    matrix4d xformOp:transform = ( (1, 2.980232238769531e-7, 1.4901161193847656e-7, 0), (-1.4901159772762185e-7, -5.9604641222676946e-8, 0.9999999403953552, 0), (2.682208730675484e-7, -0.9999999403953552, -5.9604641222676946e-8, 0), (-0.0218203067779541, -1.6778227090835571, 0.09268701076507568, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-
-    def Camera "Camera_002"
-    {
-        float2 clippingRange = (0.1, 1000)
-        float focalLength = 50
-        float horizontalAperture = 36
-        float horizontalApertureOffset = 0
-        token projection = "perspective"
-        float verticalAperture = 20.25
-        float verticalApertureOffset = 0
-    }
-}
-
 def Xform "japanese_toy"
 {
     matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, -1.6292068494294654e-7, 1, 0), (0, -1, -1.6292068494294654e-7, 0), (0, 0, 0, 1) )
@@ -145,25 +88,6 @@ def "_materials"
             string inputs:varname.connect = </_materials/japanese_toy.inputs:file2:varname>
             float2 outputs:result
         }
-    }
-}
-
-def Xform "cam_path"
-{
-    matrix4d xformOp:transform = ( (9.000065803527832, 0, 0, 0), (0, 9.122760772705078, 0, 0), (0, 0, 9.122760772705078, 0), (0, 0, 4.433056831359863, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-}
-
-def Xform "sun"
-{
-    matrix4d xformOp:transform = ( (0.9814811944961548, 0.04374975711107254, -0.18649554252624512, 0), (-0.11010859161615372, 0.9255111813545227, -0.36236056685447693, 0), (0.15675051510334015, 0.3761848509311676, 0.9131890535354614, 0), (2.783118724822998, 4.1643571853637695, 4.0690202713012695, 1) )
-    uniform token[] xformOpOrder = ["xformOp:transform"]
-
-    def DistantLight "Sun_001"
-    {
-        color3f color = (1, 1, 1)
-        float intensity = 1
-        float specular = 1
     }
 }
 
