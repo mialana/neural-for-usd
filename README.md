@@ -1,6 +1,10 @@
 # Neural Radiance Fields (NeRF) in Universal Scene Description (OpenUSD)
 
-A comprehensive program built to solve data collection for Neural Radiance Fields for the Pixar OpenUSD framework.
+![img](.github/thumbnail.png)
+
+**[Demo Video](https://youtu.be/NtF7fcyY4Mk)**
+
+A comprehensive interface to solve data collection for Neural Radiance Fields and Novel View Synthesis for the Pixar OpenUSD framework.
 
 ### Requirements
 
